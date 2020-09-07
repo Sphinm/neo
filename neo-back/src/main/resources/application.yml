@@ -15,6 +15,6 @@ server:
   servlet:
     context-path: /api
 
-security:
-  secret: secret-test
-  encrypt-secret: 0cc45749ee02b1a52c9a36758a5a174d
+#security:
+#  secret: secret-test
+#  encrypt-secret: 0cc45749ee02b1a52c9a36758a5a174d

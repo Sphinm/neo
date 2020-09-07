@@ -22,11 +22,11 @@ const responseInterceptor = (response: AxiosResponse) => {
   // 拦截 200 的错误
   const { data } = response
 
-  if (data.code !== 'SUCCESS') {
-    throw new Error(data.message)
-  } else {
-    return response.data
-  }
+  // if (data.code !== 'SUCCESS') {
+  //   throw new Error(data.message)
+  // } else {
+  return response.data
+  // }
 }
 
 const responseErrorInterceptor = (error: AxiosError) => {

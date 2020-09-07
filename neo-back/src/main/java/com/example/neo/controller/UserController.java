@@ -22,6 +22,7 @@ public class UserController {
 
     @RequestMapping("/findAll")
     public List<User> findAll() {
+        System.out.println("receive request");
         return  userMapper.findAll();
     }
 }
