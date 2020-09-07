@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/vhr?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true&zeroDateTimeBehavior=convertToNull&connectTimeout=2000&sessionVariables=character_set_connection=utf8mb4&character_set_client=utf8mb4
+    url: jdbc:mysql://localhost:3306/neo?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true&zeroDateTimeBehavior=convertToNull&connectTimeout=2000&sessionVariables=character_set_connection=utf8mb4&character_set_client=utf8mb4
     username: root
     password: root
 
@@ -10,3 +10,11 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
 
+server:
+  port: 8008
+  servlet:
+    context-path: /api
+
+security:
+  secret: secret-test
+  encrypt-secret: 0cc45749ee02b1a52c9a36758a5a174d

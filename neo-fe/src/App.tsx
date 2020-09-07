@@ -18,8 +18,8 @@ const App: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
         <Route path="/layout">
           <Layout></Layout>
         </Route>
-        <Redirect from="/" to="/layout" />
-        <Redirect from="*" to="/404"></Redirect>
+        {/* <Redirect from="/" to="/layout" /> */}
+        {/* <Redirect from="*" to="/404"></Redirect> */}
       </Switch>
     </div>
   )

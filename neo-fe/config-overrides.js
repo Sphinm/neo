@@ -15,12 +15,12 @@ const resolve = dir => path.resolve(__dirname, dir)
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
 
 const devProxy = () => config => {
-  config.before = app => {
-    apiMocker(app, resolve('src/mock/index.js'))
-  }
+  // config.before = app => {
+  //   apiMocker(app, resolve('src/mock/index.js'))
+  // }
   config.proxy = {
     '/api': {
-      target: 'http://192.168.133.63:8020/',
+      target: 'http://localhost:8008/',
       changeOrigin: true,
     },
   }
