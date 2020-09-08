@@ -17,7 +17,7 @@ public class CookieUtils {
     /**
      * 向cookie存储新字段（使用 URL Encode 编码）
      */
-    public static void setEncoded(String name, String content, boolean isHttpOnly) {
+    private static void setEncoded(String name, String content, boolean isHttpOnly) {
         try {
             setRaw(name, URLEncoder.encode(content, "UTF-8"), isHttpOnly);
         } catch (UnsupportedEncodingException ignored) {

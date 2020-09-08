@@ -1,7 +1,7 @@
-import lazy from './libs/lazy'
+import lazy from '@/libs/lazy'
 
-import Dashboard from './pages/Dashboard'
-import Login from './pages/Login'
+const Dashboard = lazy(() => import('@/pages/Dashboard'))
+const Login = lazy(() => import('@/pages/Login'))
 
 export const routeList = [
   // {

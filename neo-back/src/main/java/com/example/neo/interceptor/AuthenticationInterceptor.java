@@ -7,10 +7,11 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.neo.annotation.PassToken;
 import com.example.neo.annotation.UserLoginToken;
+import com.example.neo.constant.Constants;
 import com.example.neo.model.User;
 import com.example.neo.service.AuthService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.example.neo.utils.CookieUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -19,20 +20,19 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.util.Date;
 
 /**
  * JWT 拦截器
  */
+@Slf4j
 public class AuthenticationInterceptor implements HandlerInterceptor {
-    private static final Logger log = LoggerFactory.getLogger(AuthenticationInterceptor.class);
-
     @Autowired
     AuthService AuthService;
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
         String token = httpServletRequest.getHeader("token"); // 从 http 请求头获取 token
-
         // 如果不是映射到方法直接通过
         if (!(object instanceof HandlerMethod)) {
             return true;
@@ -52,25 +52,32 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             UserLoginToken userLoginToken = method.getAnnotation(UserLoginToken.class);
             if (userLoginToken.required()) {
                 if (token == null) {
-                    throw new RuntimeException("用户信息缺失，请重新登录");
+                    throw new Exception("用户信息缺失，请重新登录");
                 }
                 // 获取 token 中的 userId
                 String userId;
+                long expiredDate;
                 try {
                     userId = JWT.decode(token).getAudience().get(0);
+                    expiredDate = JWT.decode(token).getExpiresAt().getTime();
                 } catch (JWTDecodeException e) {
-                    throw new RuntimeException("401, ", e);
+                    throw new Exception("401, ", e);
                 }
+                if (expiredDate <= new Date().getTime()) {
+                    CookieUtils.clean(Constants.TOKEN_KEY);
+                    throw new Exception("token 过期，请重新登录");
+                }
+
                 User user = AuthService.findByUserId(userId);
                 if (user == null) {
-                    throw new RuntimeException("用户不存在，请重新登录");
+                    throw new Exception("用户不存在，请重新登录");
                 }
                 // 验证 token
-                JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
+                JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC512(Constants.JWT_SECRET)).build();
                 try {
                     jwtVerifier.verify(token);
                 } catch (JWTVerificationException e) {
-                    throw new RuntimeException("401, ", e);
+                    throw new Exception("401：token 解析失败, ", e);
                 }
                 return true;
             }

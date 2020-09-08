@@ -1,19 +1,17 @@
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import './assets/stylus/index.styl'
-import Loading from './components/Loading'
+import '@/assets/stylus/index.styl'
+import Loading from '@/components/Loading'
 import { BrowserRouter as Router } from 'react-router-dom'
 import * as serviceWorker from './serviceWorker'
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Suspense fallback={<Loading />}>
-      <Router>
-        <App />
-      </Router>
-    </Suspense>
-  </React.StrictMode>,
+  <Suspense fallback={<Loading />}>
+    <Router>
+      <App />
+    </Router>
+  </Suspense>,
   document.getElementById('root'),
 )
 

@@ -1,4 +1,4 @@
-import ajax from '../libs/axios'
+import ajax from '@/libs/axios'
 
 /** 登录 */
 export const login = (params: { mobile: string; password: string }) => {
@@ -10,7 +10,7 @@ export const logout = () => {
   return ajax.get(`/logout`)
 }
 
-/** 获取所有用户 */
-export const findAllUser = () => {
-  return ajax.get(`/findAll`)
+/** 获取用户信息 */
+export const fetchInfo = () => {
+  return ajax.get(`/me`)
 }

@@ -1,12 +1,12 @@
 import React from 'react'
-import { Layout, Card, Spin } from 'antd'
+import { Layout } from 'antd'
 // import AppHeader from './Header'
 // import SideBar from './SideBar'
 // import Content from './Content'
-import { RoleStore } from '@/store/roleStore'
+// import { RoleStore } from '@/store/roleStore'
 import { useObserver } from 'mobx-react'
 import { withRouter } from 'react-router-dom'
-import style from './index.styl'
+// import style from './index.styl'
 
 const Index = () => {
   return useObserver(() => (

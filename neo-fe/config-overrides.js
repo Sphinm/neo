@@ -66,9 +66,9 @@ module.exports = {
       React: 'React',
     }),
     addWebpackAlias({
-      ['@']: path.resolve(__dirname, 'src'),
+      '@': path.resolve(__dirname, 'src'),
     }),
-    addDecoratorsLegacy(), // 支持装饰器
+    addDecoratorsLegacy(),
     stylus(),
   ),
   devServer: overrideDevServer(devProxy()),

@@ -1,5 +1,5 @@
 // import { lazy } from 'react'
-import createLazy from '../../libs/lazy'
+import createLazy from '@/libs/lazy'
 import {
   ApartmentOutlined,
   AuditOutlined,

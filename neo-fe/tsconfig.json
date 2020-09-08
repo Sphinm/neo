@@ -20,7 +20,7 @@
     "jsx": "react",
     "baseUrl": "./src"
   },
-  "extends": "./alias.json",
+  "extends": "./paths.json",
   "include": [
     "src/**/*"
   ],

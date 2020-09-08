@@ -4,7 +4,7 @@ public class Constants {
     /**
      * token 名称
      */
-    public static final String TOKEN_KEY = "XC-TOKEN";
+    public static final String TOKEN_KEY = "XS-TOKEN";
     /**
      * token 过期时间为 2天
      */
@@ -13,4 +13,8 @@ public class Constants {
      * cookies 过期时间为 30 天
      */
     public static final int COOKIES_EXPIRE_TIME = 30 * 24 * 60 * 60;
+    /**
+     * JWT SECRET
+     */
+    public static final String JWT_SECRET = "eFczVyFnaEhIZnBDem1leGkmOFVDbU5xKmk4blRYU1E=";
 }

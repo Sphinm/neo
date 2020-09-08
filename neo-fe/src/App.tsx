@@ -1,7 +1,7 @@
 import React from 'react'
-import { Route, Switch, withRouter, Redirect, RouteComponentProps } from 'react-router-dom'
-import Layout from './pages/Layout'
-import { routeList } from './router'
+import { Route, Switch, withRouter, RouteComponentProps } from 'react-router-dom'
+import Layout from '@/pages/Layout'
+import { routeList } from '@/router'
 
 const App: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
   const childrenRouteList = routeList.filter(item => item.name !== 'Layout')
