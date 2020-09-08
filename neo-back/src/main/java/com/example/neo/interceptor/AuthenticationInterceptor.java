@@ -8,7 +8,9 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.neo.annotation.PassToken;
 import com.example.neo.annotation.UserLoginToken;
 import com.example.neo.model.User;
-import com.example.neo.service.UserService;
+import com.example.neo.service.AuthService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,13 +20,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
+/**
+ * JWT 拦截器
+ */
 public class AuthenticationInterceptor implements HandlerInterceptor {
+    private static final Logger log = LoggerFactory.getLogger(AuthenticationInterceptor.class);
+
     @Autowired
-    UserService UserService;
+    AuthService AuthService;
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
         String token = httpServletRequest.getHeader("token"); // 从 http 请求头获取 token
+
         // 如果不是映射到方法直接通过
         if (!(object instanceof HandlerMethod)) {
             return true;
@@ -53,7 +61,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 } catch (JWTDecodeException e) {
                     throw new RuntimeException("401, ", e);
                 }
-                User user = UserService.findByUserId(userId);
+                User user = AuthService.findByUserId(userId);
                 if (user == null) {
                     throw new RuntimeException("用户不存在，请重新登录");
                 }
