@@ -1,43 +1,42 @@
 package com.example.neo.model;
 
 public class User {
-    private Integer id;
+    String id;
+    String userId;
+    String mobile;
+    String password;
 
-    private String name;
-
-    private Integer age;
-
-    public User() {
-        super();
+    public String getUserId() {
+        return userId;
     }
 
-    public User(Integer id, String name, Integer age) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
 }

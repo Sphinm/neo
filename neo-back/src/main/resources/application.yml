@@ -4,9 +4,13 @@ spring:
     url: jdbc:mysql://localhost:3306/neo?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true&zeroDateTimeBehavior=convertToNull&connectTimeout=2000&sessionVariables=character_set_connection=utf8mb4&character_set_client=utf8mb4
     username: root
     password: root
+  profiles:
+    active: local
+  logging:
+    config: logback-spring.xml
 
 mybatis:
-  mapper-locations: classpath*:mapper/*
+  mapper-locations: classpath*:mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
 
@@ -14,7 +18,3 @@ server:
   port: 8008
   servlet:
     context-path: /api
-
-#security:
-#  secret: secret-test
-#  encrypt-secret: 0cc45749ee02b1a52c9a36758a5a174d

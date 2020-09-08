@@ -2,22 +2,11 @@ package com.example.neo.mapper;
 
 import com.example.neo.model.User;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-
-import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserMapper {
-    int insert(User record);
+    User findByUserMobile(@Param("mobile") String mobile);
 
-    int insertSelective(User record);
-
-    User selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(User record);
-
-    int updateByPrimaryKey(User record);
-
-    @Select("select * from user")
-    List<User> findAll();
+    User findByUserId(@Param("userId") String userId);
 }
