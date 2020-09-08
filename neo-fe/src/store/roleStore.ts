@@ -1,4 +1,6 @@
-import { action, observable, computed, toJS, runInAction } from 'mobx'
+import { action, observable, runInAction } from 'mobx'
+import { fetchInfo } from '@/apis/auth'
+import { handleError } from '@/libs/axios'
 // import { IRoles, IConfig, ICurrentAuth } from '@/interface/auth'
 // import { getListRoles, getConfigList, getCurrentAdmin } from '@/api/auth'
 // import localStorage from '@/lib/local-storage'
@@ -7,7 +9,7 @@ class Role {
   // @observable loading = true
   // @observable roleList: Array<IRoles> = []
   // @observable configList: Array<IConfig> = []
-  // @observable currentRole!: ICurrentAuth
+  @observable currentRole!: any
   // @action
   // fetchRoleList = async () => {
   //   try {
@@ -40,22 +42,19 @@ class Role {
   //     console.error(e)
   //   }
   // }
-  // @action
-  // fetchCurrentRole = async () => {
-  //   try {
-  //     const { data } = await getCurrentAdmin()
-  //     runInAction(() => {
-  //       this.currentRole = data
-  //       localStorage.setItem(
-  //         'authList',
-  //         data.configurations.map((item: { code: string }) => item.code),
-  //       )
-  //       localStorage.setItem('email', data.email)
-  //     })
-  //   } catch (e) {
-  //     console.error(e)
-  //   }
-  // }
+  @action
+  fetchCurrentRole = async () => {
+    try {
+      const { data } = await fetchInfo()
+      runInAction(() => {
+        this.currentRole = data
+        if (data?.mobile) window.location.href = '/layout'
+      })
+    } catch (e) {
+      handleError(e)
+      window.location.href = '/login'
+    }
+  }
   // @computed
   // get fetchUserCode() {
   //   return toJS(this.currentRole?.configurations.map((item: { code: string }) => item.code))

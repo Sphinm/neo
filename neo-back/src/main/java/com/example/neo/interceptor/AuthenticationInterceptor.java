@@ -32,7 +32,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
-        String token = httpServletRequest.getHeader("token"); // 从 http 请求头获取 token
+        String token = httpServletRequest.getHeader("Cookie"); // 从 http 请求头获取 token
         // 如果不是映射到方法直接通过
         if (!(object instanceof HandlerMethod)) {
             return true;
@@ -52,7 +52,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             UserLoginToken userLoginToken = method.getAnnotation(UserLoginToken.class);
             if (userLoginToken.required()) {
                 if (token == null) {
-                    throw new Exception("用户信息缺失，请重新登录");
+                    throw new RuntimeException("用户信息缺失，请重新登录");
                 }
                 // 获取 token 中的 userId
                 String userId;

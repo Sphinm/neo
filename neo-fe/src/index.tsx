@@ -5,6 +5,9 @@ import '@/assets/stylus/index.styl'
 import Loading from '@/components/Loading'
 import { BrowserRouter as Router } from 'react-router-dom'
 import * as serviceWorker from './serviceWorker'
+import { RoleStore } from '@/store/roleStore'
+
+if (window.location.pathname !== '/login') RoleStore.fetchCurrentRole()
 
 ReactDOM.render(
   <Suspense fallback={<Loading />}>

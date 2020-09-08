@@ -13,7 +13,10 @@ import com.example.neo.utils.ResponseBean;
 import com.example.neo.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +33,7 @@ public class AuthController implements HandlerInterceptor {
     @UserLoginToken
     @GetMapping("/me")
     public ResponseBean getUserInfo(HttpServletRequest request)  {
-        String token = request.getHeader("token"); // 从 http 请求头获取 token
+        String token = request.getHeader("Cookie"); // 从 http 请求头获取 token
         log.info("user token: ", token);
         String userId;
         try {
@@ -46,7 +49,6 @@ public class AuthController implements HandlerInterceptor {
     @PostMapping("/login")
     public ResponseBean login(@RequestBody ILogin login) {
         User userInfo = AuthService.login(login.getMobile());
-        log.debug("112222211",userInfo);
 
         if (userInfo == null) {
             return ResponseBean.fail(ResponseCodeEnum.USER_NOTFOUND);

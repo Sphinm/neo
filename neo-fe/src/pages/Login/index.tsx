@@ -2,26 +2,14 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Input, Form } from 'antd'
-import { fetchInfo, login } from '@/apis/auth'
+import { login } from '@/apis/auth'
 import { handleError } from '@/libs/axios'
-import Loading from '@/components/Loading'
 import styles from './index.styl'
 
 const Login = () => {
   const [form] = Form.useForm()
   const history = useHistory()
   const { validateFields } = form
-
-  const [authenticating, setAuthenticating] = React.useState(true)
-  const checkLogin = React.useCallback(async () => {
-    try {
-      const { data } = await fetchInfo()
-      if (data?.mobile) history.push('/layout', { isLogin: true })
-    } catch (e) {
-      setAuthenticating(false)
-      handleError(e)
-    }
-  }, [history])
 
   const [loading, setLoading] = React.useState(false)
   const handleSubmit = async () => {
@@ -41,13 +29,7 @@ const Login = () => {
     }
   }
 
-  React.useEffect(() => {
-    checkLogin()
-  }, [checkLogin])
-
-  return authenticating ? (
-    <Loading />
-  ) : (
+  return (
     <div className={styles['login-container']}>
       <Form form={form} className={styles['login-form']} onFinish={handleSubmit}>
         <h1>后台管理系统</h1>
