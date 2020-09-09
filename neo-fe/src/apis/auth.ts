@@ -7,7 +7,7 @@ export const login = (params: { mobile: string; password: string }) => {
 
 /** 退出登录 */
 export const logout = () => {
-  return ajax.get(`/logout`)
+  return ajax.post(`/logout`)
 }
 
 /** 获取用户信息 */

@@ -5,6 +5,7 @@ import { Button, Input, Form } from 'antd'
 import { login } from '@/apis/auth'
 import { handleError } from '@/libs/axios'
 import styles from './index.styl'
+import { RoleStore } from '@/store/roleStore'
 
 const Login = () => {
   const [form] = Form.useForm()
@@ -21,7 +22,10 @@ const Login = () => {
         mobile,
         password,
       })
-      if (data?.mobile) history.push('/main')
+      if (data?.mobile) {
+        RoleStore.currentRole = data
+        history.push('/main')
+      }
     } catch (e) {
       handleError(e)
     } finally {
