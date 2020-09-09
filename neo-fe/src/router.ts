@@ -1,7 +1,7 @@
 import lazy from '@/libs/lazy'
 
 const Dashboard = lazy(() => import('@/pages/Dashboard'))
-const Login = lazy(() => import('@/pages/Login'))
+const Login = () => import('@/pages/Login')
 
 export const routeList = [
   // {

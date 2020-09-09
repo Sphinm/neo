@@ -17,13 +17,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.HandlerInterceptor;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @RestController
-public class AuthController implements HandlerInterceptor {
+public class AuthController {
     @Autowired
     AuthService AuthService;
 
@@ -32,9 +29,9 @@ public class AuthController implements HandlerInterceptor {
 
     @UserLoginToken
     @GetMapping("/me")
-    public ResponseBean getUserInfo(HttpServletRequest request)  {
-        String token = request.getHeader("Cookie"); // 从 http 请求头获取 token
-        log.info("user token: ", token);
+    public ResponseBean getUserInfo()  {
+        String token = CookieUtils.getRaw(Constants.TOKEN_KEY);
+        log.debug("user token11111111111: ", token);
         String userId;
         try {
             userId = JWT.decode(token).getAudience().get(0);

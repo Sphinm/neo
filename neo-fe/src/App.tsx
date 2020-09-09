@@ -1,27 +1,17 @@
 import React from 'react'
-import { Route, Switch, withRouter, RouteComponentProps } from 'react-router-dom'
-import Layout from '@/pages/Layout'
-import { routeList } from '@/router'
+import { Router } from 'react-router-dom'
+import history from '@/libs/history'
+import RoutesEntry from '@/pages/router.entry'
 
-const App: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
-  const childrenRouteList = routeList.filter(item => item.name !== 'Layout')
-  return (
-    <div>
-      <Switch>
-        {childrenRouteList.map(route => {
-          return (
-            <Route key={route.name} exact={route.exact} path={route.path}>
-              <Route component={route.component}></Route>
-            </Route>
-          )
-        })}
-        <Route path="/layout">
-          <Layout></Layout>
-        </Route>
-        {/* <Redirect from="/" to="/layout" /> */}
-        {/* <Redirect from="*" to="/404"></Redirect> */}
-      </Switch>
-    </div>
-  )
+class App extends React.Component {
+  render() {
+    return (
+      <>
+        <Router history={history}>
+          <RoutesEntry />
+        </Router>
+      </>
+    )
+  }
 }
-export default withRouter(App)
+export default App

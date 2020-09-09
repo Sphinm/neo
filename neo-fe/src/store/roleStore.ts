@@ -47,8 +47,8 @@ class Role {
     try {
       const { data } = await fetchInfo()
       runInAction(() => {
+        console.log(222, data)
         this.currentRole = data
-        if (data?.mobile) window.location.href = '/layout'
       })
     } catch (e) {
       handleError(e)
