@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 import { useObserver } from 'mobx-react'
 import { RoleStore } from '@/store/roleStore'
 import { AuthType } from '@/enums/role'
+import styles from './index.styl'
 
 const { Sider } = Layout
 const { SubMenu } = Menu
@@ -34,8 +35,8 @@ const SideMenu = () => {
       collapsed={collapsed}
       onCollapse={handleCollapse}
     >
-      <div>
-        <h1>OBoss</h1>
+      <div className={styles['menu-header']}>
+        <h1>NEO</h1>
       </div>
       <Menu
         theme="dark"
@@ -44,21 +45,21 @@ const SideMenu = () => {
         mode="inline"
         onClick={handleSelect}
       >
-        {RoleStore.currentRole?.status === AuthType.ADMIN && (
+        {RoleStore.currentRole?.role === AuthType.ADMIN && (
           <SubMenu
             key="merchant"
             title={
               <span>
                 <HomeOutlined />
-                <span>Merchant Directory</span>
+                <span>Dashboard</span>
               </span>
             }
           >
-            <Menu.Item key="merchants/list">Merchant List</Menu.Item>
+            <Menu.Item>Merchant List</Menu.Item>
             <Menu.Item key="merchants/product">Product List</Menu.Item>
           </SubMenu>
         )}
-        {RoleStore.currentRole?.status === AuthType.ADMIN && (
+        {RoleStore.currentRole?.role === AuthType.ADMIN && (
           <SubMenu
             key="cms"
             title={
@@ -75,7 +76,7 @@ const SideMenu = () => {
             <Menu.Item key="cms/store">Stores</Menu.Item>
           </SubMenu>
         )}
-        {RoleStore.currentRole?.status === AuthType.ADMIN && (
+        {RoleStore.currentRole?.role === AuthType.ADMIN && (
           <SubMenu
             key="marketing"
             title={
@@ -97,7 +98,7 @@ const SideMenu = () => {
             <Menu.Item key="marketing/push-notification/home">Push Notification</Menu.Item>
           </SubMenu>
         )}
-        {RoleStore.currentRole?.status === AuthType.ADMIN && (
+        {RoleStore.currentRole?.role === AuthType.ADMIN && (
           <Menu.Item key="user-group">
             <span>
               <UsergroupAddOutlined />
@@ -105,7 +106,7 @@ const SideMenu = () => {
             </span>
           </Menu.Item>
         )}
-        {RoleStore.currentRole?.status === AuthType.ADMIN && (
+        {RoleStore.currentRole?.role === AuthType.ADMIN && (
           <SubMenu
             key="users"
             title={
