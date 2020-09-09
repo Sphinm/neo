@@ -19,11 +19,15 @@ const MainBreadCrumb = () => {
 
   return (
     <Breadcrumb style={{ margin: '21px 0' }}>
-      {paths.map((path, index) => (
-        <Breadcrumb.Item key={index}>
-          <Link to={path.link}>{path.name}</Link>
-        </Breadcrumb.Item>
-      ))}
+      {paths.map((path, index) =>
+        index === paths.length - 1 ? (
+          <Breadcrumb.Item key={`${path}`}>{path.name}</Breadcrumb.Item>
+        ) : (
+          <Breadcrumb.Item key={`${path}`}>
+            <Link to={path.link}>{path.name}</Link>
+          </Breadcrumb.Item>
+        ),
+      )}
     </Breadcrumb>
   )
 }

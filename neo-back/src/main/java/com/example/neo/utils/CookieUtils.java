@@ -50,7 +50,7 @@ public class CookieUtils {
         if (attributes != null) {
             Cookie cookie = new Cookie(name, value);
             cookie.setPath("/");
-            cookie.setMaxAge(Constants.COOKIES_EXPIRE_TIME);
+            cookie.setMaxAge(value.length() > 0 ? Constants.COOKIES_EXPIRE_TIME : 0);
             cookie.setHttpOnly(isHttpOnly);
             attributes.getResponse().addCookie(cookie);
         }

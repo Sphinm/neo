@@ -24,18 +24,9 @@ const SideMenu = () => {
   }, [])
 
   return useObserver(() => (
-    <Sider
-      style={{
-        overflow: 'auto',
-        height: '100vh',
-        position: 'fixed',
-        left: 0,
-      }}
-      collapsible
-      collapsed={collapsed}
-      onCollapse={handleCollapse}
-    >
+    <Sider collapsible collapsed={collapsed} onCollapse={handleCollapse}>
       <div className={styles['menu-header']}>
+        <img src="https://oss.fengong8.com/flex-empl-app/fengong8/logo.svg" alt="" className={styles['menu-img']} />
         <h1>NEO</h1>
       </div>
       <Menu
@@ -46,18 +37,12 @@ const SideMenu = () => {
         onClick={handleSelect}
       >
         {RoleStore.currentRole?.role === AuthType.ADMIN && (
-          <SubMenu
-            key="merchant"
-            title={
-              <span>
-                <HomeOutlined />
-                <span>Dashboard</span>
-              </span>
-            }
-          >
-            <Menu.Item>Merchant List</Menu.Item>
-            <Menu.Item key="merchants/product">Product List</Menu.Item>
-          </SubMenu>
+          <Menu.Item key="merchant">
+            <span>
+              <HomeOutlined />
+              <span>Dashboard</span>
+            </span>
+          </Menu.Item>
         )}
         {RoleStore.currentRole?.role === AuthType.ADMIN && (
           <SubMenu
@@ -69,10 +54,6 @@ const SideMenu = () => {
               </span>
             }
           >
-            <SubMenu key="homepage" title="Home Page">
-              <Menu.Item key="cms/homepage/icon">Icon</Menu.Item>
-              <Menu.Item key="cms/homepage/container">Container</Menu.Item>
-            </SubMenu>
             <Menu.Item key="cms/store">Stores</Menu.Item>
           </SubMenu>
         )}
@@ -87,24 +68,16 @@ const SideMenu = () => {
             }
           >
             <Menu.Item key="marketing/voucher/home">Voucher</Menu.Item>
-            <SubMenu key="banners" title="Banners">
+            {/* <SubMenu key="banners" title="Banners">
               <Menu.Item key="marketing/banners/ACTIVE">Actived Banner</Menu.Item>
               <Menu.Item key="marketing/banners/INACTIVE">Inactived Banner</Menu.Item>
             </SubMenu>
             <SubMenu key="popups" title="Popups">
               <Menu.Item key="marketing/popup/home/ACTIVE">Actived Popup</Menu.Item>
               <Menu.Item key="marketing/popup/home/INACTIVE">Inactived Popup</Menu.Item>
-            </SubMenu>
+            </SubMenu> */}
             <Menu.Item key="marketing/push-notification/home">Push Notification</Menu.Item>
           </SubMenu>
-        )}
-        {RoleStore.currentRole?.role === AuthType.ADMIN && (
-          <Menu.Item key="user-group">
-            <span>
-              <UsergroupAddOutlined />
-              <span>User Group</span>
-            </span>
-          </Menu.Item>
         )}
         {RoleStore.currentRole?.role === AuthType.ADMIN && (
           <SubMenu

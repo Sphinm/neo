@@ -1,6 +1,6 @@
 import * as React from 'react'
 import createLazy from '@/libs/lazy'
-import Main from './main'
+import Main from './Main/main'
 import { Redirect, Route, Switch } from 'react-router-dom'
 
 const RoutesEntry = () => (

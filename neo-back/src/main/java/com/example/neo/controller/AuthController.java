@@ -31,7 +31,6 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseBean getUserInfo()  {
         String token = CookieUtils.getRaw(Constants.TOKEN_KEY);
-        log.debug("user token11111111111: ", token);
         String userId;
         try {
             userId = JWT.decode(token).getAudience().get(0);

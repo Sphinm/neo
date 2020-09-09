@@ -32,7 +32,7 @@ const Login = () => {
   return (
     <div className={styles['login-container']}>
       <Form form={form} className={styles['login-form']} onFinish={handleSubmit}>
-        <h1>BOSS</h1>
+        <h1>NEO</h1>
         <Form.Item name="mobile" rules={[{ required: true, message: 'Please input your mobile!' }]}>
           <Input prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Mobile" />
         </Form.Item>
