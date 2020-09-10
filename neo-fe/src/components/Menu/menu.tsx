@@ -36,14 +36,12 @@ const SideMenu = () => {
         mode="inline"
         onClick={handleSelect}
       >
-        {RoleStore.currentRole?.role === AuthType.ADMIN && (
-          <Menu.Item key="merchant">
-            <span>
-              <HomeOutlined />
-              <span>Dashboard</span>
-            </span>
-          </Menu.Item>
-        )}
+        <Menu.Item key="merchant">
+          <span>
+            <HomeOutlined />
+            <span>Dashboard</span>
+          </span>
+        </Menu.Item>
         {RoleStore.currentRole?.role === AuthType.ADMIN && (
           <SubMenu
             key="cms"
