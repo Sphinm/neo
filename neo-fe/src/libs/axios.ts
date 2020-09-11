@@ -35,8 +35,8 @@ const responseErrorInterceptor = (error: AxiosError) => {
     const { status, data } = error.response
     const statusError = () => {
       return notification.error({
-        message: `CODE: ${data.code ?? status}`,
-        description: data?.message ? data.message : error.message,
+        message: `CODE: ${data.code ?? 500}`,
+        description: data?.message ? data.message : 'Server Error',
       })
     }
     switch (status) {
@@ -49,7 +49,7 @@ const responseErrorInterceptor = (error: AxiosError) => {
         statusError()
         break
       default:
-        throw new Error(data.error ? data.error : data.message)
+        throw new Error(data.error ? data.error : 'Server Error')
     }
   } else {
     throw new Error('Request Error')

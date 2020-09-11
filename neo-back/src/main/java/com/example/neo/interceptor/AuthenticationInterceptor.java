@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 
 /**
- * JWT À¹½ØÆ÷
+ * JWT æ‹¦æˆªå™¨
  */
 @Slf4j
 public class AuthenticationInterceptor implements HandlerInterceptor {
@@ -32,30 +32,30 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
-//        String cookies = httpServletRequest.getHeader("Cookie"); // ´Ó http ÇëÇóÍ·»ñÈ¡ token
+//        String cookies = httpServletRequest.getHeader("Cookie"); // ä» http è¯·æ±‚å¤´è·å– token
         String token = CookieUtils.getRaw(Constants.TOKEN_KEY);
-        // Èç¹û²»ÊÇÓ³Éäµ½·½·¨Ö±½ÓÍ¨¹ı
+        // å¦‚æœä¸æ˜¯æ˜ å°„åˆ°æ–¹æ³•ç›´æ¥é€šè¿‡
         if (!(object instanceof HandlerMethod)) {
             return true;
         }
         HandlerMethod handlerMethod = (HandlerMethod) object;
         Method method = handlerMethod.getMethod();
 
-        // ¼ì²éÊÇ·ñÓĞ passToken ×¢ÊÍ£¬ÓĞÔòÌø¹ıÈÏÖ¤
+        // æ£€æŸ¥æ˜¯å¦æœ‰ passToken æ³¨é‡Šï¼Œæœ‰åˆ™è·³è¿‡è®¤è¯
         if (method.isAnnotationPresent(PassToken.class)) {
             PassToken passToken = method.getAnnotation(PassToken.class);
             if (passToken.required()) {
                 return true;
             }
         }
-        // ¼ì²éÓĞÃ»ÓĞĞèÒªÓÃ»§È¨ÏŞµÄ×¢½â
+        // æ£€æŸ¥æœ‰æ²¡æœ‰éœ€è¦ç”¨æˆ·æƒé™çš„æ³¨è§£
         if (method.isAnnotationPresent(UserLoginToken.class)) {
             UserLoginToken userLoginToken = method.getAnnotation(UserLoginToken.class);
             if (userLoginToken.required()) {
                 if (token == null) {
-                    throw new RuntimeException("ÓÃ»§ĞÅÏ¢È±Ê§£¬ÇëÖØĞÂµÇÂ¼");
+                    throw new RuntimeException("ç”¨æˆ·ä¿¡æ¯ç¼ºå¤±ï¼Œè¯·é‡æ–°ç™»å½•");
                 }
-                // »ñÈ¡ token ÖĞµÄ userId
+                // è·å– token ä¸­çš„ userId
                 String userId;
                 long expiredDate;
                 try {
@@ -66,19 +66,19 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 }
                 if (expiredDate <= new Date().getTime()) {
                     CookieUtils.clean(Constants.TOKEN_KEY);
-                    throw new Exception("token ¹ıÆÚ£¬ÇëÖØĞÂµÇÂ¼");
+                    throw new Exception("token è¿‡æœŸï¼Œè¯·é‡æ–°ç™»å½•");
                 }
 
                 User user = AuthService.findByUserId(userId);
                 if (user == null) {
-                    throw new Exception("ÓÃ»§²»´æÔÚ£¬ÇëÖØĞÂµÇÂ¼");
+                    throw new Exception("ç”¨æˆ·ä¸å­˜åœ¨ï¼Œè¯·é‡æ–°ç™»å½•");
                 }
-                // ÑéÖ¤ token
+                // éªŒè¯ token
                 JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC512(Constants.JWT_SECRET)).build();
                 try {
                     jwtVerifier.verify(token);
                 } catch (JWTVerificationException e) {
-                    throw new Exception("401£ºtoken ½âÎöÊ§°Ü, ", e);
+                    throw new Exception("401ï¼štoken è§£æå¤±è´¥, ", e);
                 }
                 return true;
             }

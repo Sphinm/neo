@@ -20,7 +20,7 @@ const HeaderRightMenu = () => {
   const menu = (
     <Menu>
       {/* <Menu.Item onClick={changeLanguage}>Change Language</Menu.Item> */}
-      <Menu.Item onClick={logoutBoss}>退出登录</Menu.Item>
+      <Menu.Item onClick={logoutBoss}>Logout</Menu.Item>
     </Menu>
   )
   return useObserver(() => (

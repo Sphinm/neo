@@ -26,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
         return UserMapper.findByUserId(userId);
     }
 
-    // TODO: 注册接口暂不实现
+    // TODO: 鏆傛湭瀹炵幇
     public User registerUser(IRegister register) {
         return UserMapper.findByUserMobile(register.mobile);
     }

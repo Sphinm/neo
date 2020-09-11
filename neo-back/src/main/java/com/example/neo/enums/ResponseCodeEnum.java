@@ -3,9 +3,9 @@ package com.example.neo.enums;
 public enum ResponseCodeEnum {
     //system
     SUCCESS("SUCCESS"),
-    SERVER_ERROR("·şÎñÆ÷´íÎó"),
-    PASSWORD_ERROR("µÇÂ¼Ê§°Ü£¬ÃÜÂë´íÎó"),
-    USER_NOTFOUND("µÇÂ¼Ê§°Ü£¬ÓÃ»§²»´æÔÚ"),
+    SERVER_ERROR("æœåŠ¡å™¨é”™è¯¯"),
+    PASSWORD_ERROR("ç™»å½•å¤±è´¥ï¼Œå¯†ç é”™è¯¯"),
+    USER_NOTFOUND("ç™»å½•å¤±è´¥ï¼Œç”¨æˆ·ä¸å­˜åœ¨"),
     PARAMETER_ERROR("system.validate.error"),
     NOT_FOUND("system.error.not_found"),
 

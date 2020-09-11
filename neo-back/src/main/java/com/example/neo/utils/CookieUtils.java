@@ -15,7 +15,7 @@ import java.util.Optional;
 public class CookieUtils {
 
     /**
-     * Ïòcookie´æ´¢ĞÂ×Ö¶Î£¨Ê¹ÓÃ URL Encode ±àÂë£©
+     * å‘ cookies å­˜å‚¨æ–°å­—æ®µï¼ˆä½¿ç”¨ URL Encode ç¼–ç ï¼‰
      */
     private static void setEncoded(String name, String content, boolean isHttpOnly) {
         try {
@@ -25,7 +25,7 @@ public class CookieUtils {
     }
 
     /**
-     * Èç¹ûkey != null,Çå³ıÖ¸¶¨keyµÄcookie,Èç¹ûkeyÎªnull,Çå³ıËùÓĞcookie
+     * å¦‚æœkey != null,æ¸…é™¤æŒ‡å®škeyçš„cookie,å¦‚æœkeyä¸ºnull,æ¸…é™¤æ‰€æœ‰cookie
      */
     public static void clean(String key) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -43,7 +43,7 @@ public class CookieUtils {
     }
 
     /**
-     * Ïòcookie´æ´¢ĞÂ×Ö¶Î£¨²»×ö±à½âÂë´¦Àí£©
+     * å‘cookieå­˜å‚¨æ–°å­—æ®µï¼ˆä¸åšç¼–è§£ç å¤„ç†ï¼‰
      */
     public static void setRaw(String name, String value, boolean isHttpOnly) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -57,7 +57,7 @@ public class CookieUtils {
     }
 
     /**
-     * ´ÓcookieÖĞÈ¡×Ö¶Î£¨²»×ö±à½âÂë´¦Àí£©
+     * ä»cookieä¸­å–å­—æ®µï¼ˆä¸åšç¼–è§£ç å¤„ç†ï¼‰
      */
     public static String getRaw(String name) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

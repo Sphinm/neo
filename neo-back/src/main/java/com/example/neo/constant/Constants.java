@@ -2,15 +2,15 @@ package com.example.neo.constant;
 
 public class Constants {
     /**
-     * token Ãû³Æ
+     * token åç§°
      */
     public static final String TOKEN_KEY = "XS-TOKEN";
     /**
-     * token ¹ıÆÚÊ±¼äÎª 2Ìì
+     * token è¿‡æœŸæ—¶é—´ä¸º 2å¤©
      */
     public static final long TOKEN_EXPIRE_TIME = 48 * 60 * 60 * 1000;
     /**
-     * cookies ¹ıÆÚÊ±¼äÎª 30 Ìì
+     * cookies è¿‡æœŸæ—¶é—´ä¸º 30 å¤©
      */
     public static final int COOKIES_EXPIRE_TIME = 30 * 24 * 60 * 60;
     /**

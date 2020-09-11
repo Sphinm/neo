@@ -13,7 +13,7 @@ public class GloablExceptionHandler {
     public Object handleException(Exception e) {
         String msg = e.getMessage();
         if (msg == null || msg.equals("")) {
-            msg = "·þÎñÆ÷³ö´í";
+            msg = "Server Error!";
         }
         return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR, msg);
     }

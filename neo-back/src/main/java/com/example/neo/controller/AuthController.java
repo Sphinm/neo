@@ -59,9 +59,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseBean logout() {
-//        AuthService.logout();
-        return ResponseBean.success();
+    public void logout() {
+        AuthService.logout();
     }
 
 }
