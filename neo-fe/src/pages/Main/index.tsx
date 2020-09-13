@@ -1,5 +1,5 @@
 import Loading from '@/components/Loading'
-import MainBreadCrumb from '@/components/breadcrumb'
+// import MainBreadCrumb from '@/components/breadcrumb'
 import HeaderRightMenu from '@/components/HeadeiRightMenu/headerRightMenu'
 import React from 'react'
 import RoutesAuth from '../routes.auth'
@@ -22,7 +22,7 @@ const Main = () => {
       <SideMenu />
       <Layout>
         <Header className={styles.header}>
-          <MainBreadCrumb />
+          {/* <MainBreadCrumb /> */}
           <HeaderRightMenu />
         </Header>
         <Content className={styles.content}>

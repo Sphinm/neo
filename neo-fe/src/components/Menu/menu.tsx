@@ -1,6 +1,6 @@
 import history from '@/libs/history'
 import React from 'react'
-import { HomeOutlined, UsergroupAddOutlined, ShoppingOutlined } from '@ant-design/icons'
+import { HomeOutlined, ShopOutlined, UsergroupAddOutlined, ShoppingOutlined } from '@ant-design/icons'
 import { Layout, Menu } from 'antd'
 import { useParams } from 'react-router-dom'
 import { useObserver } from 'mobx-react'
@@ -36,59 +36,49 @@ const SideMenu = () => {
         mode="inline"
         onClick={handleSelect}
       >
-        <Menu.Item key="merchant">
+        <Menu.Item key="dashboard">
           <span>
             <HomeOutlined />
-            <span>Dashboard</span>
+            <span>工作台</span>
           </span>
         </Menu.Item>
         {RoleStore.currentRole?.role === AuthType.ADMIN && (
-          <SubMenu
-            key="cms"
-            title={
-              <span>
-                <HomeOutlined />
-                <span>CMS</span>
-              </span>
-            }
-          >
-            <Menu.Item key="cms/store">Stores</Menu.Item>
-          </SubMenu>
+          <Menu.Item key="admin/dataquery">
+            <span>
+              <ShopOutlined />
+              <span>数据查询</span>
+            </span>
+          </Menu.Item>
         )}
         {RoleStore.currentRole?.role === AuthType.ADMIN && (
           <SubMenu
-            key="marketing"
+            key="admin"
             title={
               <span>
                 <ShoppingOutlined />
-                <span>Marketing</span>
+                <span>用户信息</span>
               </span>
             }
           >
-            <Menu.Item key="marketing/voucher/home">Voucher</Menu.Item>
-            {/* <SubMenu key="banners" title="Banners">
-              <Menu.Item key="marketing/banners/ACTIVE">Actived Banner</Menu.Item>
-              <Menu.Item key="marketing/banners/INACTIVE">Inactived Banner</Menu.Item>
-            </SubMenu>
-            <SubMenu key="popups" title="Popups">
-              <Menu.Item key="marketing/popup/home/ACTIVE">Actived Popup</Menu.Item>
-              <Menu.Item key="marketing/popup/home/INACTIVE">Inactived Popup</Menu.Item>
-            </SubMenu> */}
-            <Menu.Item key="marketing/push-notification/home">Push Notification</Menu.Item>
+            <Menu.Item key="admin/merchant">代理商档案</Menu.Item>
+            <Menu.Item key="admin/company">公司客户档案</Menu.Item>
+            <Menu.Item key="admin/employee">员工档案</Menu.Item>
           </SubMenu>
         )}
         {RoleStore.currentRole?.role === AuthType.ADMIN && (
           <SubMenu
-            key="users"
+            key="review"
             title={
               <span>
                 <UsergroupAddOutlined />
-                <span>Admins</span>
+                <span>待审核</span>
               </span>
             }
           >
-            <Menu.Item key="users/list">Admins List</Menu.Item>
-            <Menu.Item key="users/roles">Admin Roles</Menu.Item>
+            <Menu.Item key="admin/reviewbill">开票记录</Menu.Item>
+            <Menu.Item key="admin/reviewpayroll">发放记录</Menu.Item>
+            <Menu.Item key="admin/reviewrecharge">充值记录</Menu.Item>
+            <Menu.Item key="admin/reviewuploadtax">完税凭证</Menu.Item>
           </SubMenu>
         )}
       </Menu>
