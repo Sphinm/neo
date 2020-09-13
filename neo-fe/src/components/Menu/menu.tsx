@@ -180,6 +180,14 @@ const SideMenu = () => {
           </SubMenu>
         )}
         {/* 员工配置 */}
+        {RoleStore.currentRole?.role === AuthType.EMPLOYEE && (
+          <Menu.Item key="report">
+            <span>
+              <HomeOutlined />
+              <span>员工协议</span>
+            </span>
+          </Menu.Item>
+        )}
       </Menu>
     </Sider>
   ))

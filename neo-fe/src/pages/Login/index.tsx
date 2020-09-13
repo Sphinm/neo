@@ -6,6 +6,7 @@ import { login } from '@/apis/auth'
 import { handleError } from '@/libs/axios'
 import styles from './index.styl'
 import { RoleStore } from '@/store/roleStore'
+import { AuthType } from '@/enums/role'
 
 const Login = () => {
   const [form] = Form.useForm()
@@ -24,7 +25,7 @@ const Login = () => {
       })
       if (data?.mobile) {
         RoleStore.currentRole = data
-        history.push('/main')
+        data.role === AuthType.EMPLOYEE ? history.push('/main/report') : history.push('/main')
       }
     } catch (e) {
       handleError(e)

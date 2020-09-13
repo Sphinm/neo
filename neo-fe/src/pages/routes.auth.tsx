@@ -7,6 +7,7 @@ import Finance from './finance/routes'
 import Sign from './sign/routes'
 import Sole from './sole/routes'
 import Flexible from './flexible/routes'
+import Report from './report/routes'
 
 const RoutesAuth = () => {
   return (
@@ -18,6 +19,7 @@ const RoutesAuth = () => {
       <Route path="/main/sign" component={Sign} />
       <Route path="/main/sole" component={Sole} />
       <Route path="/main/flexible" component={Flexible} />
+      <Route path="/main/report" component={Report} />
       <Route render={() => <Redirect to="/main/dashboard" />} />
     </Switch>
   )
