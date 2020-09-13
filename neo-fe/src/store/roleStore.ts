@@ -47,7 +47,6 @@ class Role {
     try {
       const { data } = await fetchInfo()
       runInAction(() => {
-        console.log(222, data)
         this.currentRole = data
       })
     } catch (e) {
