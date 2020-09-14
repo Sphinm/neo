@@ -5,7 +5,6 @@ import { Button, Input, Form } from 'antd'
 import { login } from '@/apis/auth'
 import { handleError } from '@/libs/axios'
 import styles from './index.styl'
-
 import { AuthType } from '@/enums/role'
 
 const Login = () => {

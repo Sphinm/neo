@@ -1,5 +1,5 @@
 import history from '@/libs/history'
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import { HomeOutlined, ShopOutlined, UsergroupAddOutlined, ShoppingOutlined } from '@ant-design/icons'
 import { Layout, Menu } from 'antd'
 import { useParams } from 'react-router-dom'
@@ -12,14 +12,14 @@ const { Sider } = Layout
 const { SubMenu } = Menu
 
 const SideMenu = () => {
-  const [collapsed, setCollapsed] = React.useState(false)
+  const [collapsed, setCollapsed] = useState(false)
   const { page, subPage, subPage2 } = useParams<{ page: string; subPage?: string; subPage2?: string }>()
 
-  const handleCollapse = React.useCallback((value: boolean) => {
+  const handleCollapse = useCallback((value: boolean) => {
     setCollapsed(value)
   }, [])
 
-  const handleSelect = React.useCallback((param: any) => {
+  const handleSelect = useCallback((param: any) => {
     history.push(`/main/${param.key}`)
   }, [])
 
@@ -46,7 +46,7 @@ const SideMenu = () => {
         )}
         {/* 管理员配置 */}
         {RoleStore.currentRole?.role === AuthType.ADMIN && (
-          <Menu.Item key="admin/dataquery">
+          <Menu.Item key="dataquery">
             <span>
               <ShopOutlined />
               <span>数据查询</span>

@@ -8,12 +8,14 @@ import Sign from './sign/routes'
 import Sole from './sole/routes'
 import Flexible from './flexible/routes'
 import Report from './report/routes'
+import DataQueryRoute from './dataQuery/routes'
 
 const RoutesAuth = () => {
   return (
     <Switch>
       <Route path="/main/dashboard" component={createLazy(() => import('@/pages/dashboard'))} />
       <Route path="/main/admin" component={Admin} />
+      <Route path="/main/dataquery" component={DataQueryRoute} />
       <Route path="/main/payroll" component={Payroll} />
       <Route path="/main/finance" component={Finance} />
       <Route path="/main/sign" component={Sign} />

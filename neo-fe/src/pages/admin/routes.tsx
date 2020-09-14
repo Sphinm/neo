@@ -1,6 +1,5 @@
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router'
-import { DataQuery } from './dataQuery'
 // 用户信息
 import { Merchant } from './userInfo/merchant'
 import { Company } from './userInfo/company'
@@ -14,7 +13,6 @@ import { UploadTaxReceipts } from './review/uploadTaxReceipts'
 const Admin = () => {
   return (
     <Switch>
-      <Route path="/main/admin/dataquery" component={DataQuery} />
       <Route exact path="/main/admin/merchant" component={Merchant} />
       <Route exact path="/main/admin/company" component={Company} />
       <Route exact path="/main/admin/employee" component={Employee} />
