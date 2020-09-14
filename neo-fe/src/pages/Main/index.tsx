@@ -8,7 +8,7 @@ import { Layout } from 'antd'
 import { useObserver } from 'mobx-react'
 import styles from './index.styl'
 
-const { Header, Content } = Layout
+const { Header, Footer, Content } = Layout
 
 const Main = () => {
   const [authenticating, setAuthenticating] = React.useState(true)
@@ -30,7 +30,7 @@ const Main = () => {
             {authenticating ? <Loading /> : <RoutesAuth />}
           </div>
         </Content>
-        {/* <Footer style={{ textAlign: 'center' }}>NEO ©2020 Created by XXX</Footer> */}
+        <Footer style={{ textAlign: 'center' }}>NEO ©2020 Created by XXX</Footer>
       </Layout>
     </Layout>
   ))
