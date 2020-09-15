@@ -145,7 +145,7 @@ export const PayrollDetails = () => {
   }
 
   return (
-    <Card title="人员发放明细" style={{ marginTop: 20 }}>
+    <Card title="人员发放明细">
       <Form form={form}>
         <Row gutter={24}>
           <Col span={7}>

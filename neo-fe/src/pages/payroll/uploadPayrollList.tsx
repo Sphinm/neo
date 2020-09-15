@@ -3,6 +3,7 @@ import { Card, Select, Button, Space, message, Upload, Table } from 'antd'
 import { taskOptions } from '@/setting/constantVar'
 import { CloudUploadOutlined } from '@ant-design/icons'
 import style from './index.styl'
+import { downloadExcel } from '@/libs/download-excel'
 
 export const UploadPayrollList = () => {
   const props = {
@@ -133,12 +134,18 @@ export const UploadPayrollList = () => {
     },
   ]
 
+  const downLoadReport = async () => {
+    downloadExcel(data)
+  }
+
   return (
     <>
       <Card className={style['header-payroll']}>
         <div className={style['left-btn']}>
           <Space size="middle">
-            <Button type="default">下载模板</Button>
+            <Button type="default" onClick={downLoadReport}>
+              下载模板
+            </Button>
             <Select allowClear placeholder="请先选择一个任务">
               {taskOptions.map(item => (
                 <Select.Option key={item} value={item}>

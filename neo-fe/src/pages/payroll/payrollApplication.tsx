@@ -144,7 +144,7 @@ export const PayrollApplication = () => {
   }
 
   return (
-    <Card title="申请发放" style={{ marginTop: 20 }}>
+    <Card title="申请发放">
       <Table bordered rowKey="name" columns={columns as any} dataSource={data} />
     </Card>
   )

@@ -106,7 +106,7 @@ export const PayrollRecord = () => {
   ]
 
   return (
-    <Card title="发放记录" style={{ marginTop: 20 }}>
+    <Card title="发放记录">
       <Table bordered rowKey="name" columns={columns as any} dataSource={data} />
     </Card>
   )
