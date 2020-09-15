@@ -48,7 +48,8 @@
     "stylus": "^0.54.8",
     "stylus-loader": "^3.0.2",
     "typescript": "^3.8.3",
-    "webpack-dashboard": "^3.2.1"
+    "webpack-dashboard": "^3.2.1",
+    "xlsx": "^0.16.7"
   },
   "husky": {
     "hooks": {
