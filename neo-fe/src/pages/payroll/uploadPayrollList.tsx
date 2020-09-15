@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Card, Select, Button, Space, message, Upload, Table } from 'antd'
 import { taskOptions } from '@/setting/constantVar'
 import { CloudUploadOutlined } from '@ant-design/icons'
@@ -6,6 +6,8 @@ import style from './index.styl'
 import { downloadExcel } from '@/libs/download-excel'
 
 export const UploadPayrollList = () => {
+  const [task, setTask] = useState('')
+
   const props = {
     name: 'file',
     action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
@@ -138,6 +140,10 @@ export const UploadPayrollList = () => {
     downloadExcel(data)
   }
 
+  const changeTask = (value: string) => {
+    setTask(value)
+  }
+
   return (
     <>
       <Card className={style['header-payroll']}>
@@ -146,15 +152,17 @@ export const UploadPayrollList = () => {
             <Button type="default" onClick={downLoadReport}>
               下载模板
             </Button>
-            <Select allowClear placeholder="请先选择一个任务">
+
+            <Select allowClear placeholder="请先选择一个任务" onChange={changeTask}>
               {taskOptions.map(item => (
                 <Select.Option key={item} value={item}>
                   {item}
                 </Select.Option>
               ))}
             </Select>
+
             <Upload {...props}>
-              <Button type="primary" icon={<CloudUploadOutlined />}>
+              <Button disabled={!task?.length} type="primary" icon={<CloudUploadOutlined />}>
                 上传发放列表
               </Button>
             </Upload>
@@ -162,7 +170,11 @@ export const UploadPayrollList = () => {
         </div>
         <div className={style['right-text']}>
           {textMessage.map(item => {
-            return <div className={style['item-text']}>{item}</div>
+            return (
+              <div key={item} className={style['item-text']}>
+                {item}
+              </div>
+            )
           })}
         </div>
       </Card>
