@@ -64,7 +64,7 @@ const SideMenu = () => {
             }
           >
             <Menu.Item key="admin/merchant">代理商档案</Menu.Item>
-            <Menu.Item key="admin/company">公司客户档案</Menu.Item>
+            <Menu.Item key="admin/company">公司档案</Menu.Item>
             <Menu.Item key="admin/employee">员工档案</Menu.Item>
           </SubMenu>
         )}
@@ -78,10 +78,12 @@ const SideMenu = () => {
               </span>
             }
           >
-            <Menu.Item key="admin/reviewbill">开票记录</Menu.Item>
-            <Menu.Item key="admin/reviewpayroll">发放记录</Menu.Item>
-            <Menu.Item key="admin/reviewrecharge">充值记录</Menu.Item>
-            <Menu.Item key="admin/reviewuploadtax">完税凭证</Menu.Item>
+            <Menu.Item key="admin/reviewrecharge">公司充值审核</Menu.Item>
+            <Menu.Item key="admin/reviewbill">公司开票记录</Menu.Item>
+            <Menu.Item key="admin/reviewpayroll">公司发放记录</Menu.Item>
+            <Menu.Item key="admin/reviewadd">代理商新增客户审核</Menu.Item>
+            <Menu.Item key="admin/withdraw">代理商提现审核</Menu.Item>
+            <Menu.Item key="admin/reviewuploadtax">上传完税凭证</Menu.Item>
           </SubMenu>
         )}
 
