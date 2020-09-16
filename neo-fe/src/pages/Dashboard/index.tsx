@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { RoleStore } from '@/store/roleStore'
 import { useObserver } from 'mobx-react'
-import { Card, Button, Row, Col, Descriptions, Modal, Input } from 'antd'
+import { Card, Button, Row, Col, Descriptions, Modal, Input, Form } from 'antd'
 import history from '@/libs/history'
 import echarts from 'echarts/lib/echarts'
 import 'echarts/lib/chart/line'
 import { options } from '@/setting/echartConfig'
 import style from './index.styl'
-import { AuthType } from '@/enums/role'
 
 const userInfo = [
   { key: 'userName', filed: '对接人', value: '测试111' },
@@ -29,10 +28,10 @@ type CanvasType = HTMLDivElement | HTMLCanvasElement
 
 // 员工无法看到该页面
 const Dashboard = () => {
+  const [form] = Form.useForm()
   const chartRef = useRef<CanvasType>(null)
   const [visible, setVisible] = useState(false)
   let chartInstance: echarts.ECharts | null = null
-  const role: keyof typeof AuthType = RoleStore.currentRole?.role
 
   const renderChart = () => {
     const renderedInstance = echarts.getInstanceByDom(chartRef?.current as CanvasType)
@@ -67,7 +66,7 @@ const Dashboard = () => {
 
   return useObserver(() => (
     <>
-      {role !== 'ADMIN' && (
+      {RoleStore.currentRole?.role !== 'ADMIN' && (
         <Card>
           <div className={style['money-title']}>账户可用余额</div>
           <div className={style['money']}>￥100.24</div>
@@ -83,9 +82,9 @@ const Dashboard = () => {
       )}
       <div className={style['card-wrapper']}>
         <Row gutter={24}>
-          <Col span={role !== 'ADMIN' ? 18 : 24}>
+          <Col span={RoleStore.currentRole?.role !== 'ADMIN' ? 18 : 24}>
             <Card>
-              {role === 'ADMIN' && (
+              {RoleStore.currentRole?.role === 'ADMIN' && (
                 <Button className={style['edit']} type="primary" onClick={() => setVisible(true)}>
                   编辑
                 </Button>
@@ -104,7 +103,7 @@ const Dashboard = () => {
               <div style={{ width: '100%', height: '300px' }} ref={chartRef as any} />
             </Card>
           </Col>
-          {role !== 'ADMIN' && (
+          {RoleStore.currentRole?.role !== 'ADMIN' && (
             <Col span={6}>
               <Card title="公告">
                 由于银行对公转账的相关限制，费用发放在工作日内：周一 至 周五 09:00 ~
@@ -126,6 +125,8 @@ const Dashboard = () => {
         getContainer={false}
         title="编辑用户信息"
         visible={visible}
+        onOk={handleOk}
+        onCancel={() => setVisible(false)}
         footer={[
           <Button key="back" onClick={() => setVisible(false)}>
             取消
@@ -135,7 +136,38 @@ const Dashboard = () => {
           </Button>,
         ]}
       >
-        <Input style={{ flex: 1, marginLeft: 20 }} placeholder="请输入手机号"></Input>
+        <Form form={form} initialValues={userInfo}>
+          <Form.Item label="对接人" name="username">
+            <Input placeholder="请输入手机号"></Input>
+          </Form.Item>
+          <Form.Item label="对接手机号" name="username">
+            <Input placeholder="请输入手机号"></Input>
+          </Form.Item>
+          <Form.Item label="公司名称" name="username">
+            <Input placeholder="请输入手机号"></Input>
+          </Form.Item>
+          <Form.Item label="公司税号" name="username">
+            <Input placeholder="请输入手机号"></Input>
+          </Form.Item>
+          <Form.Item label="对接人" name="username">
+            <Input placeholder="请输入手机号"></Input>
+          </Form.Item>
+          <Form.Item label="对接人" name="username">
+            <Input placeholder="请输入手机号"></Input>
+          </Form.Item>
+          <Form.Item label="对接人" name="username">
+            <Input placeholder="请输入手机号"></Input>
+          </Form.Item>
+          <Form.Item label="对接人" name="username">
+            <Input placeholder="请输入手机号"></Input>
+          </Form.Item>
+          <Form.Item label="对接人" name="username">
+            <Input placeholder="请输入手机号"></Input>
+          </Form.Item>
+          <Form.Item label="对接人" name="username">
+            <Input placeholder="请输入手机号"></Input>
+          </Form.Item>
+        </Form>
       </Modal>
     </>
   ))

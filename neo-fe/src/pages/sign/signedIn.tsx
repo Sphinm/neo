@@ -154,6 +154,8 @@ export const SignedIn = () => {
       <Modal
         title="修改手机号"
         visible={visible}
+        onOk={handleOk}
+        onCancel={() => setVisible(false)}
         footer={[
           <Button key="back" onClick={() => setVisible(false)}>
             取消
