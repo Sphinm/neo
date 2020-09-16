@@ -197,7 +197,18 @@ export const UnSigned = () => {
 
         <Table rowSelection={rowSelection} bordered rowKey="name" columns={columns as any} dataSource={data} />
       </Card>
-      <Modal title="修改手机号" visible={visible} onOk={handleOk} onCancel={() => setVisible(false)}>
+      <Modal
+        title="修改手机号"
+        visible={visible}
+        footer={[
+          <Button key="back" onClick={() => setVisible(false)}>
+            取消
+          </Button>,
+          <Button key="submit" type="primary" onClick={handleOk}>
+            提交
+          </Button>,
+        ]}
+      >
         <div className={styles['fix-mobile']}>
           <span>修改手机号: </span>
           <Input style={{ flex: 1, marginLeft: 20 }} placeholder="请输入手机号"></Input>
