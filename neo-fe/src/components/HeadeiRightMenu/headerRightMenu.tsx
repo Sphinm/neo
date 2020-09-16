@@ -31,6 +31,12 @@ const HeaderRightMenu = () => {
   const handleOk = async () => {
     const values = await form.validateFields()
     console.log(11, values)
+    form.resetFields()
+    setVisible(false)
+  }
+
+  const cancelText = () => {
+    form.resetFields()
     setVisible(false)
   }
 
@@ -49,7 +55,7 @@ const HeaderRightMenu = () => {
         onOk={handleOk}
         onCancel={() => setVisible(false)}
         footer={[
-          <Button key="back" onClick={() => setVisible(false)}>
+          <Button key="back" onClick={cancelText}>
             取消
           </Button>,
           <Button key="submit" type="primary" onClick={handleOk}>
