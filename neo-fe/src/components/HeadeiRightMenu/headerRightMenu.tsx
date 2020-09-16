@@ -23,8 +23,8 @@ const HeaderRightMenu = () => {
 
   const menu = (
     <Menu>
-      <Menu.Item onClick={logoutBoss}>退出</Menu.Item>
       <Menu.Item onClick={() => setVisible(true)}>更改密码</Menu.Item>
+      <Menu.Item onClick={logoutBoss}>退出</Menu.Item>
     </Menu>
   )
 
