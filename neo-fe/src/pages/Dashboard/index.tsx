@@ -44,7 +44,7 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    renderChart()
+    RoleStore.currentRole?.role !== 'ADMIN' && renderChart()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -60,7 +60,9 @@ const Dashboard = () => {
     history.push('/main/finance/recharge-records')
   }
 
-  const handleOk = () => {
+  const handleOk = async () => {
+    const values = await form.validateFields()
+    console.log(11, values)
     setVisible(false)
   }
 
@@ -99,8 +101,12 @@ const Dashboard = () => {
                 })}
               </Descriptions>
               {/* Echart */}
-              <div className={style['canvas-title']}>最近一个月发放情况</div>
-              <div style={{ width: '100%', height: '300px' }} ref={chartRef as any} />
+              {RoleStore.currentRole?.role !== 'ADMIN' && (
+                <>
+                  <div className={style['canvas-title']}>最近一个月发放情况</div>
+                  <div style={{ width: '100%', height: '300px' }} ref={chartRef as any} />
+                </>
+              )}
             </Card>
           </Col>
           {RoleStore.currentRole?.role !== 'ADMIN' && (
@@ -131,7 +137,7 @@ const Dashboard = () => {
           <Button key="back" onClick={() => setVisible(false)}>
             取消
           </Button>,
-          <Button key="submit" type="primary" onClick={handleOk}>
+          <Button key="submit" htmlType="submit" type="primary" onClick={handleOk}>
             提交
           </Button>,
         ]}
@@ -140,16 +146,16 @@ const Dashboard = () => {
           <Form.Item label="对接人" name="username">
             <Input placeholder="请输入手机号"></Input>
           </Form.Item>
-          <Form.Item label="对接手机号" name="username">
+          <Form.Item label="对接手机号" name="username1">
             <Input placeholder="请输入手机号"></Input>
           </Form.Item>
-          <Form.Item label="公司名称" name="username">
+          <Form.Item label="公司名称" name="username2">
             <Input placeholder="请输入手机号"></Input>
           </Form.Item>
-          <Form.Item label="公司税号" name="username">
+          <Form.Item label="公司税号" name="username3">
             <Input placeholder="请输入手机号"></Input>
           </Form.Item>
-          <Form.Item label="对接人" name="username">
+          <Form.Item label="对接人" name="username4">
             <Input placeholder="请输入手机号"></Input>
           </Form.Item>
           <Form.Item label="对接人" name="username">
