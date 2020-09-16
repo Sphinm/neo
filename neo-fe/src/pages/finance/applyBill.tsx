@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, Table, Button, Cascader, Select, Form, Input } from 'antd'
+import { Card, Table, Button, Cascader, Select, Form, Input, Divider } from 'antd'
 import { billOptions, typeOptions } from '@/setting/constantVar'
 import styles from './index.styl'
 
@@ -63,6 +63,42 @@ export const ApplyBill = () => {
       address: 6000,
       tags: ['loser'],
     },
+    {
+      name: 'John Brown',
+      age: 32,
+      address: 100,
+      tags: ['nice', 'developer'],
+    },
+    {
+      name: 'Jim Green',
+      age: 42,
+      address: 6000,
+      tags: ['loser'],
+    },
+    {
+      name: 'John Brown',
+      age: 32,
+      address: 100,
+      tags: ['nice', 'developer'],
+    },
+    {
+      name: 'Jim Green',
+      age: 42,
+      address: 6000,
+      tags: ['loser'],
+    },
+    {
+      name: 'John Brown',
+      age: 32,
+      address: 100,
+      tags: ['nice', 'developer'],
+    },
+    {
+      name: 'Jim Green',
+      age: 42,
+      address: 6000,
+      tags: ['loser'],
+    },
   ]
 
   const onBillChange = (value: any) => {
@@ -86,13 +122,14 @@ export const ApplyBill = () => {
       <Table
         rowSelection={rowSelection}
         pagination={false}
-        style={{ height: 160 }}
+        className={styles['bill-table']}
         size="small"
         bordered
         rowKey="name"
         columns={columns as any}
         dataSource={data}
       />
+      <Divider />
       <Form className={styles['bill-form']} form={form} {...layout} onFinish={onFinish}>
         <Form.Item label="开票内容" name="username">
           <Cascader options={billOptions} onChange={onBillChange} placeholder="请选择开票内容"></Cascader>
