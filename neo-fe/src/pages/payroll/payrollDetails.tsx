@@ -150,7 +150,7 @@ export const PayrollDetails = () => {
         <Row gutter={24}>
           <Col span={7}>
             <Form.Item name="idcard">
-              <Search placeholder="身份证" enterButton="Search" onSearch={value => console.log(value)} />
+              <Search placeholder="身份证" enterButton="搜索" onSearch={value => console.log(value)} />
             </Form.Item>
           </Col>
           <Col span={8}>

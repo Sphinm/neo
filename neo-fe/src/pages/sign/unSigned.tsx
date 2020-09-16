@@ -149,10 +149,6 @@ export const UnSigned = () => {
     },
   ]
 
-  // const handleSelectRow = (record: any) => {
-  //   console.log('handleSelectRow', record)
-  // }
-
   const deleteItem = (record: any) => {
     console.log('deleteItem', record)
   }
@@ -186,7 +182,7 @@ export const UnSigned = () => {
             提醒签约
           </Button>
 
-          <Search placeholder="身份证" enterButton="Search" onSearch={value => console.log(value)} />
+          <Search placeholder="身份证" enterButton="搜索" onSearch={value => console.log(value)} />
 
           <Button type="default" onClick={downLoadReport}>
             下载模板
