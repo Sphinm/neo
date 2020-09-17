@@ -7,6 +7,7 @@ import echarts from 'echarts/lib/echarts'
 import 'echarts/lib/chart/line'
 import { options } from '@/setting/echartConfig'
 import style from './index.styl'
+import { AuthType } from '@/enums/role'
 
 const userInfo = [
   { key: 'userName', filed: '对接人', value: '测试111' },
@@ -22,6 +23,12 @@ const userInfo = [
   { key: 'mailingAddress', filed: '收件地址', value: '上海市闵行区剑川路951号5幢507室' },
   { key: 'bankName', filed: '开户行', value: '上海银行江川路支行' },
   { key: 'bankCardNo', filed: '银行账号', value: '620522002192085991' },
+]
+
+const textMessage = [
+  '1. 我司只接受 6% 服务费专票',
+  '2. 代理商同一手机号可同时开通代理商账户和用人单位账户',
+  '3. 我司收到发票后 1-3 个工作日发放佣金',
 ]
 
 type CanvasType = HTMLDivElement | HTMLCanvasElement
@@ -53,11 +60,19 @@ const Dashboard = () => {
   }, [])
 
   const goFinance = () => {
-    history.push('/main/finance/recharge')
+    if (RoleStore.currentRole?.role === AuthType.MERCHANT) {
+      history.push('/main/finance/withdraw')
+    } else {
+      history.push('/main/finance/recharge')
+    }
   }
 
   const goFinanceList = () => {
-    history.push('/main/finance/recharge-records')
+    if (RoleStore.currentRole?.role === AuthType.MERCHANT) {
+      history.push('/main/flexible/rebates')
+    } else {
+      history.push('/main/finance/recharge-records')
+    }
   }
 
   const handleOk = async () => {
@@ -69,16 +84,26 @@ const Dashboard = () => {
   return useObserver(() => (
     <>
       {RoleStore.currentRole?.role !== 'ADMIN' && (
-        <Card>
+        <Card className={style['dash-header']}>
           <div className={style['money-title']}>账户可用余额</div>
           <div className={style['money']}>￥100.24</div>
           <div className={style['button-group']}>
             <Button type="primary" onClick={goFinance}>
-              立即充值
+              {RoleStore.currentRole?.role === AuthType.MERCHANT ? '申请提现' : '立即充值'}
             </Button>
             <Button type="default" className={style['button-right']} onClick={goFinanceList}>
               查看明细
             </Button>
+          </div>
+          <div className={style['right-text']}>
+            {RoleStore.currentRole?.role === AuthType.MERCHANT &&
+              textMessage.map(item => {
+                return (
+                  <div key={item} className={style['item-text']}>
+                    {item}
+                  </div>
+                )
+              })}
           </div>
         </Card>
       )}
@@ -103,7 +128,9 @@ const Dashboard = () => {
               {/* Echart */}
               {RoleStore.currentRole?.role !== 'ADMIN' && (
                 <>
-                  <div className={style['canvas-title']}>最近一个月发放情况</div>
+                  <div className={style['canvas-title']}>
+                    {RoleStore.currentRole?.role === AuthType.COMPANY ? '最近一个月发放情况' : '最近一个月返佣情况'}
+                  </div>
                   <div style={{ width: '100%', height: '300px' }} ref={chartRef as any} />
                 </>
               )}
@@ -111,16 +138,22 @@ const Dashboard = () => {
           </Col>
           {RoleStore.currentRole?.role !== 'ADMIN' && (
             <Col span={6}>
-              <Card title="公告">
-                由于银行对公转账的相关限制，费用发放在工作日内：周一 至 周五 09:00 ~
-                16:00之间进行，超过该时间顺延到第二个工作日办理，如需按时发放请提前做好相关工作准备。
-              </Card>
+              {RoleStore.currentRole?.role === AuthType.COMPANY && (
+                <Card title="公告">
+                  由于银行对公转账的相关限制，费用发放在工作日内：周一 至 周五 09:00 ~
+                  16:00之间进行，超过该时间顺延到第二个工作日办理，如需按时发放请提前做好相关工作准备。
+                </Card>
+              )}
               <Card style={{ margin: '20px 0' }}>
-                <div className={style['money-title']}>最近一个月发放金额</div>
+                <div className={style['money-title']}>
+                  {RoleStore.currentRole?.role === AuthType.COMPANY ? '最近一个月发放金额' : '最近一个月返佣金额'}
+                </div>
                 <div className={style['money']}>￥100.24 元</div>
               </Card>
               <Card>
-                <div className={style['money-title']}>最近一个月发放人数</div>
+                <div className={style['money-title']}>
+                  {RoleStore.currentRole?.role === AuthType.COMPANY ? '最近一个月发放人数' : '最近一个月返佣人数'}
+                </div>
                 <div className={style['money']}>￥100 人</div>
               </Card>
             </Col>

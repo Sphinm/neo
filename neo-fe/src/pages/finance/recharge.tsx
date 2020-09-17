@@ -100,7 +100,7 @@ export const Recharge = () => {
           <Form.Item label="实际充值金额" name="leftmoney">
             <Input placeholder="打款金额（元）" disabled />
           </Form.Item>
-          <Form.Item label="充值后可用余额" hidden name="totalmoney">
+          <Form.Item label="充值后可用余额" name="totalmoney">
             <span style={{ fontSize: 20, fontWeight: 500 }}>{totalMoney}</span>
           </Form.Item>
           <Form.Item style={{ marginLeft: 200 }}>
