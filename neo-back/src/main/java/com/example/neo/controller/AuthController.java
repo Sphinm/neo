@@ -66,8 +66,8 @@ public class AuthController {
 
     @UserLoginToken
     @PostMapping("/changePassword")
-    public ResponseBean changePassword(@RequestBody IChangePassword changePassword) {
-
+    public ResponseBean changePassword(@RequestBody IChangePassword pwd) {
+        AuthService.changePwd(pwd);
         return ResponseBean.success();
     }
 
