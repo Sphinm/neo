@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.example.neo.annotation.UserLoginToken;
 import com.example.neo.constant.Constants;
+import com.example.neo.entity.params.IChangePassword;
 import com.example.neo.entity.params.ILogin;
 import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.User;
@@ -61,6 +62,13 @@ public class AuthController {
     @PostMapping("/logout")
     public void logout() {
         AuthService.logout();
+    }
+
+    @UserLoginToken
+    @PostMapping("/changePassword")
+    public ResponseBean changePassword(@RequestBody IChangePassword changePassword) {
+
+        return ResponseBean.success();
     }
 
 }
