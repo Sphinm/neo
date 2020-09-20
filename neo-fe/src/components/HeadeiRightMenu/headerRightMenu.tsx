@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Menu, Dropdown, Avatar, Modal, Button, Input, Form } from 'antd'
+import { Menu, Dropdown, Avatar, Modal, Button, Input, Form, notification } from 'antd'
 import { UserOutlined, DownOutlined } from '@ant-design/icons'
 import { RoleStore } from '@/store/roleStore'
-import { logout } from '@/apis/auth'
+import { changePwd, logout } from '@/apis/auth'
 import style from './index.styl'
 import { useObserver } from 'mobx-react'
 import { handleError } from '@/libs/axios'
@@ -31,8 +31,33 @@ const HeaderRightMenu = () => {
   const handleOk = async () => {
     const values = await form.validateFields()
     console.log(11, values)
-    form.resetFields()
-    setVisible(false)
+    if (values.oldPwd === values.newPwd) {
+      notification.error({
+        message: '新老密码不能相同'
+      })
+      return 
+    }
+    if (values.newPwd !== values.checkPwd) {
+      notification.error({
+        message: '确认密码错误，请检查重试'
+      })
+      return 
+    }
+    try {
+      const params = {
+        oldPwd: values.oldPwd,
+        newPwd: values.newPwd
+      }
+      const { data } = await changePwd(params)
+      console.log(22,data)
+      form.resetFields()
+      setVisible(false)
+      notification.success({
+        message: '更改密码成功'
+      })
+    } catch (e) {
+      handleError(e)
+    }
   }
 
   const cancelText = () => {
@@ -64,7 +89,7 @@ const HeaderRightMenu = () => {
         ]}
       >
         <Form form={form}>
-          <Form.Item label="初始密码" name="originPwd">
+          <Form.Item label="初始密码" name="oldPwd">
             <Input placeholder="请输入初始密码"></Input>
           </Form.Item>
           <Form.Item label="新的密码" name="newPwd">

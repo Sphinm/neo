@@ -28,9 +28,11 @@ public class AuthController {
     @Autowired
     TokenUtils TokenUtils;
 
-    @UserLoginToken
-    @GetMapping("/me")
-    public ResponseBean getUserInfo()  {
+    /**
+     * 从 token 中获取用户信息
+     * @return
+     */
+    private String fetchUserId() {
         String token = CookieUtils.getRaw(Constants.TOKEN_KEY);
         String userId;
         try {
@@ -38,8 +40,13 @@ public class AuthController {
         } catch (JWTDecodeException e) {
             throw new RuntimeException("401, ", e);
         }
+        return userId;
+    }
 
-        User user = AuthService.findByUserId(userId);
+    @UserLoginToken
+    @GetMapping("/me")
+    public ResponseBean getUserInfo()  {
+        User user = AuthService.findByUserId(fetchUserId());
         return ResponseBean.success(user);
     }
 
@@ -65,9 +72,9 @@ public class AuthController {
     }
 
     @UserLoginToken
-    @PostMapping("/changePassword")
+    @PostMapping("/change/password")
     public ResponseBean changePassword(@RequestBody IChangePassword pwd) {
-        AuthService.changePwd(pwd);
+        AuthService.changePwd(pwd, fetchUserId());
         return ResponseBean.success();
     }
 

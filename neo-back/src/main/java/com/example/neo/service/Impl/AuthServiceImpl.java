@@ -25,8 +25,8 @@ public class AuthServiceImpl implements AuthService {
         CookieUtils.clean(Constants.TOKEN_KEY);
     }
 
-    public void changePwd(IChangePassword pwd) {
-        log.info("{} ", pwd.getOldPwd(), pwd.getNewPwd());
+    public void changePwd(IChangePassword pwd, String userId) {
+        UserMapper.changePassword(pwd, userId);
     }
 
     public User findByUserId(String userId) {

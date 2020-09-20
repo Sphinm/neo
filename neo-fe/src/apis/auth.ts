@@ -10,6 +10,11 @@ export const logout = () => {
   return ajax.post(`/logout`)
 }
 
+/** 更改密码 */
+export const changePwd = (params: { oldPwd: string; newPwd: string }) => {
+  return ajax.post(`/change/password`, params)
+}
+
 /** 获取用户信息 */
 export const fetchInfo = () => {
   return ajax.get(`/me`)

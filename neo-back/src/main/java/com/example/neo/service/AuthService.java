@@ -11,7 +11,7 @@ public interface AuthService {
 
     User registerUser(IRegister register);
 
-    void changePwd(IChangePassword pwd);
+    void changePwd(IChangePassword pwd, String userId);
 
     User findByUserId(String userId);
 }

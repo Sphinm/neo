@@ -6,6 +6,10 @@
       SELECT * FROM user where mobile = #{mobile}
     </select>
     <select id="findByUserId" resultType="com.example.neo.model.User">
-      SELECT id, user_id as userId, user_name as userName, mobile, password, status, role FROM user where user_id = #{userId}
+      SELECT * FROM user where user_id = #{userId}
     </select>
+
+    <update id="changePassword">
+        UPDATE user SET password = #{pwd.newPwd} WHERE user_id=#{userId}
+    </update>
 </mapper>

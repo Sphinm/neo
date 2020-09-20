@@ -9,7 +9,7 @@ CREATE TABLE `user`
     `mobile`     VARCHAR(20)    NOT NULL COMMENT '手机号/登录账号',
     `password`   VARCHAR(45)    NOT NULL DEFAULT '123456' COMMENT '登录密码',
     `status`     VARCHAR(20)    NOT NULL DEFAULT 'ENABLED' COMMENT 'ENABLED: 启用, DISABLED: 禁用',
-    `role`       VARCHAR(45)    NOT NULL COMMENT '用户权限',
+    `role`       VARCHAR(45)    NOT NULL COMMENT '用户权限 => ADMIN: 管理员, MERCHANT: 代理商, COMPANY: 公司, EMPLOYEE: 员工',
     PRIMARY KEY (`id`),
     KEY `u_idx_userid` (`user_id`),
     KEY `u_idx_username` (`user_name`),
