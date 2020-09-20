@@ -9,14 +9,15 @@ public class User {
     String userName;
     String mobile;
     String password;
-    String company;
-    Integer taxNumber;
-    String companyPhone;
-    String rate;
-    String industry;
-    String address;
-    String bank;
-    String bankAccount;
     String role;
-    Boolean enabled;
+    String status;
+//    String company;
+//    Integer taxNumber;
+//    String companyPhone;
+//    String rate;
+//    String industry;
+//    String address;
+//    String bank;
+//    String bankAccount;
+
 }
