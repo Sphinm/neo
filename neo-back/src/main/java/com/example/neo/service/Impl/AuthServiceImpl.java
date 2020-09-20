@@ -3,6 +3,7 @@ package com.example.neo.service.Impl;
 import com.example.neo.constant.Constants;
 import com.example.neo.entity.params.IChangePassword;
 import com.example.neo.entity.params.IRegister;
+import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.mapper.UserMapper;
 import com.example.neo.model.User;
 import com.example.neo.service.AuthService;
@@ -25,8 +26,16 @@ public class AuthServiceImpl implements AuthService {
         CookieUtils.clean(Constants.TOKEN_KEY);
     }
 
-    public void changePwd(IChangePassword pwd, String userId) {
+    public ResponseCodeEnum changePwd(IChangePassword pwd, String userId) {
+        User userInfo = findByUserId(userId);
+        if (!pwd.getOldPwd().equals(userInfo.getPassword())) {
+            return ResponseCodeEnum.INIT_PASSWORD_ERROR;
+        }
+        if (pwd.getOldPwd().equals(pwd.getNewPwd())) {
+            return ResponseCodeEnum.PASSWORD_EQUALS;
+        }
         UserMapper.changePassword(pwd, userId);
+        return ResponseCodeEnum.SUCCESS;
     }
 
     public User findByUserId(String userId) {

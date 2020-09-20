@@ -74,7 +74,13 @@ public class AuthController {
     @UserLoginToken
     @PostMapping("/change/password")
     public ResponseBean changePassword(@RequestBody IChangePassword pwd) {
-        AuthService.changePwd(pwd, fetchUserId());
+        ResponseCodeEnum code = AuthService.changePwd(pwd, fetchUserId());
+        if (code == ResponseCodeEnum.INIT_PASSWORD_ERROR) {
+            return ResponseBean.fail(ResponseCodeEnum.INIT_PASSWORD_ERROR);
+        }
+        if (code == ResponseCodeEnum.PASSWORD_EQUALS) {
+            return ResponseBean.fail(ResponseCodeEnum.PASSWORD_EQUALS);
+        }
         return ResponseBean.success();
     }
 

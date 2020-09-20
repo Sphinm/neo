@@ -5,6 +5,8 @@ public enum ResponseCodeEnum {
     SUCCESS("SUCCESS"),
     SERVER_ERROR("服务器错误"),
     PASSWORD_ERROR("登录失败，密码错误"),
+    INIT_PASSWORD_ERROR("初始密码错误"),
+    PASSWORD_EQUALS("密码重复，请确保修改后的密码和之前的不一样"),
     USER_NOTFOUND("登录失败，用户不存在"),
     PARAMETER_ERROR("system.validate.error"),
     NOT_FOUND("system.error.not_found"),

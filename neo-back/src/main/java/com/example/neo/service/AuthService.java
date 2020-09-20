@@ -2,6 +2,7 @@ package com.example.neo.service;
 
 import com.example.neo.entity.params.IChangePassword;
 import com.example.neo.entity.params.IRegister;
+import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.User;
 
 public interface AuthService {
@@ -11,7 +12,7 @@ public interface AuthService {
 
     User registerUser(IRegister register);
 
-    void changePwd(IChangePassword pwd, String userId);
+    ResponseCodeEnum changePwd(IChangePassword pwd, String userId);
 
     User findByUserId(String userId);
 }
