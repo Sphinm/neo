@@ -11,13 +11,6 @@ public class User {
     String password;
     String role;
     String status;
-//    String company;
-//    Integer taxNumber;
-//    String companyPhone;
-//    String rate;
-//    String industry;
-//    String address;
-//    String bank;
-//    String bankAccount;
+
 
 }

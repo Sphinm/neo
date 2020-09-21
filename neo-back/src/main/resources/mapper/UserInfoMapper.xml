@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.neo.mapper.UserMapper">
+
+    <select id="fetchUserInfo" resultType="com.example.neo.model.UserInfo">
+      SELECT * FROM user_info where user_id = #{userId}
+    </select>
+
+    <insert id="insertUserInfo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user_info (
+         user_id, user_name, company, tax_number, company_mobile, company_address, fixed_telephone, rate, industry, bank, bank_account,
+         receiver_name, receiver_mobile, receiver_address, create_timestamp, update_timestamp
+        ) VALUES (
+        #{user_id},#{user_name},#{company},#{tax_number},#{company_mobile},#{company_address},#{fixed_telephone},#{rate},
+        #{industry},#{bank},#{bank_account},#{receiver_name},#{receiver_mobile},#{receiver_address},#{create_timestamp},#{update_timestamp}
+        )
+    </insert>
+
+    <update id="updateUserInfo">
+        UPDATE user_info SET user_name=#{user_name},company=#{company},tax_number=#{tax_number},company_mobile=#{company_mobile},
+        company_address=#{company_address},fixed_telephone=#{fixed_telephone},rate=#{rate},industry=#{industry},bank=#{bank},
+        bank_account=#{bank_account},receiver_name=#{receiver_name},receiver_mobile=#{receiver_mobile},receiver_address=#{receiver_address},
+        create_timestamp=#{create_timestamp},update_timestamp=#{update_timestamp},
+        WHERE user_id=#{userId}
+    </update>
+</mapper>

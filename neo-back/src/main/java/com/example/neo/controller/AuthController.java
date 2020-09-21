@@ -30,9 +30,8 @@ public class AuthController {
 
     /**
      * 从 token 中获取用户信息
-     * @return
      */
-    private String fetchUserId() {
+    public String fetchUserId() {
         String token = CookieUtils.getRaw(Constants.TOKEN_KEY);
         String userId;
         try {
