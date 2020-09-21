@@ -1,10 +1,12 @@
 package com.example.neo.utils;
 
+import lombok.Data;
+
 public class ContextHolder {
     public static final String USER_ID = "USER_ID";
     private static final ThreadLocal<UserContext> userContext = new ThreadLocal<>();
 
-    public void setContext(UserContext context) {
+    public static void setContext(UserContext context) {
         userContext.set(context);
     }
 
@@ -16,11 +18,12 @@ public class ContextHolder {
         return null;
     }
 
-    static void remove() {
+    public static void remove() {
         userContext.remove();
     }
 
-    static class UserContext {
+    @Data
+    public static class UserContext {
         String userId;
     }
 }

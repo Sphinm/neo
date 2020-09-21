@@ -61,6 +61,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 try {
                     userId = JWT.decode(token).getAudience().get(0);
                     expiredDate = JWT.decode(token).getExpiresAt().getTime();
+
                 } catch (JWTDecodeException e) {
                     throw new Exception("401, ", e);
                 }
@@ -68,7 +69,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                     CookieUtils.clean(Constants.TOKEN_KEY);
                     throw new Exception("token 过期，请重新登录");
                 }
-
+//                ContextHolder.UserContext contextHolder = new ContextHolder.UserContext(userId);
+//                ContextHolder.setContext(contextHolder);
                 User user = AuthService.findByUserId(userId);
                 if (user == null) {
                     throw new Exception("用户不存在，请重新登录");

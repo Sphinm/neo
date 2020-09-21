@@ -8,6 +8,7 @@ import 'echarts/lib/chart/line'
 import { options } from '@/setting/echartConfig'
 import style from './index.styl'
 import { AuthType } from '@/enums/role'
+import { fetchUserInfo } from '@/apis/user'
 
 const userInfo = [
   { key: 'userName', filed: '对接人', value: '测试111' },
@@ -57,7 +58,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     RoleStore.fetchCurrentRole()
+    fetchUserDetailInfo()
   }, [])
+
+  const fetchUserDetailInfo = async () => {
+    try {
+      const { data } = await fetchUserInfo()
+      console.log(22, data)
+    } catch (error) {}
+  }
 
   const goFinance = () => {
     if (RoleStore.currentRole?.role === AuthType.MERCHANT) {
