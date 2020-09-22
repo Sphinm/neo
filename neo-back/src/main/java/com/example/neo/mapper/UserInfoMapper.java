@@ -10,5 +10,5 @@ public interface UserInfoMapper {
 
     void insertUserInfo(UserInfo userInfo);
 
-    UserInfo updateUserInfo(UserInfo userInfo);
+    void updateUserInfo(UserInfo userInfo);
 }

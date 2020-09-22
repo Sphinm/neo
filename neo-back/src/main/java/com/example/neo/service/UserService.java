@@ -29,6 +29,6 @@ public interface UserService {
     /**
      * 更新用户信息
      */
-    UserInfo updateUserInfo(UserInfo userInfo);
+    void updateUserInfo(UserInfo userInfo);
 
 }

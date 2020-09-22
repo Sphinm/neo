@@ -94,8 +94,8 @@ const Dashboard = () => {
     try {
       if (Object.keys(userInfo).length) {
         // update
-        const { data } = await updateUserInfo(values)
-        console.log(112, data)
+        await updateUserInfo({ ...userInfo, ...values })
+        fetchUserDetailInfo()
       } else {
         // insert
         await insertUserInfo(values)
@@ -104,6 +104,11 @@ const Dashboard = () => {
       handleError(error)
     }
     setVisible(false)
+  }
+
+  const openEditDialog = () => {
+    form.setFieldsValue({ ...userInfo })
+    setVisible(true)
   }
 
   return useObserver(() => (
@@ -137,7 +142,7 @@ const Dashboard = () => {
           <Col span={RoleStore.currentRole?.role !== 'ADMIN' ? 18 : 24}>
             <Card>
               {RoleStore.currentRole?.role === 'ADMIN' && (
-                <Button className={style['edit']} type="primary" onClick={() => setVisible(true)}>
+                <Button className={style['edit']} type="primary" onClick={openEditDialog}>
                   编辑用户信息
                 </Button>
               )}

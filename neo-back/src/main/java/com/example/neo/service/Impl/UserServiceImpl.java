@@ -84,8 +84,28 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void insertUserInfo(UserInfo userinfo) {
-        UserInfo userDo = new UserInfo();
+        UserInfo userDo = keepUserInfo(userinfo);
         userDo.setUserId(Snowflake.INSTANCE.nextId());
+        userDo.setCreateTimestamp(System.currentTimeMillis());
+        log.info("userInfo ===> {}", userDo);
+        userInfoMapper.insertUserInfo(userDo);
+    }
+
+    /**
+     * 更新用户信息
+     *
+     * @param userInfo
+     */
+    @Override
+    public void updateUserInfo(UserInfo userInfo) {
+        UserInfo userDo = keepUserInfo(userInfo);
+        userDo.setUserId(userInfo.getUserId());
+        userDo.setCreateTimestamp(userInfo.getCreateTimestamp());
+        userInfoMapper.updateUserInfo(userDo);
+    }
+
+    private UserInfo keepUserInfo(UserInfo userinfo) {
+        UserInfo userDo = new UserInfo();
         userDo.setUserName(userinfo.getUserName());
         userDo.setCompany(userinfo.getCompany());
         userDo.setTaxNumber(userinfo.getTaxNumber());
@@ -99,19 +119,7 @@ public class UserServiceImpl implements UserService {
         userDo.setReceiverName(userinfo.getReceiverName());
         userDo.setReceiverMobile(userinfo.getReceiverMobile());
         userDo.setReceiverAddress(userinfo.getReceiverAddress());
-        userDo.setCreateTimestamp(System.currentTimeMillis());
         userDo.setUpdateTimestamp(System.currentTimeMillis());
-        log.info("userInfo ===> {}", userDo);
-        userInfoMapper.insertUserInfo(userDo);
-    }
-
-    /**
-     * 更新用户信息
-     *
-     * @param userInfo
-     */
-    @Override
-    public UserInfo updateUserInfo(UserInfo userInfo) {
-        return userInfoMapper.updateUserInfo(userInfo);
+        return userDo;
     }
 }

@@ -45,8 +45,8 @@ public class UserController {
     @UserLoginToken
     @PostMapping("/update/userInfo")
     public ResponseBean updateUserInfo(@RequestBody UserInfo userInfo) {
-        UserInfo info = userService.updateUserInfo(userInfo);
-        return ResponseBean.success(info);
+        userService.updateUserInfo(userInfo);
+        return ResponseBean.success();
     }
 
 }
