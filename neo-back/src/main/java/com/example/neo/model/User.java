@@ -7,10 +7,12 @@ import lombok.Data;
 @Data
 public class User {
     String id;
-    long userId;
+    Long userId;
     String userName;
     String mobile;
     String password;
     UserTypeEnum role;
     UserStatusEnum status;
+    Long createTimestamp;
+    Long updateTimestamp;
 }

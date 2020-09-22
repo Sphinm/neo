@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class UserInfo {
     String id;
-    long userId;
+    Long userId;
     String userName;
     String company;
     String taxNumber;

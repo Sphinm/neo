@@ -11,7 +11,6 @@ import com.example.neo.service.UserService;
 import com.example.neo.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -29,30 +28,36 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 创建代理商和公司用户
-     * 也可以创建公司和员工（TODO）
+     * 也可以创建公司和员工
      * @param user
      */
     public void createUser(ICreateUser user, UserTypeEnum userType) {
         User userDto = new User();
         UserInfo userInfo = new UserInfo();
-        if (userType != UserTypeEnum.EMPLOYEE) {
-            userDto.setUserId(Snowflake.INSTANCE.nextId());
-            userDto.setStatus(UserStatusEnum.ENABLED);
-            userDto.setUserName(user.getUserName());
-            userDto.setMobile(user.getMobile());
-            userDto.setPassword("123456");
-            switch (userType) {
-                case ADMIN:
-                    userDto.setRole(UserTypeEnum.ADMIN);
-                    break;
-                case MERCHANT:
-                    userDto.setRole(UserTypeEnum.MERCHANT);
-                    break;
-                case COMPANY:
-                    userDto.setRole(UserTypeEnum.COMPANY);
-                    break;
-            }
 
+        userDto.setUserId(Snowflake.INSTANCE.nextId());
+        userDto.setStatus(UserStatusEnum.ENABLED);
+        userDto.setUserName(user.getUserName());
+        userDto.setMobile(user.getMobile());
+        userDto.setPassword("123456");
+        userDto.setCreateTimestamp(System.currentTimeMillis());
+        userDto.setUpdateTimestamp(System.currentTimeMillis());
+        switch (userType) {
+            case ADMIN:
+                userDto.setRole(UserTypeEnum.ADMIN);
+                break;
+            case MERCHANT:
+                userDto.setRole(UserTypeEnum.MERCHANT);
+                break;
+            case COMPANY:
+                userDto.setRole(UserTypeEnum.COMPANY);
+                break;
+            case EMPLOYEE:
+                userDto.setRole(UserTypeEnum.EMPLOYEE);
+                break;
+        }
+
+        if (userType != UserTypeEnum.EMPLOYEE) {
             userInfo.setUserId(Snowflake.INSTANCE.nextId());
             userInfo.setUserName(user.getUserName());
             userInfo.setCompany(user.getCompany());
@@ -67,15 +72,15 @@ public class UserServiceImpl implements UserService {
             userInfo.setReceiverName(user.getReceiverName());
             userInfo.setReceiverMobile(user.getReceiverMobile());
             userInfo.setReceiverAddress(user.getReceiverAddress());
-        } else {
-
         }
 
         try {
-//            userMapper
-            // TODO: 这里想把 user 信息存 user 表，userInfo 的详情存 userInfo 表
-        } catch (DuplicateKeyException e) {
-            throw new RuntimeException("username or email duplicated");
+            userMapper.createUser(userDto);
+            if (userType != UserTypeEnum.EMPLOYEE) {
+                userInfoMapper.insertUserInfo(userInfo);
+            }
+        } catch (RuntimeException e) {
+            throw new RuntimeException("用户创建失败");
         }
     }
 

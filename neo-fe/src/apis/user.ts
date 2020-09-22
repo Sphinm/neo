@@ -1,4 +1,10 @@
+import { AuthType } from '@/enums/role'
 import ajax from '@/libs/axios'
+
+/** 创建用户 */
+export const createNewUser = (params: any) => {
+  return ajax.post('/create/user', params)
+}
 
 /** 获取用户详细信息 */
 export const fetchUserInfo = () => {

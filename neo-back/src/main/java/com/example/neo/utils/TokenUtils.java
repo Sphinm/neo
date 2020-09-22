@@ -12,6 +12,6 @@ import java.util.Date;
 public class TokenUtils {
     public String getToken(User user) {
         Date expiredDate = new Date(System.currentTimeMillis() + Constants.TOKEN_EXPIRE_TIME);
-        return JWT.create().withAudience(user.getUserId()).withExpiresAt(expiredDate).sign(Algorithm.HMAC512(Constants.JWT_SECRET));
+        return JWT.create().withAudience(String.valueOf(user.getUserId())).withExpiresAt(expiredDate).sign(Algorithm.HMAC512(Constants.JWT_SECRET));
     }
 }
