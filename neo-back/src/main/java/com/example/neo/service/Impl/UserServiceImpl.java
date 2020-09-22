@@ -1,5 +1,6 @@
 package com.example.neo.service.Impl;
 
+import com.example.neo.entity.params.ICreateUser;
 import com.example.neo.mapper.UserInfoMapper;
 import com.example.neo.mapper.UserMapper;
 import com.example.neo.model.User;
@@ -23,8 +24,8 @@ public class UserServiceImpl implements UserService {
     }
 
     // TODO: 暂未实现
-    public User createUser(User user) {
-        return userMapper.findByUserId(user.getUserId());
+    public void createUser(ICreateUser user) {
+
     }
 
     /**

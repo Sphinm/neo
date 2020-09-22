@@ -1,6 +1,7 @@
 package com.example.neo.controller;
 
 import com.example.neo.annotation.UserLoginToken;
+import com.example.neo.entity.params.ICreateUser;
 import com.example.neo.model.UserInfo;
 import com.example.neo.service.UserService;
 import com.example.neo.utils.ContextHolder;
@@ -17,6 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     @Autowired
     UserService userService;
+
+    @UserLoginToken
+    @PostMapping("/create/user")
+    public ResponseBean createUser(@RequestBody ICreateUser user) {
+        userService.createUser(user);
+        return ResponseBean.success();
+    }
 
     @UserLoginToken
     @GetMapping("/get/userInfo")

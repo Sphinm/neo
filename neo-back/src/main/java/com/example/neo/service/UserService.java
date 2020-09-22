@@ -1,5 +1,6 @@
 package com.example.neo.service;
 
+import com.example.neo.entity.params.ICreateUser;
 import com.example.neo.model.User;
 import com.example.neo.model.UserInfo;
 
@@ -11,9 +12,9 @@ public interface UserService {
 
     /**
      * 创建新用户
-     * @param user
+     * admin 用户无法创建
      */
-    User createUser(User user);
+    void createUser(ICreateUser user);
 
     /**
      * 根据 userId 获取用户信息

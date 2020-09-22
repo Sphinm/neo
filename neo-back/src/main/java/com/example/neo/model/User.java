@@ -11,6 +11,4 @@ public class User {
     String password;
     String role;
     String status;
-
-
 }
