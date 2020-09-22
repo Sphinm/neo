@@ -58,27 +58,11 @@ public class UserServiceImpl implements UserService {
         }
 
         if (userType != UserTypeEnum.EMPLOYEE) {
-            userInfo.setUserId(Snowflake.INSTANCE.nextId());
-            userInfo.setUserName(user.getUserName());
-            userInfo.setCompany(user.getCompany());
-            userInfo.setTaxNumber(user.getTaxNumber());
-            userInfo.setCompanyMobile(user.getCompanyMobile());
-            userInfo.setCompanyAddress(user.getCompanyAddress());
-            userInfo.setFixedTelephone(user.getFixedTelephone());
-            userInfo.setRate(user.getRate());
-            userInfo.setIndustry(user.getIndustry());
-            userInfo.setBank(user.getBank());
-            userInfo.setBankAccount(user.getBankAccount());
-            userInfo.setReceiverName(user.getReceiverName());
-            userInfo.setReceiverMobile(user.getReceiverMobile());
-            userInfo.setReceiverAddress(user.getReceiverAddress());
+            insertUserInfo(userInfo);
         }
 
         try {
             userMapper.createUser(userDto);
-            if (userType != UserTypeEnum.EMPLOYEE) {
-                userInfoMapper.insertUserInfo(userInfo);
-            }
         } catch (RuntimeException e) {
             throw new RuntimeException("用户创建失败");
         }
@@ -97,11 +81,28 @@ public class UserServiceImpl implements UserService {
     /**
      * 添加用户信息
      *
-     * @param userInfo
      */
     @Override
-    public void insertUserInfo(UserInfo userInfo) {
-        userInfoMapper.insertUserInfo(userInfo);
+    public void insertUserInfo(UserInfo userinfo) {
+        UserInfo userDo = new UserInfo();
+        userDo.setUserId(Snowflake.INSTANCE.nextId());
+        userDo.setUserName(userinfo.getUserName());
+        userDo.setCompany(userinfo.getCompany());
+        userDo.setTaxNumber(userinfo.getTaxNumber());
+        userDo.setCompanyMobile(userinfo.getCompanyMobile());
+        userDo.setCompanyAddress(userinfo.getCompanyAddress());
+        userDo.setFixedTelephone(userinfo.getFixedTelephone());
+        userDo.setRate(userinfo.getRate());
+        userDo.setIndustry(userinfo.getIndustry());
+        userDo.setBank(userinfo.getBank());
+        userDo.setBankAccount(userinfo.getBankAccount());
+        userDo.setReceiverName(userinfo.getReceiverName());
+        userDo.setReceiverMobile(userinfo.getReceiverMobile());
+        userDo.setReceiverAddress(userinfo.getReceiverAddress());
+        userDo.setCreateTimestamp(System.currentTimeMillis());
+        userDo.setUpdateTimestamp(System.currentTimeMillis());
+        log.info("userInfo ===> {}", userDo);
+        userInfoMapper.insertUserInfo(userDo);
     }
 
     /**

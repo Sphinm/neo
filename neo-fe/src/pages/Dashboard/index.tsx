@@ -8,7 +8,8 @@ import 'echarts/lib/chart/line'
 import { options } from '@/setting/echartConfig'
 import style from './index.styl'
 import { AuthType } from '@/enums/role'
-import { fetchUserInfo } from '@/apis/user'
+import { fetchUserInfo, insertUserInfo, updateUserInfo } from '@/apis/user'
+import { handleError } from '@/libs/axios'
 
 // const userInfo = [
 //   { key: 'userName', filed: '对接人', value: '测试111' },
@@ -67,7 +68,9 @@ const Dashboard = () => {
       const { data } = await fetchUserInfo()
       console.log(22, data)
       setUserInfo(data ? data : {})
-    } catch (error) {}
+    } catch (error) {
+      handleError(error)
+    }
   }
 
   const goFinance = () => {
@@ -88,7 +91,18 @@ const Dashboard = () => {
 
   const handleOk = async () => {
     const values = await form.validateFields()
-    console.log(11, values)
+    try {
+      if (Object.keys(userInfo).length) {
+        // update
+        const { data } = await updateUserInfo(values)
+        console.log(112, data)
+      } else {
+        // insert
+        await insertUserInfo(values)
+      }
+    } catch (error) {
+      handleError(error)
+    }
     setVisible(false)
   }
 
@@ -124,7 +138,7 @@ const Dashboard = () => {
             <Card>
               {RoleStore.currentRole?.role === 'ADMIN' && (
                 <Button className={style['edit']} type="primary" onClick={() => setVisible(true)}>
-                  {Object.keys(userInfo).length === 0 ? '创建用户信息' : '编辑'}
+                  编辑用户信息
                 </Button>
               )}
               <Descriptions title="基本信息">
@@ -189,35 +203,52 @@ const Dashboard = () => {
         ]}
       >
         <Form form={form} initialValues={userInfo}>
-          <Form.Item label="对接人" name="username">
-            <Input placeholder="请输入手机号"></Input>
+          <Form.Item label="对接人" name="userName" rules={[{ required: true, message: '请输入对接人' }]}>
+            <Input placeholder="请输入对接人"></Input>
           </Form.Item>
-          <Form.Item label="对接手机号" name="username1">
-            <Input placeholder="请输入手机号"></Input>
+          <Form.Item
+            label="对接人手机号"
+            name="companyMobile"
+            rules={[{ required: true, message: '请输入对接人手机号' }]}
+          >
+            <Input placeholder="请输入对接人手机号"></Input>
           </Form.Item>
-          <Form.Item label="公司名称" name="username2">
-            <Input placeholder="请输入手机号"></Input>
+          <Form.Item label="公司名称" name="company" rules={[{ required: true, message: '请输入公司名称' }]}>
+            <Input placeholder="请输入公司名称"></Input>
           </Form.Item>
-          <Form.Item label="公司税号" name="username3">
-            <Input placeholder="请输入手机号"></Input>
+          <Form.Item label="公司税号" name="taxNumber" rules={[{ required: true, message: '请输入公司税号' }]}>
+            <Input placeholder="请输入公司税号"></Input>
           </Form.Item>
-          <Form.Item label="对接人" name="username4">
-            <Input placeholder="请输入手机号"></Input>
+          <Form.Item label="公司固话" name="fixedTelephone" rules={[{ required: true, message: '请输入公司固定电话' }]}>
+            <Input placeholder="请输入公司固定电话"></Input>
           </Form.Item>
-          <Form.Item label="对接人" name="username">
-            <Input placeholder="请输入手机号"></Input>
+          <Form.Item label="费率" name="rate" rules={[{ required: true, message: '请输入费率' }]}>
+            <Input placeholder="请输入费率"></Input>
           </Form.Item>
-          <Form.Item label="对接人" name="username">
-            <Input placeholder="请输入手机号"></Input>
+          <Form.Item label="所属行业" name="industry" rules={[{ required: true, message: '请输入所属行业' }]}>
+            <Input placeholder="请输入所属行业"></Input>
           </Form.Item>
-          <Form.Item label="对接人" name="username">
-            <Input placeholder="请输入手机号"></Input>
+          <Form.Item label="公司地址" name="companyAddress" rules={[{ required: true, message: '请输入公司地址' }]}>
+            <Input placeholder="请输入公司地址"></Input>
           </Form.Item>
-          <Form.Item label="对接人" name="username">
-            <Input placeholder="请输入手机号"></Input>
+          <Form.Item label="收件人" name="receiverName" rules={[{ required: true, message: '请输入收件人手机号' }]}>
+            <Input placeholder="请输入收件人手机号"></Input>
           </Form.Item>
-          <Form.Item label="对接人" name="username">
-            <Input placeholder="请输入手机号"></Input>
+          <Form.Item
+            label="收件人手机号"
+            name="receiverMobile"
+            rules={[{ required: true, message: '请输入收件人手机号' }]}
+          >
+            <Input placeholder="收件人手机号"></Input>
+          </Form.Item>
+          <Form.Item label="开户行" name="bank" rules={[{ required: true, message: '请输入开户行' }]}>
+            <Input placeholder="请输入开户行"></Input>
+          </Form.Item>
+          <Form.Item label="银行账号" name="bankAccount" rules={[{ required: true, message: '请输入银行账号' }]}>
+            <Input placeholder="请输入银行账号"></Input>
+          </Form.Item>
+          <Form.Item label="收件地址" name="receiverAddress" rules={[{ required: true, message: '请输入收件人地址' }]}>
+            <Input placeholder="请输入收件人地址"></Input>
           </Form.Item>
         </Form>
       </Modal>

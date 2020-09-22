@@ -19,4 +19,6 @@ public class UserInfo {
     String receiverName;
     String receiverMobile;
     String receiverAddress;
+    Long createTimestamp;
+    Long updateTimestamp;
 }
