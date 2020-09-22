@@ -1,4 +1,3 @@
-import { AuthType } from '@/enums/role'
 import ajax from '@/libs/axios'
 
 /** 创建用户 */

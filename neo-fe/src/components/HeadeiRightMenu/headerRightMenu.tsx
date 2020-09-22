@@ -48,7 +48,7 @@ const HeaderRightMenu = () => {
         oldPwd: values.oldPwd,
         newPwd: values.newPwd,
       }
-      const { data } = await changePwd(params)
+      await changePwd(params)
       form.resetFields()
       setVisible(false)
       notification.success({
