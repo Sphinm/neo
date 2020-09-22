@@ -40,7 +40,7 @@ const Dashboard = () => {
   const [form] = Form.useForm()
   const chartRef = useRef<CanvasType>(null)
   const [visible, setVisible] = useState(false)
-  const [userInfo, setUserInfo] = useState({})
+  const [userInfo, setUserInfo] = useState<any>({})
   let chartInstance: echarts.ECharts | null = null
 
   const renderChart = () => {
@@ -142,15 +142,49 @@ const Dashboard = () => {
                 </Button>
               )}
               <Descriptions title="基本信息">
-                {Object.keys(userInfo)?.map(item => {
-                  console.log(222, item)
-                  return (
-                    <></>
-                    // <Descriptions.Item key={item.key} label={item.filed}>
-                    //   <span className={style['item-title']}>{item.value}</span>
-                    // </Descriptions.Item>
-                  )
-                })}
+                {Object.keys(userInfo).length > 0 && (
+                  <>
+                    <Descriptions.Item label="对接人">
+                      <span className={style['item-title']}>{userInfo?.userName}</span>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="对接手机号">
+                      <span className={style['item-title']}>{userInfo?.companyMobile}</span>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="公司名称">
+                      <span className={style['item-title']}>{userInfo?.company}</span>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="公司税号">
+                      <span className={style['item-title']}>{userInfo?.taxNumber}</span>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="公司固话">
+                      <span className={style['item-title']}>{userInfo?.fixedTelephone}</span>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="费率">
+                      <span className={style['item-title']}>{userInfo?.rate ?? 0}%</span>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="所属行业">
+                      <span className={style['item-title']}>{userInfo?.industry}</span>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="公司地址">
+                      <span className={style['item-title']}>{userInfo?.companyAddress}</span>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="收件人">
+                      <span className={style['item-title']}>{userInfo?.receiverName}</span>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="收件人手机号">
+                      <span className={style['item-title']}>{userInfo?.receiverMobile}</span>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="收件地址">
+                      <span className={style['item-title']}>{userInfo?.receiverAddress}</span>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="开户行">
+                      <span className={style['item-title']}>{userInfo.bank}</span>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="银行账号">
+                      <span className={style['item-title']}>{userInfo?.bankAccount}</span>
+                    </Descriptions.Item>
+                  </>
+                )}
               </Descriptions>
               {/* Echart */}
               {RoleStore.currentRole?.role !== 'ADMIN' && (
@@ -202,7 +236,7 @@ const Dashboard = () => {
           </Button>,
         ]}
       >
-        <Form form={form} initialValues={userInfo}>
+        <Form form={form}>
           <Form.Item label="对接人" name="userName" rules={[{ required: true, message: '请输入对接人' }]}>
             <Input placeholder="请输入对接人"></Input>
           </Form.Item>
