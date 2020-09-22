@@ -11,5 +11,7 @@ public interface UserMapper {
 
     User findByUserId(@Param("userId") String userId);
 
+    void createUser(User user);
+
     void changePassword(@Param("pwd") IChangePassword pwd, @Param("userId") String userId);
 }

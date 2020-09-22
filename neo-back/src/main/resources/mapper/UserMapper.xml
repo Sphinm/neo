@@ -9,6 +9,14 @@
       SELECT * FROM user where user_id = #{userId}
     </select>
 
+    <insert id="createUser" useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO user (
+      user_id, user_name, mobile, password, status, role, create_timestamp, update_timestamp
+      ) INTO (
+      #{user_id},#{user_name},#{mobile},#{password},#{status},#{role},#{create_timestamp},#{update_timestamp}
+      )
+    </insert>
+
     <update id="changePassword">
         UPDATE user SET password = #{pwd.newPwd} WHERE user_id=#{userId}
     </update>
