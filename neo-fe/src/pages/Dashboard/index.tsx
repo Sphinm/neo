@@ -11,22 +11,6 @@ import { AuthType } from '@/enums/role'
 import { fetchUserInfo, insertUserInfo, updateUserInfo } from '@/apis/user'
 import { handleError } from '@/libs/axios'
 
-// const userInfo = [
-//   { key: 'userName', filed: '对接人', value: '测试111' },
-//   { key: 'bossMobile', filed: '对接手机号', value: '13651608916' },
-//   { key: 'companyName', filed: '公司名称', value: '上海昂彻网络科技有限公司' },
-//   { key: 'companyTax', filed: '公司税号', value: '91310112MA1GBT7K0C' },
-//   { key: 'companyPhone', filed: '公司电话', value: '021-64500866' },
-//   { key: 'rate', filed: '费率', value: '12%' },
-//   { key: 'industry', filed: '所属行业', value: '人力资源服务' },
-//   { key: 'companyAddress', filed: '公司地址', value: '上海市闵行区506室' },
-//   { key: 'mailingName', filed: '收件人', value: '特殊222' },
-//   { key: 'mailingMobile', filed: '收件人手机号', value: '13651608916' },
-//   { key: 'mailingAddress', filed: '收件地址', value: '上海市闵行区剑川路951号5幢507室' },
-//   { key: 'bankName', filed: '开户行', value: '上海银行江川路支行' },
-//   { key: 'bankCardNo', filed: '银行账号', value: '620522002192085991' },
-// ]
-
 const textMessage = [
   '1. 我司只接受 6% 服务费专票',
   '2. 代理商同一手机号可同时开通代理商账户和用人单位账户',
