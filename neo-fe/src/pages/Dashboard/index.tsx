@@ -10,21 +10,21 @@ import style from './index.styl'
 import { AuthType } from '@/enums/role'
 import { fetchUserInfo } from '@/apis/user'
 
-const userInfo = [
-  { key: 'userName', filed: '对接人', value: '测试111' },
-  { key: 'bossMobile', filed: '对接手机号', value: '13651608916' },
-  { key: 'companyName', filed: '公司名称', value: '上海昂彻网络科技有限公司' },
-  { key: 'companyTax', filed: '公司税号', value: '91310112MA1GBT7K0C' },
-  { key: 'companyPhone', filed: '公司电话', value: '021-64500866' },
-  { key: 'rate', filed: '费率', value: '12%' },
-  { key: 'industry', filed: '所属行业', value: '人力资源服务' },
-  { key: 'companyAddress', filed: '公司地址', value: '上海市闵行区506室' },
-  { key: 'mailingName', filed: '收件人', value: '特殊222' },
-  { key: 'mailingMobile', filed: '收件人手机号', value: '13651608916' },
-  { key: 'mailingAddress', filed: '收件地址', value: '上海市闵行区剑川路951号5幢507室' },
-  { key: 'bankName', filed: '开户行', value: '上海银行江川路支行' },
-  { key: 'bankCardNo', filed: '银行账号', value: '620522002192085991' },
-]
+// const userInfo = [
+//   { key: 'userName', filed: '对接人', value: '测试111' },
+//   { key: 'bossMobile', filed: '对接手机号', value: '13651608916' },
+//   { key: 'companyName', filed: '公司名称', value: '上海昂彻网络科技有限公司' },
+//   { key: 'companyTax', filed: '公司税号', value: '91310112MA1GBT7K0C' },
+//   { key: 'companyPhone', filed: '公司电话', value: '021-64500866' },
+//   { key: 'rate', filed: '费率', value: '12%' },
+//   { key: 'industry', filed: '所属行业', value: '人力资源服务' },
+//   { key: 'companyAddress', filed: '公司地址', value: '上海市闵行区506室' },
+//   { key: 'mailingName', filed: '收件人', value: '特殊222' },
+//   { key: 'mailingMobile', filed: '收件人手机号', value: '13651608916' },
+//   { key: 'mailingAddress', filed: '收件地址', value: '上海市闵行区剑川路951号5幢507室' },
+//   { key: 'bankName', filed: '开户行', value: '上海银行江川路支行' },
+//   { key: 'bankCardNo', filed: '银行账号', value: '620522002192085991' },
+// ]
 
 const textMessage = [
   '1. 我司只接受 6% 服务费专票',
@@ -39,6 +39,7 @@ const Dashboard = () => {
   const [form] = Form.useForm()
   const chartRef = useRef<CanvasType>(null)
   const [visible, setVisible] = useState(false)
+  const [userInfo, setUserInfo] = useState({})
   let chartInstance: echarts.ECharts | null = null
 
   const renderChart = () => {
@@ -65,6 +66,7 @@ const Dashboard = () => {
     try {
       const { data } = await fetchUserInfo()
       console.log(22, data)
+      setUserInfo(data ? data : {})
     } catch (error) {}
   }
 
@@ -122,15 +124,17 @@ const Dashboard = () => {
             <Card>
               {RoleStore.currentRole?.role === 'ADMIN' && (
                 <Button className={style['edit']} type="primary" onClick={() => setVisible(true)}>
-                  编辑
+                  {Object.keys(userInfo).length === 0 ? '创建用户信息' : '编辑'}
                 </Button>
               )}
               <Descriptions title="基本信息">
-                {userInfo.map(item => {
+                {Object.keys(userInfo)?.map(item => {
+                  console.log(222, item)
                   return (
-                    <Descriptions.Item key={item.key} label={item.filed}>
-                      <span className={style['item-title']}>{item.value}</span>
-                    </Descriptions.Item>
+                    <></>
+                    // <Descriptions.Item key={item.key} label={item.filed}>
+                    //   <span className={style['item-title']}>{item.value}</span>
+                    // </Descriptions.Item>
                   )
                 })}
               </Descriptions>
@@ -171,7 +175,7 @@ const Dashboard = () => {
       </div>
       <Modal
         getContainer={false}
-        title="编辑用户信息"
+        title={Object.keys(userInfo).length === 0 ? '创建用户信息' : '编辑用户信息'}
         visible={visible}
         onOk={handleOk}
         onCancel={() => setVisible(false)}

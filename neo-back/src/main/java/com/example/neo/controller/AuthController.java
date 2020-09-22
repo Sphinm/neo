@@ -1,7 +1,5 @@
 package com.example.neo.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.example.neo.annotation.UserLoginToken;
 import com.example.neo.constant.Constants;
 import com.example.neo.entity.params.IChangePassword;
@@ -9,6 +7,8 @@ import com.example.neo.entity.params.ILogin;
 import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.User;
 import com.example.neo.service.AuthService;
+import com.example.neo.service.UserService;
+import com.example.neo.utils.ContextHolder;
 import com.example.neo.utils.CookieUtils;
 import com.example.neo.utils.ResponseBean;
 import com.example.neo.utils.TokenUtils;
@@ -26,33 +26,24 @@ public class AuthController {
     AuthService AuthService;
 
     @Autowired
-    TokenUtils TokenUtils;
+    UserService userService;
 
-    /**
-     * 从 token 中获取用户信息
-     */
-    public String fetchUserId() {
-        String token = CookieUtils.getRaw(Constants.TOKEN_KEY);
-        String userId;
-        try {
-            userId = JWT.decode(token).getAudience().get(0);
-        } catch (JWTDecodeException e) {
-            throw new RuntimeException("401, ", e);
-        }
-        return userId;
-    }
+    @Autowired
+    TokenUtils TokenUtils;
 
     @UserLoginToken
     @GetMapping("/me")
     public ResponseBean getUserInfo()  {
-        User user = AuthService.findByUserId(fetchUserId());
+        String userId = ContextHolder.getCurrentUserId();
+        log.info("fetch userId ===> {}", userId);
+        User user = userService.findByUserId(userId);
         return ResponseBean.success(user);
     }
 
     @PostMapping("/login")
     public ResponseBean login(@RequestBody ILogin login) {
         User userInfo = AuthService.login(login.getMobile());
-
+        log.info("userInfo ===> {}", userInfo);
         if (userInfo == null) {
             return ResponseBean.fail(ResponseCodeEnum.USER_NOTFOUND);
         }
@@ -73,7 +64,8 @@ public class AuthController {
     @UserLoginToken
     @PostMapping("/change/password")
     public ResponseBean changePassword(@RequestBody IChangePassword pwd) {
-        ResponseCodeEnum code = AuthService.changePwd(pwd, fetchUserId());
+        String userId = ContextHolder.getCurrentUserId();
+        ResponseCodeEnum code = AuthService.changePwd(pwd, userId);
         if (code == ResponseCodeEnum.INIT_PASSWORD_ERROR) {
             return ResponseBean.fail(ResponseCodeEnum.INIT_PASSWORD_ERROR);
         }

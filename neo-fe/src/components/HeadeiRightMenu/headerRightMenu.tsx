@@ -33,27 +33,26 @@ const HeaderRightMenu = () => {
     console.log(11, values)
     if (values.oldPwd === values.newPwd) {
       notification.error({
-        message: '新老密码不能相同'
+        message: '新老密码不能相同',
       })
-      return 
+      return
     }
     if (values.newPwd !== values.checkPwd) {
       notification.error({
-        message: '确认密码错误，请检查重试'
+        message: '确认密码错误，请检查重试',
       })
-      return 
+      return
     }
     try {
       const params = {
         oldPwd: values.oldPwd,
-        newPwd: values.newPwd
+        newPwd: values.newPwd,
       }
       const { data } = await changePwd(params)
-      console.log(22,data)
       form.resetFields()
       setVisible(false)
       notification.success({
-        message: '更改密码成功'
+        message: '更改密码成功',
       })
     } catch (e) {
       handleError(e)

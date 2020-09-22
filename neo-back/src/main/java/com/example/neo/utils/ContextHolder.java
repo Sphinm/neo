@@ -25,5 +25,9 @@ public class ContextHolder {
     @Data
     public static class UserContext {
         String userId;
+
+        public UserContext(String userId) {
+            this.userId = userId;
+        }
     }
 }

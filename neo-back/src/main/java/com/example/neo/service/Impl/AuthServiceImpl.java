@@ -2,7 +2,6 @@ package com.example.neo.service.Impl;
 
 import com.example.neo.constant.Constants;
 import com.example.neo.entity.params.IChangePassword;
-import com.example.neo.entity.params.IRegister;
 import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.mapper.UserMapper;
 import com.example.neo.model.User;
@@ -27,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     public ResponseCodeEnum changePwd(IChangePassword pwd, String userId) {
-        User userInfo = findByUserId(userId);
+        User userInfo = UserMapper.findByUserId(userId);
         if (!pwd.getOldPwd().equals(userInfo.getPassword())) {
             return ResponseCodeEnum.INIT_PASSWORD_ERROR;
         }
@@ -36,14 +35,5 @@ public class AuthServiceImpl implements AuthService {
         }
         UserMapper.changePassword(pwd, userId);
         return ResponseCodeEnum.SUCCESS;
-    }
-
-    public User findByUserId(String userId) {
-        return UserMapper.findByUserId(userId);
-    }
-
-    // TODO: 暂未实现
-    public User registerUser(IRegister register) {
-        return UserMapper.findByUserMobile(register.mobile);
     }
 }

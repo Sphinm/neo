@@ -10,6 +10,7 @@ import com.example.neo.annotation.UserLoginToken;
 import com.example.neo.constant.Constants;
 import com.example.neo.model.User;
 import com.example.neo.service.AuthService;
+import com.example.neo.utils.ContextHolder;
 import com.example.neo.utils.CookieUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +70,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                     CookieUtils.clean(Constants.TOKEN_KEY);
                     throw new Exception("token 过期，请重新登录");
                 }
-//                ContextHolder.UserContext contextHolder = new ContextHolder.UserContext(userId);
-//                ContextHolder.setContext(contextHolder);
+                ContextHolder.UserContext contextHolder = new ContextHolder.UserContext(userId);
+                ContextHolder.setContext(contextHolder);
                 User user = AuthService.findByUserId(userId);
                 if (user == null) {
                     throw new Exception("用户不存在，请重新登录");

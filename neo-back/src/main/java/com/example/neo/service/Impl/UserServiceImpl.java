@@ -1,6 +1,8 @@
 package com.example.neo.service.Impl;
 
 import com.example.neo.mapper.UserInfoMapper;
+import com.example.neo.mapper.UserMapper;
+import com.example.neo.model.User;
 import com.example.neo.model.UserInfo;
 import com.example.neo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,18 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     @Autowired
     UserInfoMapper userInfoMapper;
+
+    @Autowired
+    UserMapper userMapper;
+
+    public User findByUserId(String userId) {
+        return userMapper.findByUserId(userId);
+    }
+
+    // TODO: 暂未实现
+    public User createUser(User user) {
+        return userMapper.findByUserId(user.getUserId());
+    }
 
     /**
      * 根据 userId 获取用户信息
