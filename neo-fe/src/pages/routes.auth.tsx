@@ -13,7 +13,7 @@ import DataQueryRoute from './dataQuery/routes'
 const RoutesAuth = () => {
   return (
     <Switch>
-      <Route path="/main/dashboard" component={createLazy(() => import('@/pages/dashboard'))} />
+      <Route path="/main/dashboard" component={createLazy(() => import('@/pages/dashboard/index'))} />
       <Route path="/main/admin" component={Admin} />
       <Route path="/main/dataquery" component={DataQueryRoute} />
       <Route path="/main/payroll" component={Payroll} />

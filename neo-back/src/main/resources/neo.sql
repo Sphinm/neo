@@ -1,3 +1,20 @@
+CREATE TABLE `neo_user`  (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+  `account` varchar(50) NULL COMMENT '用户名',
+  `password` varchar(50) NULL COMMENT '密码',
+  `username` varchar(50) NULL COMMENT '姓名',
+  `tel` varchar(50) NULL COMMENT '手机号',
+  `email` varchar(50) NULL COMMENT '邮箱',
+  `is_locked` tinyint(1) NULL COMMENT '是否锁定（0:未锁定，1:锁定）',
+  `role_id` int NULL COMMENT '角色id，关联neo_role表id',
+  `related_id` int NULL COMMENT '关联id（关联公司id）',
+  `creator_id` int NULL COMMENT '创建人id',
+  `creator_date` datetime NULL COMMENT '创建时间',
+  `update_id` int NULL COMMENT '更新者id',
+  `update_date` datetime NULL COMMENT '更新日期',
+  PRIMARY KEY (`id`)
+) COMMENT = '用户表';
+
 CREATE TABLE `neo_company`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `company_name` varchar(255) NULL COMMENT '公司名称',
@@ -17,7 +34,7 @@ CREATE TABLE `neo_company`  (
   `creator_date` datetime NULL COMMENT '创建时间',
   `update_id` int NULL COMMENT '更新人',
   `update_date` datetime NULL COMMENT '更新时间',
-  `company_type` tinyint(1) NULL COMMENT '公司类型（0：代理商，1：客户公司）',
+  `company_type` tinyint(1) NULL COMMENT '公司类型（0：代理商，1：客户公司，2：管理员）',
   PRIMARY KEY (`id`)
 ) COMMENT = '公司客户';
 
@@ -186,23 +203,6 @@ CREATE TABLE `neo_sp`  (
   `is_deleted` tinyint(1) NULL COMMENT '是否删除（0：否，1：是）',
   PRIMARY KEY (`id`)
 ) COMMENT = '个体独资管理';
-
-CREATE TABLE `neo_user`  (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '自增主键',
-  `account` varchar(50) NULL COMMENT '用户名',
-  `password` varchar(50) NULL COMMENT '密码',
-  `username` varchar(50) NULL COMMENT '姓名',
-  `tel` varchar(50) NULL COMMENT '手机号',
-  `email` varchar(50) NULL COMMENT '邮箱',
-  `is_locked` tinyint(1) NULL COMMENT '是否锁定（0:未锁定，1:锁定）',
-  `role_id` int NULL COMMENT '角色id，关联neo_role表id',
-  `related_id` int NULL COMMENT '关联id（关联公司id）',
-  `creator_id` int NULL COMMENT '创建人id',
-  `creator_date` datetime NULL COMMENT '创建时间',
-  `update_id` int NULL COMMENT '更新者id',
-  `update_date` datetime NULL COMMENT '更新日期',
-  PRIMARY KEY (`id`)
-) COMMENT = '用户表';
 
 CREATE TABLE `neo_withdraw`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '自增id',

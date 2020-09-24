@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "PORT=8007 react-app-rewired start",
+    "serve": "react-app-rewired start --port 8007",
     "build": "node scripts/build.js",
     "eject": "react-app-rewired eject",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.tsx\""
