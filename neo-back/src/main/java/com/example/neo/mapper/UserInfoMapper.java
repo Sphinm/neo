@@ -1,14 +1,14 @@
 package com.example.neo.mapper;
 
-import com.example.neo.model.UserInfo;
+import com.example.neo.model.CompanyInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserInfoMapper {
-    UserInfo fetchUserInfo(@Param("userId")  String userId);
+    CompanyInfo fetchUserInfo(@Param("userId")  String userId);
 
-    void insertUserInfo(UserInfo userInfo);
+    void insertUserInfo(CompanyInfo companyInfo);
 
-    void updateUserInfo(UserInfo userInfo);
+    void updateUserInfo(CompanyInfo companyInfo);
 }

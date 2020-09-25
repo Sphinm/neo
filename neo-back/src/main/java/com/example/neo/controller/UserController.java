@@ -3,7 +3,7 @@ package com.example.neo.controller;
 import com.example.neo.annotation.UserLoginToken;
 import com.example.neo.entity.params.ICreateUser;
 import com.example.neo.enums.UserTypeEnum;
-import com.example.neo.model.UserInfo;
+import com.example.neo.model.CompanyInfo;
 import com.example.neo.service.UserService;
 import com.example.neo.utils.ContextHolder;
 import com.example.neo.utils.ResponseBean;
@@ -24,28 +24,28 @@ public class UserController {
     @PostMapping("/create/user")
     public ResponseBean createUser(@RequestBody ICreateUser user, UserTypeEnum userType) {
         userService.createUser(user, userType);
-        return ResponseBean.success();
+        return ResponseBean.success(user);
     }
 
     @UserLoginToken
     @GetMapping("/get/userInfo")
     public ResponseBean fetchUserInfo() {
         String userId = ContextHolder.getCurrentUserId();
-        UserInfo userInfo = userService.fetchUserInfo(userId);
-        return ResponseBean.success(userInfo);
+        CompanyInfo companyInfo = userService.fetchUserInfo(userId);
+        return ResponseBean.success(companyInfo);
     }
 
     @UserLoginToken
     @PostMapping("/insert/userInfo")
-    public ResponseBean insertUserInfo(@RequestBody UserInfo userInfo) {
-        userService.insertUserInfo(userInfo);
+    public ResponseBean insertUserInfo(@RequestBody CompanyInfo companyInfo) {
+        userService.insertUserInfo(companyInfo);
         return ResponseBean.success();
     }
 
     @UserLoginToken
     @PostMapping("/update/userInfo")
-    public ResponseBean updateUserInfo(@RequestBody UserInfo userInfo) {
-        userService.updateUserInfo(userInfo);
+    public ResponseBean updateUserInfo(@RequestBody CompanyInfo companyInfo) {
+        userService.updateUserInfo(companyInfo);
         return ResponseBean.success();
     }
 

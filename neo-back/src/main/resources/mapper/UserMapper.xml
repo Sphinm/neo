@@ -3,21 +3,21 @@
 <mapper namespace="com.example.neo.mapper.UserMapper">
 
     <select id="findByUserMobile" resultType="com.example.neo.model.User">
-      SELECT * FROM user where mobile = #{mobile}
+      SELECT * FROM neo_user where mobile = #{mobile}
     </select>
     <select id="findByUserId" resultType="com.example.neo.model.User">
-      SELECT * FROM user where user_id = #{userId}
+      SELECT * FROM neo_user where id = #{userId}
     </select>
 
     <insert id="createUser" useGeneratedKeys="true" keyProperty="id">
-      INSERT INTO user (
-      user_id, user_name, mobile, password, status, role, create_timestamp, update_timestamp
-      ) INTO (
-      #{user_id},#{user_name},#{mobile},#{password},#{status},#{role},#{create_timestamp},#{update_timestamp}
+      INSERT INTO neo_user (
+        password, username, mobile, is_locked, role_id, related_id, creator_id, creator_date, update_id, update_date
+      )  INTO (
+      #{password},#{username},#{mobile},#{is_locked},#{role_id},#{related_id},#{creator_id},#{creator_date},#{update_id},#{update_date}
       )
     </insert>
 
     <update id="changePassword">
-        UPDATE user SET password = #{pwd.newPwd} WHERE user_id=#{userId}
+        UPDATE neo_user SET password = #{pwd.newPwd} WHERE user_id=#{userId}
     </update>
 </mapper>
