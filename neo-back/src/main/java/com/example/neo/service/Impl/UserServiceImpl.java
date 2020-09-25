@@ -7,7 +7,6 @@ import com.example.neo.mapper.UserMapper;
 import com.example.neo.model.CompanyInfo;
 import com.example.neo.model.User;
 import com.example.neo.service.UserService;
-import com.example.neo.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,11 +75,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void insertUserInfo(CompanyInfo userinfo) {
-        CompanyInfo userDo = keepUserInfo(userinfo);
-        userDo.setUserId(Snowflake.INSTANCE.nextId());
-        userDo.setCreateTimestamp(System.currentTimeMillis());
-        log.info("userInfo ===> {}", userDo);
-        userInfoMapper.insertUserInfo(userDo);
+//        CompanyInfo userDo = keepUserInfo(userinfo);
+//        userDo.setUserId(Snowflake.INSTANCE.nextId());
+//        userDo.setCreateTimestamp(System.currentTimeMillis());
+//        log.info("userInfo ===> {}", userDo);
+//        userInfoMapper.insertUserInfo(userDo);
     }
 
     /**
@@ -89,28 +88,28 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void updateUserInfo(CompanyInfo companyInfo) {
-        CompanyInfo userDo = keepUserInfo(companyInfo);
-        userDo.setUserId(companyInfo.getUserId());
-        userDo.setCreateTimestamp(companyInfo.getCreateTimestamp());
-        userInfoMapper.updateUserInfo(userDo);
+//        CompanyInfo userDo = keepUserInfo(companyInfo);
+//        userDo.setUserId(companyInfo.getUserId());
+//        userDo.setCreateTimestamp(companyInfo.getCreateTimestamp());
+//        userInfoMapper.updateUserInfo(userDo);
     }
 
     private CompanyInfo keepUserInfo(CompanyInfo companyInfo) {
         CompanyInfo userDo = new CompanyInfo();
-        userDo.setUserName(companyInfo.getUserName());
-        userDo.setCompany(companyInfo.getCompany());
-        userDo.setTaxNumber(companyInfo.getTaxNumber());
-        userDo.setCompanyMobile(companyInfo.getCompanyMobile());
-        userDo.setCompanyAddress(companyInfo.getCompanyAddress());
-        userDo.setFixedTelephone(companyInfo.getFixedTelephone());
-        userDo.setRate(companyInfo.getRate());
-        userDo.setIndustry(companyInfo.getIndustry());
-        userDo.setBank(companyInfo.getBank());
-        userDo.setBankAccount(companyInfo.getBankAccount());
-        userDo.setReceiverName(companyInfo.getReceiverName());
-        userDo.setReceiverMobile(companyInfo.getReceiverMobile());
-        userDo.setReceiverAddress(companyInfo.getReceiverAddress());
-        userDo.setUpdateTimestamp(System.currentTimeMillis());
+//        userDo.setUserName(companyInfo.getUserName());
+//        userDo.setCompany(companyInfo.getCompany());
+//        userDo.setTaxNumber(companyInfo.getTaxNumber());
+//        userDo.setCompanyMobile(companyInfo.getCompanyMobile());
+//        userDo.setCompanyAddress(companyInfo.getCompanyAddress());
+//        userDo.setFixedTelephone(companyInfo.getFixedTelephone());
+//        userDo.setRate(companyInfo.getRate());
+//        userDo.setIndustry(companyInfo.getIndustry());
+//        userDo.setBank(companyInfo.getBank());
+//        userDo.setBankAccount(companyInfo.getBankAccount());
+//        userDo.setReceiverName(companyInfo.getReceiverName());
+//        userDo.setReceiverMobile(companyInfo.getReceiverMobile());
+//        userDo.setReceiverAddress(companyInfo.getReceiverAddress());
+//        userDo.setUpdateTimestamp(System.currentTimeMillis());
         return userDo;
     }
 }

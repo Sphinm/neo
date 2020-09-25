@@ -10,6 +10,13 @@ const Login = {
     data: '',
     message: 'SUCCESS',
   }),
+  'GET /api/me': Mock.mock({
+    code: 'SUCCESS',
+    data: {
+      role: 'ADMIN',
+    },
+    message: 'SUCCESS',
+  }),
 }
 
 module.exports = Login
