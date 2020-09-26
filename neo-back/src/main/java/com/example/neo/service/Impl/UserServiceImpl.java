@@ -1,12 +1,12 @@
 package com.example.neo.service.Impl;
 
-import com.example.neo.model.ICreateUser;
-import com.example.neo.enums.UserTypeEnum;
-import com.example.neo.mapper.UserInfoMapper;
-import com.example.neo.mapper.UserMapper;
 import com.example.neo.entity.CompanyInfo;
 import com.example.neo.entity.Role;
 import com.example.neo.entity.User;
+import com.example.neo.enums.UserTypeEnum;
+import com.example.neo.mapper.UserInfoMapper;
+import com.example.neo.mapper.UserMapper;
+import com.example.neo.model.IGetUser;
 import com.example.neo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +23,19 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserMapper userMapper;
 
-    public User findByUserId(String userId) {
+    public IGetUser findByUserId(String userId) {
         User user = userMapper.findByUserId(userId);
         Role role = userMapper.findRoleByUserId(user.getRoleId());
 
-        log.info("111 => {} {}", user, role);
-        return user;
+        IGetUser u = new IGetUser();
+        u.setUserName(user.getUserName());
+        u.setEmail(user.getEmail());
+        u.setMobile(user.getMobile());
+        u.setIsLocked(user.getIsLocked());
+        u.setRoleName(role.getRoleName());
+        u.setRoleType(role.getRoleType());
+        log.info("111 => {}", u);
+        return u;
     }
 
     /**
@@ -46,7 +53,8 @@ public class UserServiceImpl implements UserService {
      * 也可以创建公司和员工
      * @param user 用户信息
      */
-    public void createUser(ICreateUser user, UserTypeEnum userType) {
+    public void createUser(User user, UserTypeEnum userType) {
+        // 创建用户的时候先判断用户有无公司信息，如果没有则不创建公司信息，同时无关联id
         Date date = new Date();
         User userDto = new User();
         CompanyInfo companyInfo = new CompanyInfo();
@@ -54,14 +62,12 @@ public class UserServiceImpl implements UserService {
         // 创建用户表
         userDto.setUserName(user.getUserName());
         userDto.setMobile(user.getMobile());
-        userDto.setPassword("123456");
-//        userDto.setIs_locked(0);
-//        userDto.setRole_id(userType.getId());
+        userDto.setRoleId(userType.getId());
 //        userDto.setRelated_id();
-//        userDto.setCreator_id();
-//        userDto.setUpdate_id();
-        userDto.setCreatorDate(date);
-        userDto.setCreatorDate(date);
+//        userDto.setCreatorId();
+//        userDto.setUpdateId();
+        userDto.setCreateDate(date);
+        userDto.setUpdateDate(date);
 
         if (userType != UserTypeEnum.EMPLOYEE) {
             insertUserInfo(companyInfo);

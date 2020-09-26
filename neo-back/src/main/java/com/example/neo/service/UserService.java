@@ -1,20 +1,20 @@
 package com.example.neo.service;
 
-import com.example.neo.model.ICreateUser;
-import com.example.neo.enums.UserTypeEnum;
 import com.example.neo.entity.CompanyInfo;
 import com.example.neo.entity.User;
+import com.example.neo.enums.UserTypeEnum;
+import com.example.neo.model.IGetUser;
 
 public interface UserService {
     /**
      * 根据 userId 获取用户
      */
-    User findByUserId(String userId);
+    IGetUser findByUserId(String userId);
 
     /**
      * 创建新用户
      */
-    void createUser(ICreateUser user, UserTypeEnum userType);
+    void createUser(User user, UserTypeEnum userType);
 
     /**
      * 根据 userId 获取用户信息

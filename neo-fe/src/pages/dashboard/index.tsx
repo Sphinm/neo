@@ -38,7 +38,7 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    RoleStore.currentRole?.role !== 'ADMIN' && renderChart()
+    RoleStore.currentRole?.roleType !== 'ADMIN' && renderChart()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -58,7 +58,7 @@ const Dashboard = () => {
   }
 
   const goFinance = () => {
-    if (RoleStore.currentRole?.role === AuthType.MERCHANT) {
+    if (RoleStore.currentRole?.roleType === AuthType.MERCHANT) {
       history.push('/main/finance/withdraw')
     } else {
       history.push('/main/finance/recharge')
@@ -66,7 +66,7 @@ const Dashboard = () => {
   }
 
   const goFinanceList = () => {
-    if (RoleStore.currentRole?.role === AuthType.MERCHANT) {
+    if (RoleStore.currentRole?.roleType === AuthType.MERCHANT) {
       history.push('/main/flexible/rebates')
     } else {
       history.push('/main/finance/recharge-records')
@@ -97,20 +97,20 @@ const Dashboard = () => {
 
   return useObserver(() => (
     <>
-      {RoleStore.currentRole?.role !== 'ADMIN' && (
+      {RoleStore.currentRole?.roleType !== 'ADMIN' && (
         <Card className={style['dash-header']}>
           <div className={style['money-title']}>账户可用余额</div>
           <div className={style['money']}>￥100.24</div>
           <div className={style['button-group']}>
             <Button type="primary" onClick={goFinance}>
-              {RoleStore.currentRole?.role === AuthType.MERCHANT ? '申请提现' : '立即充值'}
+              {RoleStore.currentRole?.roleType === AuthType.MERCHANT ? '申请提现' : '立即充值'}
             </Button>
             <Button type="default" className={style['button-right']} onClick={goFinanceList}>
               查看明细
             </Button>
           </div>
           <div className={style['right-text']}>
-            {RoleStore.currentRole?.role === AuthType.MERCHANT &&
+            {RoleStore.currentRole?.roleType === AuthType.MERCHANT &&
               textMessage.map(item => {
                 return (
                   <div key={item} className={style['item-text']}>
@@ -123,9 +123,9 @@ const Dashboard = () => {
       )}
       <div className={style['card-wrapper']}>
         <Row gutter={24}>
-          <Col span={RoleStore.currentRole?.role !== 'ADMIN' ? 18 : 24}>
+          <Col span={RoleStore.currentRole?.roleType !== 'ADMIN' ? 18 : 24}>
             <Card>
-              {RoleStore.currentRole?.role === 'ADMIN' && (
+              {RoleStore.currentRole?.roleType === 'ADMIN' && (
                 <Button className={style['edit']} type="primary" onClick={openEditDialog}>
                   编辑用户信息
                 </Button>
@@ -176,19 +176,19 @@ const Dashboard = () => {
                 )}
               </Descriptions>
               {/* Echart */}
-              {RoleStore.currentRole?.role !== 'ADMIN' && (
+              {RoleStore.currentRole?.roleType !== 'ADMIN' && (
                 <>
                   <div className={style['canvas-title']}>
-                    {RoleStore.currentRole?.role === AuthType.COMPANY ? '最近一个月发放情况' : '最近一个月返佣情况'}
+                    {RoleStore.currentRole?.roleType === AuthType.COMPANY ? '最近一个月发放情况' : '最近一个月返佣情况'}
                   </div>
                   <div style={{ width: '100%', height: '300px' }} ref={chartRef as any} />
                 </>
               )}
             </Card>
           </Col>
-          {RoleStore.currentRole?.role !== 'ADMIN' && (
+          {RoleStore.currentRole?.roleType !== 'ADMIN' && (
             <Col span={6}>
-              {RoleStore.currentRole?.role === AuthType.COMPANY && (
+              {RoleStore.currentRole?.roleType === AuthType.COMPANY && (
                 <Card title="公告">
                   由于银行对公转账的相关限制，费用发放在工作日内：周一 至 周五 09:00 ~
                   16:00之间进行，超过该时间顺延到第二个工作日办理，如需按时发放请提前做好相关工作准备。
@@ -196,13 +196,13 @@ const Dashboard = () => {
               )}
               <Card style={{ margin: '20px 0' }}>
                 <div className={style['money-title']}>
-                  {RoleStore.currentRole?.role === AuthType.COMPANY ? '最近一个月发放金额' : '最近一个月返佣金额'}
+                  {RoleStore.currentRole?.roleType === AuthType.COMPANY ? '最近一个月发放金额' : '最近一个月返佣金额'}
                 </div>
                 <div className={style['money']}>￥100.24 元</div>
               </Card>
               <Card>
                 <div className={style['money-title']}>
-                  {RoleStore.currentRole?.role === AuthType.COMPANY ? '最近一个月发放人数' : '最近一个月返佣人数'}
+                  {RoleStore.currentRole?.roleType === AuthType.COMPANY ? '最近一个月发放人数' : '最近一个月返佣人数'}
                 </div>
                 <div className={style['money']}>￥100 人</div>
               </Card>

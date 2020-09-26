@@ -8,7 +8,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.neo.annotation.PassToken;
 import com.example.neo.annotation.UserLoginToken;
 import com.example.neo.constant.Constants;
-import com.example.neo.entity.User;
+import com.example.neo.model.IGetUser;
 import com.example.neo.service.UserService;
 import com.example.neo.utils.ContextHolder;
 import com.example.neo.utils.CookieUtils;
@@ -72,7 +72,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 }
                 ContextHolder.UserContext contextHolder = new ContextHolder.UserContext(userId);
                 ContextHolder.setContext(contextHolder);
-                User user = userService.findByUserId(userId);
+                IGetUser user = userService.findByUserId(userId);
                 if (user == null) {
                     throw new Exception("用户不存在，请重新登录");
                 }

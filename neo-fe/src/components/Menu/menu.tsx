@@ -36,7 +36,7 @@ const SideMenu = () => {
         mode="inline"
         onClick={handleSelect}
       >
-        {RoleStore.currentRole?.role !== AuthType.EMPLOYEE && (
+        {RoleStore.currentRole?.roleType !== AuthType.EMPLOYEE && (
           <Menu.Item key="dashboard">
             <span>
               <HomeOutlined />
@@ -45,7 +45,7 @@ const SideMenu = () => {
           </Menu.Item>
         )}
         {/* 管理员配置 */}
-        {RoleStore.currentRole?.role === AuthType.ADMIN && (
+        {RoleStore.currentRole?.roleType === AuthType.ADMIN && (
           <Menu.Item key="dataquery">
             <span>
               <ShopOutlined />
@@ -53,7 +53,7 @@ const SideMenu = () => {
             </span>
           </Menu.Item>
         )}
-        {RoleStore.currentRole?.role === AuthType.ADMIN && (
+        {RoleStore.currentRole?.roleType === AuthType.ADMIN && (
           <SubMenu
             key="admin"
             title={
@@ -68,7 +68,7 @@ const SideMenu = () => {
             <Menu.Item key="admin/employee">员工档案</Menu.Item>
           </SubMenu>
         )}
-        {RoleStore.currentRole?.role === AuthType.ADMIN && (
+        {RoleStore.currentRole?.roleType === AuthType.ADMIN && (
           <SubMenu
             key="review"
             title={
@@ -88,7 +88,7 @@ const SideMenu = () => {
         )}
 
         {/* 代理商配置 */}
-        {RoleStore.currentRole?.role === AuthType.MERCHANT && (
+        {RoleStore.currentRole?.roleType === AuthType.MERCHANT && (
           <SubMenu
             key="sole"
             title={
@@ -102,7 +102,7 @@ const SideMenu = () => {
             <Menu.Item key="sole/records">客户列表</Menu.Item>
           </SubMenu>
         )}
-        {RoleStore.currentRole?.role === AuthType.MERCHANT && (
+        {RoleStore.currentRole?.roleType === AuthType.MERCHANT && (
           <SubMenu
             key="flexible"
             title={
@@ -118,7 +118,7 @@ const SideMenu = () => {
             <Menu.Item key="flexible/rebates">返佣记录</Menu.Item>
           </SubMenu>
         )}
-        {RoleStore.currentRole?.role === AuthType.MERCHANT && (
+        {RoleStore.currentRole?.roleType === AuthType.MERCHANT && (
           <SubMenu
             key="finance"
             title={
@@ -134,7 +134,7 @@ const SideMenu = () => {
         )}
 
         {/* 公司配置 */}
-        {RoleStore.currentRole?.role === AuthType.COMPANY && (
+        {RoleStore.currentRole?.roleType === AuthType.COMPANY && (
           <SubMenu
             key="payroll"
             title={
@@ -150,7 +150,7 @@ const SideMenu = () => {
             <Menu.Item key="payroll/details">人员发放明细</Menu.Item>
           </SubMenu>
         )}
-        {RoleStore.currentRole?.role === AuthType.COMPANY && (
+        {RoleStore.currentRole?.roleType === AuthType.COMPANY && (
           <SubMenu
             key="finance"
             title={
@@ -167,7 +167,7 @@ const SideMenu = () => {
             <Menu.Item key="finance/receipts">完税凭证</Menu.Item>
           </SubMenu>
         )}
-        {RoleStore.currentRole?.role === AuthType.COMPANY && (
+        {RoleStore.currentRole?.roleType === AuthType.COMPANY && (
           <SubMenu
             key="sign"
             title={
@@ -182,7 +182,7 @@ const SideMenu = () => {
           </SubMenu>
         )}
         {/* 员工配置 */}
-        {RoleStore.currentRole?.role === AuthType.EMPLOYEE && (
+        {RoleStore.currentRole?.roleType === AuthType.EMPLOYEE && (
           <Menu.Item key="report">
             <span>
               <HomeOutlined />
