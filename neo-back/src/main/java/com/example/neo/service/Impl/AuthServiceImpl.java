@@ -1,10 +1,10 @@
 package com.example.neo.service.Impl;
 
 import com.example.neo.constant.Constants;
-import com.example.neo.entity.params.IChangePassword;
+import com.example.neo.model.IChangePassword;
 import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.mapper.UserMapper;
-import com.example.neo.model.User;
+import com.example.neo.entity.User;
 import com.example.neo.service.AuthService;
 import com.example.neo.utils.CookieUtils;
 import lombok.extern.slf4j.Slf4j;

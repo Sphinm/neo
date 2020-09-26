@@ -1,9 +1,9 @@
 package com.example.neo.controller;
 
 import com.example.neo.annotation.UserLoginToken;
-import com.example.neo.entity.params.ICreateUser;
+import com.example.neo.model.ICreateUser;
 import com.example.neo.enums.UserTypeEnum;
-import com.example.neo.model.CompanyInfo;
+import com.example.neo.entity.CompanyInfo;
 import com.example.neo.service.UserService;
 import com.example.neo.utils.ContextHolder;
 import com.example.neo.utils.ResponseBean;

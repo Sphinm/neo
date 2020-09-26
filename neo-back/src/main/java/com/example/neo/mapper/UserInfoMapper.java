@@ -1,6 +1,6 @@
 package com.example.neo.mapper;
 
-import com.example.neo.model.CompanyInfo;
+import com.example.neo.entity.CompanyInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

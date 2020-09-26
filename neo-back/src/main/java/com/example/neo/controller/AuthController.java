@@ -2,10 +2,10 @@ package com.example.neo.controller;
 
 import com.example.neo.annotation.UserLoginToken;
 import com.example.neo.constant.Constants;
-import com.example.neo.entity.params.IChangePassword;
-import com.example.neo.entity.params.ILogin;
+import com.example.neo.model.IChangePassword;
+import com.example.neo.model.ILogin;
 import com.example.neo.enums.ResponseCodeEnum;
-import com.example.neo.model.User;
+import com.example.neo.entity.User;
 import com.example.neo.service.AuthService;
 import com.example.neo.service.UserService;
 import com.example.neo.utils.ContextHolder;

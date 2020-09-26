@@ -8,7 +8,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.neo.annotation.PassToken;
 import com.example.neo.annotation.UserLoginToken;
 import com.example.neo.constant.Constants;
-import com.example.neo.model.User;
+import com.example.neo.entity.User;
 import com.example.neo.service.UserService;
 import com.example.neo.utils.ContextHolder;
 import com.example.neo.utils.CookieUtils;

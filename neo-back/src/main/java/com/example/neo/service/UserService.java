@@ -1,9 +1,9 @@
 package com.example.neo.service;
 
-import com.example.neo.entity.params.ICreateUser;
+import com.example.neo.model.ICreateUser;
 import com.example.neo.enums.UserTypeEnum;
-import com.example.neo.model.CompanyInfo;
-import com.example.neo.model.User;
+import com.example.neo.entity.CompanyInfo;
+import com.example.neo.entity.User;
 
 public interface UserService {
     /**

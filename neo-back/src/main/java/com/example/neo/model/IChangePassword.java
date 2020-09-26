@@ -1,4 +1,4 @@
-package com.example.neo.entity.params;
+package com.example.neo.model;
 
 import lombok.Data;
 

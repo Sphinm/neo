@@ -1,17 +1,18 @@
 package com.example.neo.service.Impl;
 
-import com.example.neo.entity.params.ICreateUser;
+import com.example.neo.model.ICreateUser;
 import com.example.neo.enums.UserTypeEnum;
 import com.example.neo.mapper.UserInfoMapper;
 import com.example.neo.mapper.UserMapper;
-import com.example.neo.model.CompanyInfo;
-import com.example.neo.model.User;
+import com.example.neo.entity.CompanyInfo;
+import com.example.neo.entity.Role;
+import com.example.neo.entity.User;
 import com.example.neo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 @Slf4j
 @Service
@@ -23,7 +24,11 @@ public class UserServiceImpl implements UserService {
     UserMapper userMapper;
 
     public User findByUserId(String userId) {
-        return userMapper.findByUserId(userId);
+        User user = userMapper.findByUserId(userId);
+        Role role = userMapper.findRoleByUserId(user.getRoleId());
+
+        log.info("111 => {} {}", user, role);
+        return user;
     }
 
     /**
@@ -42,7 +47,7 @@ public class UserServiceImpl implements UserService {
      * @param user 用户信息
      */
     public void createUser(ICreateUser user, UserTypeEnum userType) {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Date date = new Date();
         User userDto = new User();
         CompanyInfo companyInfo = new CompanyInfo();
 
@@ -50,13 +55,13 @@ public class UserServiceImpl implements UserService {
         userDto.setUserName(user.getUserName());
         userDto.setMobile(user.getMobile());
         userDto.setPassword("123456");
-        userDto.setIs_locked(0);
-        userDto.setRole_id(userType.getId());
+//        userDto.setIs_locked(0);
+//        userDto.setRole_id(userType.getId());
 //        userDto.setRelated_id();
 //        userDto.setCreator_id();
 //        userDto.setUpdate_id();
-        userDto.setCreator_date(timestamp);
-        userDto.setCreator_date(timestamp);
+        userDto.setCreatorDate(date);
+        userDto.setCreatorDate(date);
 
         if (userType != UserTypeEnum.EMPLOYEE) {
             insertUserInfo(companyInfo);
@@ -74,8 +79,8 @@ public class UserServiceImpl implements UserService {
      *
      */
     @Override
-    public void insertUserInfo(CompanyInfo userinfo) {
-//        CompanyInfo userDo = keepUserInfo(userinfo);
+    public void insertUserInfo(CompanyInfo userInfo) {
+//        CompanyInfo userDo = keepUserInfo(userInfo);
 //        userDo.setUserId(Snowflake.INSTANCE.nextId());
 //        userDo.setCreateTimestamp(System.currentTimeMillis());
 //        log.info("userInfo ===> {}", userDo);

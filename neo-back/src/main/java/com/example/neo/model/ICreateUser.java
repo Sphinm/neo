@@ -1,4 +1,4 @@
-package com.example.neo.entity.params;
+package com.example.neo.model;
 
 import com.example.neo.enums.UserStatusEnum;
 import com.example.neo.enums.UserTypeEnum;

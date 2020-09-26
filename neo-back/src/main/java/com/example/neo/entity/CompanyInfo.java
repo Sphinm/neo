@@ -1,8 +1,9 @@
-package com.example.neo.model;
+package com.example.neo.entity;
 
 import lombok.Data;
 
-import java.sql.Timestamp;
+import java.util.Date;
+
 
 @Data
 public class CompanyInfo {
@@ -10,68 +11,68 @@ public class CompanyInfo {
     /**
      * 公司名称
      */
-    String company_name;
+    String companyName;
     /**
      * 公司税号
      */
-    String company_tax;
+    String companyTax;
     /**
      * 公司地址
      */
-    String company_location;
+    String companyLocation;
     /**
      * 开户行名称
      */
-    String company_bank_name;
+    String companyBankName;
     /**
      * 银行账户（基本户）
      */
-    String company_bank_number;
+    String companyBankNumber;
     /**
      * 所属行业
      */
-    String company_industry;
+    String companyIndustry;
     /**
      * 税率
      */
-    String company_rate;
+    String companyRate;
     /**
      * 公司固定电话
      */
-    String company_fixed_tel;
+    String companyFixedTel;
     /**
      * 联系人姓名
      */
-    String contact_name;
+    String contactName;
     /**
      * 联系人电话
      */
-    String contact_tel;
+    String contactTel;
     /**
      * 收件人姓名
      */
-    String recipient_name;
+    String recipientName;
     /**
      * 收件人电话
      */
-    String recipient_tel;
+    String recipientTel;
     /**
      * 收件人地址
      */
-    String recipient_address;
+    String recipientAddress;
     /**
      * 公司状态(0:待定，1：审核通过)
      */
-    Integer company_status;
+    Integer companyStatus;
     /**
      * 公司类型（0：代理商，1：客户公司，2：管理员）
      */
-    Integer company_type;
+    Integer companyType;
     /**
      * 公司名称
      */
-    Integer creator_id;
-    Integer update_id;
-    Timestamp creator_date;
-    Timestamp update_date;
+    Integer creatorId;
+    Integer updateId;
+    Date createDate;
+    Date updateDate;
 }

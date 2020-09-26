@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 25/09/2020 23:27:54
+ Date: 27/09/2020 00:12:26
 */
 
 SET NAMES utf8mb4;
@@ -38,7 +38,7 @@ CREATE TABLE `neo_company` (
   `recipient_address` varchar(255) DEFAULT NULL COMMENT '收件人地址',
   `company_status` tinyint(1) DEFAULT NULL COMMENT '公司状态(0:待定，1：待定)',
   `creator_id` int(10) unsigned DEFAULT NULL COMMENT '创建人',
-  `creator_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
   `update_id` int(11) DEFAULT NULL COMMENT '更新人',
   `update_date` datetime DEFAULT NULL COMMENT '更新时间',
   `company_type` tinyint(1) DEFAULT NULL COMMENT '公司类型（0：代理商，1：客户公司）',
@@ -62,7 +62,7 @@ CREATE TABLE `neo_company_relation` (
   `company_id` int(11) DEFAULT NULL COMMENT '公司id（关联neo_company中的id）',
   `is_deleted` tinyint(1) DEFAULT NULL COMMENT '是否删除（0：未删除，1：已删除）',
   `creator_id` int(11) DEFAULT NULL COMMENT '创建人id',
-  `creator_date` datetime DEFAULT NULL COMMENT '创建日期',
+  `create_date` datetime DEFAULT NULL COMMENT '创建日期',
   `update_id` int(11) DEFAULT NULL COMMENT '更新人id',
   `update_date` datetime DEFAULT NULL COMMENT '更新日期',
   `is_checked` tinyint(1) DEFAULT NULL COMMENT '是否审核',
@@ -81,7 +81,7 @@ CREATE TABLE `neo_company_tax` (
   `tax_receive` varchar(255) DEFAULT NULL COMMENT '完税凭证文件名',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注信息',
   `creator_id` int(11) DEFAULT NULL COMMENT '创建人id',
-  `creator_date` datetime DEFAULT NULL COMMENT '创建日期',
+  `create_date` datetime DEFAULT NULL COMMENT '创建日期',
   `update_id` int(11) DEFAULT NULL COMMENT '更新人id',
   `update_date` datetime DEFAULT NULL COMMENT '更新日期',
   PRIMARY KEY (`id`)
@@ -101,7 +101,7 @@ CREATE TABLE `neo_employee` (
   `id_check` tinyint(1) DEFAULT NULL COMMENT '实名认证（0：未认证，1：认证成功，2:认证失败）',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   `creator_id` int(11) DEFAULT NULL COMMENT '创建人id',
-  `creator_date` datetime DEFAULT NULL COMMENT '创建日期',
+  `create_date` datetime DEFAULT NULL COMMENT '创建日期',
   `update_id` int(11) DEFAULT NULL COMMENT '更新人id',
   `update_date` datetime DEFAULT NULL COMMENT '更新日期',
   PRIMARY KEY (`id`)
@@ -120,7 +120,7 @@ CREATE TABLE `neo_finance` (
   `rate` float DEFAULT NULL COMMENT '费率',
   `status` tinyint(1) DEFAULT NULL COMMENT '状态',
   `creator_id` int(11) DEFAULT NULL COMMENT '创建人id',
-  `creator_date` datetime DEFAULT NULL COMMENT '创建日期',
+  `create_date` datetime DEFAULT NULL COMMENT '创建日期',
   `update_id` int(11) DEFAULT NULL COMMENT '更新人id',
   `update_date` datetime DEFAULT NULL COMMENT '更新日期',
   PRIMARY KEY (`id`)
@@ -155,7 +155,7 @@ CREATE TABLE `neo_invoice` (
   `receive_address` varchar(255) DEFAULT NULL COMMENT '收件人地址',
   `status` tinyint(1) DEFAULT NULL COMMENT '审核状态（0：待审核，1：审核通过，待寄出，2：审核未通过，3：已寄出）',
   `creator_id` int(11) DEFAULT NULL COMMENT '创建人id',
-  `creator_date` datetime DEFAULT NULL COMMENT '创建日期',
+  `create_date` datetime DEFAULT NULL COMMENT '创建日期',
   `update_id` int(11) DEFAULT NULL COMMENT '更新人id',
   `update_date` datetime DEFAULT NULL COMMENT '更新日期',
   PRIMARY KEY (`id`)
@@ -174,7 +174,7 @@ CREATE TABLE `neo_issue` (
   `status` tinyint(1) DEFAULT NULL COMMENT '发放状态（0：已创建，1：成功，2：部分失败，2：全部失败）',
   `rebate` double DEFAULT NULL COMMENT '返佣金额',
   `creator_id` int(11) DEFAULT NULL COMMENT '创建人id',
-  `creator_date` datetime DEFAULT NULL COMMENT '创建日期',
+  `create_date` datetime DEFAULT NULL COMMENT '创建日期',
   `update_id` int(11) DEFAULT NULL COMMENT '更新人id',
   `update_date` datetime DEFAULT NULL COMMENT '更新日期',
   PRIMARY KEY (`id`)
@@ -197,7 +197,7 @@ CREATE TABLE `neo_issue_detail` (
   `info_verify` varchar(100) DEFAULT NULL COMMENT '验证信息',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   `creator_id` int(11) DEFAULT NULL COMMENT '创建人id',
-  `creator_date` datetime DEFAULT NULL COMMENT '创建日期',
+  `create_date` datetime DEFAULT NULL COMMENT '创建日期',
   `update_id` int(11) DEFAULT NULL COMMENT '更新人id',
   `update_date` datetime DEFAULT NULL COMMENT '更新日期',
   PRIMARY KEY (`id`)
@@ -217,7 +217,7 @@ CREATE TABLE `neo_recharge_record` (
   `invoicing_status` tinyint(1) DEFAULT NULL COMMENT '开票状态（0：未开票，1：已开票）',
   `approval_status` tinyint(1) DEFAULT NULL COMMENT '审核状态(0：待审核，1：审核通过，2：审核未通过)',
   `creator_id` int(11) DEFAULT NULL COMMENT '创建人id',
-  `creator_date` datetime DEFAULT NULL COMMENT '创建日期',
+  `create_date` datetime DEFAULT NULL COMMENT '创建日期',
   `update_id` int(11) DEFAULT NULL COMMENT '更新人id',
   `update_date` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
@@ -239,10 +239,10 @@ CREATE TABLE `neo_role` (
 -- Records of neo_role
 -- ----------------------------
 BEGIN;
-INSERT INTO `neo_role` VALUES (1, 'ADMIN', '管理员', 0);
-INSERT INTO `neo_role` VALUES (2, 'MERCHANT', '代理商', 0);
-INSERT INTO `neo_role` VALUES (3, 'COMPANY', '客户公司', 0);
-INSERT INTO `neo_role` VALUES (4, 'EMPLOYEE', '员工', 0);
+INSERT INTO `neo_role` VALUES (1, '管理员', 'ADMIN', 0);
+INSERT INTO `neo_role` VALUES (2, '代理商', 'MERCHANT', 0);
+INSERT INTO `neo_role` VALUES (3, '客户公司', 'COMPANY', 0);
+INSERT INTO `neo_role` VALUES (4, '员工', 'EMPLOYEE', 0);
 COMMIT;
 
 -- ----------------------------
@@ -270,7 +270,7 @@ CREATE TABLE `neo_sp` (
   `sp_amount` double DEFAULT NULL COMMENT '打款金额',
   `sp_status` tinyint(1) DEFAULT NULL COMMENT '审核状态（0：审核中，1：审核通过，2：审核未通过）',
   `creator_id` int(11) DEFAULT NULL COMMENT '创建人id',
-  `creator_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
   `update_id` int(11) DEFAULT NULL COMMENT '更新人id',
   `update_date` datetime DEFAULT NULL COMMENT '更新时间',
   `is_deleted` tinyint(1) DEFAULT NULL COMMENT '是否删除（0：否，1：是）',
@@ -292,12 +292,19 @@ CREATE TABLE `neo_user` (
   `role_id` int(11) DEFAULT NULL COMMENT '角色id，关联neo_role表id',
   `related_id` int(11) DEFAULT NULL COMMENT '关联id（关联公司id）',
   `creator_id` int(11) DEFAULT NULL COMMENT '创建人id',
-  `creator_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
   `update_id` int(11) DEFAULT NULL COMMENT '更新者id',
   `update_date` datetime DEFAULT NULL COMMENT '更新日期',
   PRIMARY KEY (`id`),
   KEY `u_idx_tel` (`mobile`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
+
+-- ----------------------------
+-- Records of neo_user
+-- ----------------------------
+BEGIN;
+INSERT INTO `neo_user` VALUES (1, NULL, '123456', 'min.su', '131', '111@11.cn', 0, 1, NULL, 1, '2020-09-27 00:09:37', 1, '2020-09-27 00:09:45');
+COMMIT;
 
 -- ----------------------------
 -- Table structure for neo_withdraw
@@ -313,7 +320,7 @@ CREATE TABLE `neo_withdraw` (
   `status` tinyint(1) DEFAULT NULL COMMENT '审核状态（0：待审核，1：审核通过，2：审核不通过）',
   `review_date` datetime DEFAULT NULL COMMENT '审核时间',
   `creator_id` int(11) DEFAULT NULL COMMENT '创建人id',
-  `creator_date` datetime DEFAULT NULL COMMENT '创建日期',
+  `create_date` datetime DEFAULT NULL COMMENT '创建日期',
   `update_id` int(11) DEFAULT NULL COMMENT '更新人id',
   `update_date` datetime DEFAULT NULL COMMENT '更新日期',
   PRIMARY KEY (`id`)
