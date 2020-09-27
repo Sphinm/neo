@@ -2,8 +2,8 @@ package com.example.neo.controller;
 
 import com.example.neo.annotation.UserLoginToken;
 import com.example.neo.entity.CompanyInfo;
-import com.example.neo.entity.User;
 import com.example.neo.enums.UserTypeEnum;
+import com.example.neo.model.ICreateUser;
 import com.example.neo.service.UserService;
 import com.example.neo.utils.ContextHolder;
 import com.example.neo.utils.ResponseBean;
@@ -22,7 +22,7 @@ public class UserController {
 
     @UserLoginToken
     @PostMapping("/create/user")
-    public ResponseBean createUser(@RequestBody User user, UserTypeEnum userType) {
+    public ResponseBean createUser(@RequestBody ICreateUser user, UserTypeEnum userType) {
         userService.createUser(user, userType);
         return ResponseBean.success(user);
     }
@@ -37,8 +37,8 @@ public class UserController {
 
     @UserLoginToken
     @PostMapping("/insert/userInfo")
-    public ResponseBean insertUserInfo(@RequestBody CompanyInfo companyInfo) {
-        userService.insertUserInfo(companyInfo);
+    public ResponseBean insertUserInfo(@RequestBody CompanyInfo companyInfo, UserTypeEnum userType) {
+        userService.insertUserInfo(companyInfo, userType);
         return ResponseBean.success();
     }
 

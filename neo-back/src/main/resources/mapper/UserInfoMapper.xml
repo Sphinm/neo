@@ -7,15 +7,9 @@
     </select>
 
     <insert id="insertUserInfo" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO neo_company (
-         company_name, company_tax, company_location, company_bank_name, company_bank_number, company_industry, company_rate,
-         company_fixed_tel, contact_name, contact_tel, recipient_name, recipient_tel, recipient_address, company_status,
-         creator_id, create_date, update_id, update_date, company_type
-        ) VALUES (
-        #{companyName},#{companyTax},#{companyLocation},#{companyBankName},#{companyBankNumber},#{companyIndustry},#{companyRate},
-        #{companyFixedTel},#{contactName},#{contactTel},#{recipientName},#{recipientTel},#{recipientAddress},#{companyStatus},#{companyType},
-        #{creatorId},#{updateId},#{createDate},#{updateDate},
-        )
+        INSERT INTO neo_company (company_name, company_tax, company_location, company_bank_name, company_bank_number, company_industry, company_rate,company_fixed_tel, contact_name, contact_tel, recipient_name, recipient_tel, recipient_address, company_status,creator_id, create_date, update_id, update_date, company_type)
+        VALUES (
+        #{companyName},#{companyTax},#{companyLocation},#{companyBankName},#{companyBankNumber},#{companyIndustry},#{companyRate},#{companyFixedTel},#{contactName},#{contactTel},#{recipientName},#{recipientTel},#{recipientAddress},#{companyStatus},#{creatorId},#{createDate},#{updateId},#{updateDate},#{companyType})
     </insert>
 
     <update id="updateUserInfo">
@@ -23,7 +17,7 @@
         company_bank_number=#{companyBankNumber},company_industry=#{companyIndustry},company_rate=#{companyRate},contact_name=#{contactName},company_fixed_tel=#{companyFixedTel},
         contact_tel=#{contactTel},recipient_name=#{recipientName},recipient_tel=#{recipientTel},recipient_address=#{recipientAddress},
         company_status=#{companyStatus},creator_id=#{creatorId},create_date=#{createDate},update_id=#{updateId},
-        update_date=#{updateDate},company_type=#{companyType},
+        update_date=#{updateDate},company_type=#{companyType}
         WHERE id=#{userId}
     </update>
 </mapper>

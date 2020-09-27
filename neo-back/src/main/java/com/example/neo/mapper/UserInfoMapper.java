@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 public interface UserInfoMapper {
     CompanyInfo fetchUserInfo(@Param("userId")  String userId);
 
-    void insertUserInfo(CompanyInfo companyInfo);
+    int insertUserInfo(CompanyInfo companyInfo);
 
     void updateUserInfo(CompanyInfo companyInfo);
 }

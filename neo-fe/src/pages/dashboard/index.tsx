@@ -50,7 +50,6 @@ const Dashboard = () => {
   const fetchUserDetailInfo = async () => {
     try {
       const { data } = await fetchUserInfo()
-      console.log(22, data)
       setUserInfo(data ? data : {})
     } catch (error) {
       handleError(error)
@@ -82,7 +81,7 @@ const Dashboard = () => {
         fetchUserDetailInfo()
       } else {
         // insert
-        await insertUserInfo(values)
+        await insertUserInfo({ ...values, userType: AuthType.ADMIN})
       }
     } catch (error) {
       handleError(error)
@@ -131,46 +130,46 @@ const Dashboard = () => {
                 </Button>
               )}
               <Descriptions title="基本信息">
-                {Object.keys(userInfo).length > 0 && (
+                {Object.keys(userInfo).length > 0 && userInfo.contactName && (
                   <>
                     <Descriptions.Item label="对接人">
-                      <span className={style['item-title']}>{userInfo?.userName}</span>
+                      <span className={style['item-title']}>{userInfo?.contactName}</span>
                     </Descriptions.Item>
                     <Descriptions.Item label="对接手机号">
-                      <span className={style['item-title']}>{userInfo?.companyMobile}</span>
+                      <span className={style['item-title']}>{userInfo?.contactTel}</span>
                     </Descriptions.Item>
                     <Descriptions.Item label="公司名称">
-                      <span className={style['item-title']}>{userInfo?.company}</span>
+                      <span className={style['item-title']}>{userInfo?.companyName}</span>
                     </Descriptions.Item>
                     <Descriptions.Item label="公司税号">
-                      <span className={style['item-title']}>{userInfo?.taxNumber}</span>
+                      <span className={style['item-title']}>{userInfo?.companyTax}</span>
                     </Descriptions.Item>
                     <Descriptions.Item label="公司固话">
-                      <span className={style['item-title']}>{userInfo?.fixedTelephone}</span>
+                      <span className={style['item-title']}>{userInfo?.companyFixedTel}</span>
                     </Descriptions.Item>
                     <Descriptions.Item label="费率">
-                      <span className={style['item-title']}>{userInfo?.rate ?? 0}%</span>
+                      <span className={style['item-title']}>{userInfo?.companyRate ?? 0}%</span>
                     </Descriptions.Item>
                     <Descriptions.Item label="所属行业">
-                      <span className={style['item-title']}>{userInfo?.industry}</span>
+                      <span className={style['item-title']}>{userInfo?.companyIndustry}</span>
                     </Descriptions.Item>
                     <Descriptions.Item label="公司地址">
-                      <span className={style['item-title']}>{userInfo?.companyAddress}</span>
+                      <span className={style['item-title']}>{userInfo?.companyLocation}</span>
                     </Descriptions.Item>
                     <Descriptions.Item label="收件人">
-                      <span className={style['item-title']}>{userInfo?.receiverName}</span>
+                      <span className={style['item-title']}>{userInfo?.recipientName}</span>
                     </Descriptions.Item>
                     <Descriptions.Item label="收件人手机号">
-                      <span className={style['item-title']}>{userInfo?.receiverMobile}</span>
+                      <span className={style['item-title']}>{userInfo?.recipientTel}</span>
                     </Descriptions.Item>
                     <Descriptions.Item label="收件地址">
-                      <span className={style['item-title']}>{userInfo?.receiverAddress}</span>
+                      <span className={style['item-title']}>{userInfo?.recipientAddress}</span>
                     </Descriptions.Item>
                     <Descriptions.Item label="开户行">
-                      <span className={style['item-title']}>{userInfo.bank}</span>
+                      <span className={style['item-title']}>{userInfo.companyBankName}</span>
                     </Descriptions.Item>
                     <Descriptions.Item label="银行账号">
-                      <span className={style['item-title']}>{userInfo?.bankAccount}</span>
+                      <span className={style['item-title']}>{userInfo?.companyBankNumber}</span>
                     </Descriptions.Item>
                   </>
                 )}
@@ -226,51 +225,51 @@ const Dashboard = () => {
         ]}
       >
         <Form form={form}>
-          <Form.Item label="对接人" name="userName" rules={[{ required: true, message: '请输入对接人' }]}>
+          <Form.Item label="对接人" name="contactName" rules={[{ required: true, message: '请输入对接人' }]}>
             <Input placeholder="请输入对接人"></Input>
           </Form.Item>
           <Form.Item
             label="对接人手机号"
-            name="companyMobile"
+            name="contactTel"
             rules={[{ required: true, message: '请输入对接人手机号' }]}
           >
             <Input placeholder="请输入对接人手机号"></Input>
           </Form.Item>
-          <Form.Item label="公司名称" name="company" rules={[{ required: true, message: '请输入公司名称' }]}>
+          <Form.Item label="公司名称" name="companyName" rules={[{ required: true, message: '请输入公司名称' }]}>
             <Input placeholder="请输入公司名称"></Input>
           </Form.Item>
-          <Form.Item label="公司税号" name="taxNumber" rules={[{ required: true, message: '请输入公司税号' }]}>
+          <Form.Item label="公司税号" name="companyTax" rules={[{ required: true, message: '请输入公司税号' }]}>
             <Input placeholder="请输入公司税号"></Input>
           </Form.Item>
-          <Form.Item label="公司固话" name="fixedTelephone" rules={[{ required: true, message: '请输入公司固定电话' }]}>
+          <Form.Item label="公司固话" name="companyFixedTel" rules={[{ required: true, message: '请输入公司固定电话' }]}>
             <Input placeholder="请输入公司固定电话"></Input>
           </Form.Item>
-          <Form.Item label="费率" name="rate" rules={[{ required: true, message: '请输入费率' }]}>
+          <Form.Item label="费率" name="companyRate" rules={[{ required: true, message: '请输入费率' }]}>
             <Input placeholder="请输入费率"></Input>
           </Form.Item>
-          <Form.Item label="所属行业" name="industry" rules={[{ required: true, message: '请输入所属行业' }]}>
+          <Form.Item label="所属行业" name="companyIndustry" rules={[{ required: true, message: '请输入所属行业' }]}>
             <Input placeholder="请输入所属行业"></Input>
           </Form.Item>
-          <Form.Item label="公司地址" name="companyAddress" rules={[{ required: true, message: '请输入公司地址' }]}>
+          <Form.Item label="公司地址" name="companyLocation" rules={[{ required: true, message: '请输入公司地址' }]}>
             <Input placeholder="请输入公司地址"></Input>
           </Form.Item>
-          <Form.Item label="收件人" name="receiverName" rules={[{ required: true, message: '请输入收件人手机号' }]}>
+          <Form.Item label="收件人" name="recipientName" rules={[{ required: true, message: '请输入收件人手机号' }]}>
             <Input placeholder="请输入收件人手机号"></Input>
           </Form.Item>
           <Form.Item
             label="收件人手机号"
-            name="receiverMobile"
+            name="recipientTel"
             rules={[{ required: true, message: '请输入收件人手机号' }]}
           >
             <Input placeholder="收件人手机号"></Input>
           </Form.Item>
-          <Form.Item label="开户行" name="bank" rules={[{ required: true, message: '请输入开户行' }]}>
+          <Form.Item label="开户行" name="companyBankName" rules={[{ required: true, message: '请输入开户行' }]}>
             <Input placeholder="请输入开户行"></Input>
           </Form.Item>
-          <Form.Item label="银行账号" name="bankAccount" rules={[{ required: true, message: '请输入银行账号' }]}>
+          <Form.Item label="银行账号" name="companyBankNumber" rules={[{ required: true, message: '请输入银行账号' }]}>
             <Input placeholder="请输入银行账号"></Input>
           </Form.Item>
-          <Form.Item label="收件地址" name="receiverAddress" rules={[{ required: true, message: '请输入收件人地址' }]}>
+          <Form.Item label="收件地址" name="recipientAddress" rules={[{ required: true, message: '请输入收件人地址' }]}>
             <Input placeholder="请输入收件人地址"></Input>
           </Form.Item>
         </Form>
