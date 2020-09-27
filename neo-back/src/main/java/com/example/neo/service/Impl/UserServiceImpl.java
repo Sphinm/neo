@@ -26,13 +26,11 @@ public class UserServiceImpl implements UserService {
     public IGetUser findByUserId(String userId) {
         User user = userMapper.findByUserId(userId);
         Role role = userMapper.findRoleByUserId(user.getRoleId());
-        CompanyInfo companyInfo = new CompanyInfo();
-        log.info("info1111 => {}", companyInfo);
-        if (user.getRelatedId() > 0) {
-            companyInfo = userMapper.findCompanyInfo(user.getRelatedId());
-        } else {
-//            companyInfo = {};
-        }
+//        CompanyInfo companyInfo = new CompanyInfo();
+//        log.info("info1111 => {}", companyInfo);
+//        if (user.getRelatedId() > 0) {
+//            companyInfo = userMapper.findCompanyInfo(user.getRelatedId());
+//        }
         IGetUser u = new IGetUser();
         u.setUserName(user.getUserName());
         u.setEmail(user.getEmail());
@@ -40,7 +38,7 @@ public class UserServiceImpl implements UserService {
         u.setIsLocked(user.getIsLocked());
         u.setRoleName(role.getRoleName());
         u.setRoleType(role.getRoleType());
-        u.setUserInfo(companyInfo);
+//        u.setUserInfo(companyInfo);
         log.info("111 => {}", u);
         return u;
     }
