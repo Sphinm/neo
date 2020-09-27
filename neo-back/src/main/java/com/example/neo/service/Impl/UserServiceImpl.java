@@ -26,7 +26,13 @@ public class UserServiceImpl implements UserService {
     public IGetUser findByUserId(String userId) {
         User user = userMapper.findByUserId(userId);
         Role role = userMapper.findRoleByUserId(user.getRoleId());
-
+        CompanyInfo companyInfo = new CompanyInfo();
+        log.info("info1111 => {}", companyInfo);
+        if (user.getRelatedId() > 0) {
+            companyInfo = userMapper.findCompanyInfo(user.getRelatedId());
+        } else {
+//            companyInfo = {};
+        }
         IGetUser u = new IGetUser();
         u.setUserName(user.getUserName());
         u.setEmail(user.getEmail());
@@ -34,6 +40,7 @@ public class UserServiceImpl implements UserService {
         u.setIsLocked(user.getIsLocked());
         u.setRoleName(role.getRoleName());
         u.setRoleType(role.getRoleType());
+        u.setUserInfo(companyInfo);
         log.info("111 => {}", u);
         return u;
     }
@@ -52,9 +59,9 @@ public class UserServiceImpl implements UserService {
      * 创建代理商和公司用户
      * 也可以创建公司和员工
      * @param user 用户信息
+     * 创建用户的时候先判断用户有无公司信息，如果没有则不创建公司信息，同时无关联id
      */
     public void createUser(User user, UserTypeEnum userType) {
-        // 创建用户的时候先判断用户有无公司信息，如果没有则不创建公司信息，同时无关联id
         Date date = new Date();
         User userDto = new User();
         CompanyInfo companyInfo = new CompanyInfo();
@@ -63,7 +70,7 @@ public class UserServiceImpl implements UserService {
         userDto.setUserName(user.getUserName());
         userDto.setMobile(user.getMobile());
         userDto.setRoleId(userType.getId());
-//        userDto.setRelated_id();
+//        userDto.setRelatedId();
 //        userDto.setCreatorId();
 //        userDto.setUpdateId();
         userDto.setCreateDate(date);

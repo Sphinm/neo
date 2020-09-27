@@ -11,4 +11,5 @@ public class IGetUser {
     Integer isLocked;
     String roleName;
     String roleType;
+    Object userInfo;
 }
