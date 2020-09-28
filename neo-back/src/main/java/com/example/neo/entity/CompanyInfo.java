@@ -65,7 +65,7 @@ public class CompanyInfo {
      */
     Integer companyStatus;
     /**
-     * 公司类型（0：代理商，1：客户公司，2：管理员）
+     * 公司类型（0：管理员，1：代理商，2：客户公司）
      */
     Integer companyType;
     /**

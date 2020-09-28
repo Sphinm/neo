@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { RoleStore } from '@/store/roleStore'
 import { useObserver } from 'mobx-react'
-import { Card, Button, Row, Col, Descriptions, Modal, Input, Form } from 'antd'
+import { Card, Button, Row, Col, Descriptions, Modal, Input, Form, Spin } from 'antd'
 import history from '@/libs/history'
 import echarts from 'echarts/lib/echarts'
 import 'echarts/lib/chart/line'
@@ -25,6 +25,7 @@ const Dashboard = () => {
   const chartRef = useRef<CanvasType>(null)
   const [visible, setVisible] = useState(false)
   const [userInfo, setUserInfo] = useState<any>({})
+  const [isLoaded, setLoaded] = useState<boolean>(false)
   let chartInstance: echarts.ECharts | null = null
 
   const renderChart = () => {
@@ -43,6 +44,7 @@ const Dashboard = () => {
   }, [])
 
   useEffect(() => {
+    setLoaded(true)
     RoleStore.fetchCurrentRole()
     fetchUserDetailInfo()
   }, [])
@@ -53,6 +55,8 @@ const Dashboard = () => {
       setUserInfo(data ? data : {})
     } catch (error) {
       handleError(error)
+    } finally {
+      setLoaded(false)
     }
   }
 
@@ -81,7 +85,7 @@ const Dashboard = () => {
         fetchUserDetailInfo()
       } else {
         // insert
-        await insertUserInfo({ ...values, userType: AuthType.ADMIN})
+        await insertUserInfo(values, AuthType.ADMIN)
       }
     } catch (error) {
       handleError(error)
@@ -95,7 +99,7 @@ const Dashboard = () => {
   }
 
   return useObserver(() => (
-    <>
+    <Spin spinning={isLoaded}>
       {RoleStore.currentRole?.roleType !== 'ADMIN' && (
         <Card className={style['dash-header']}>
           <div className={style['money-title']}>账户可用余额</div>
@@ -228,11 +232,7 @@ const Dashboard = () => {
           <Form.Item label="对接人" name="contactName" rules={[{ required: true, message: '请输入对接人' }]}>
             <Input placeholder="请输入对接人"></Input>
           </Form.Item>
-          <Form.Item
-            label="对接人手机号"
-            name="contactTel"
-            rules={[{ required: true, message: '请输入对接人手机号' }]}
-          >
+          <Form.Item label="对接人手机号" name="contactTel" rules={[{ required: true, message: '请输入对接人手机号' }]}>
             <Input placeholder="请输入对接人手机号"></Input>
           </Form.Item>
           <Form.Item label="公司名称" name="companyName" rules={[{ required: true, message: '请输入公司名称' }]}>
@@ -241,7 +241,11 @@ const Dashboard = () => {
           <Form.Item label="公司税号" name="companyTax" rules={[{ required: true, message: '请输入公司税号' }]}>
             <Input placeholder="请输入公司税号"></Input>
           </Form.Item>
-          <Form.Item label="公司固话" name="companyFixedTel" rules={[{ required: true, message: '请输入公司固定电话' }]}>
+          <Form.Item
+            label="公司固话"
+            name="companyFixedTel"
+            rules={[{ required: true, message: '请输入公司固定电话' }]}
+          >
             <Input placeholder="请输入公司固定电话"></Input>
           </Form.Item>
           <Form.Item label="费率" name="companyRate" rules={[{ required: true, message: '请输入费率' }]}>
@@ -274,7 +278,7 @@ const Dashboard = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </>
+    </Spin>
   ))
 }
 

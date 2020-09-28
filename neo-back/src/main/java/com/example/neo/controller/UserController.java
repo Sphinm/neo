@@ -9,10 +9,7 @@ import com.example.neo.utils.ContextHolder;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -22,7 +19,7 @@ public class UserController {
 
     @UserLoginToken
     @PostMapping("/create/user")
-    public ResponseBean createUser(@RequestBody ICreateUser user, UserTypeEnum userType) {
+    public ResponseBean createUser(@RequestBody ICreateUser user, @RequestParam("type") UserTypeEnum userType) {
         userService.createUser(user, userType);
         return ResponseBean.success(user);
     }
@@ -37,7 +34,7 @@ public class UserController {
 
     @UserLoginToken
     @PostMapping("/insert/userInfo")
-    public ResponseBean insertUserInfo(@RequestBody CompanyInfo companyInfo, UserTypeEnum userType) {
+    public ResponseBean insertUserInfo(@RequestBody CompanyInfo companyInfo, @RequestParam("type") UserTypeEnum userType) {
         userService.insertUserInfo(companyInfo, userType);
         return ResponseBean.success();
     }
