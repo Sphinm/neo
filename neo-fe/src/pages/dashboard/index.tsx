@@ -160,6 +160,9 @@ const Dashboard = () => {
                     <Descriptions.Item label="公司地址">
                       <span className={style['item-title']}>{userInfo?.companyLocation}</span>
                     </Descriptions.Item>
+                    <Descriptions.Item>
+                      <span></span>
+                    </Descriptions.Item>
                     <Descriptions.Item label="收件人">
                       <span className={style['item-title']}>{userInfo?.recipientName}</span>
                     </Descriptions.Item>

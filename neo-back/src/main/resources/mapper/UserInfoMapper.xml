@@ -18,6 +18,6 @@
         contact_tel=#{contactTel},recipient_name=#{recipientName},recipient_tel=#{recipientTel},recipient_address=#{recipientAddress},
         company_status=#{companyStatus},creator_id=#{creatorId},create_date=#{createDate},update_id=#{updateId},
         update_date=#{updateDate},company_type=#{companyType}
-        WHERE id=#{userId}
+        WHERE id=#{id}
     </update>
 </mapper>

@@ -114,12 +114,14 @@ public class UserServiceImpl implements UserService {
         CompanyInfo userDo = keepUserInfo(companyInfo);
         userDo.setCreatorId(companyInfo.getCreatorId());
         userDo.setCreateDate(companyInfo.getCreateDate());
+        log.info("==========> {}", userDo);
         userInfoMapper.updateUserInfo(userDo);
     }
 
     private CompanyInfo keepUserInfo(CompanyInfo companyInfo) {
         Date date = new Date();
         CompanyInfo userDo = new CompanyInfo();
+        userDo.setId(companyInfo.getId());
         userDo.setCompanyName(companyInfo.getCompanyName());
         userDo.setCompanyTax(companyInfo.getCompanyTax());
         userDo.setCompanyLocation(companyInfo.getCompanyLocation());
