@@ -43,7 +43,7 @@ public class UserController {
     @PostMapping("/update/userInfo")
     public ResponseBean updateUserInfo(@RequestBody CompanyInfo companyInfo) {
         userService.updateUserInfo(companyInfo);
-        return ResponseBean.success();
+        return ResponseBean.success(companyInfo);
     }
 
 }

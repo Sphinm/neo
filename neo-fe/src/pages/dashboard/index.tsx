@@ -81,8 +81,8 @@ const Dashboard = () => {
     try {
       if (Object.keys(userInfo).length) {
         // update
-        await updateUserInfo({ ...userInfo, ...values })
-        fetchUserDetailInfo()
+        const { data } = await updateUserInfo({ ...userInfo, ...values })
+        setUserInfo(data ? data : {})
       } else {
         // insert
         await insertUserInfo(values, AuthType.ADMIN)

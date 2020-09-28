@@ -65,10 +65,8 @@ public class UserServiceImpl implements UserService {
     public void createUser(ICreateUser user, UserTypeEnum userType) {
         Date date = new Date();
         User userDto = new User();
-        log.debug("===============>");
         if (user.getCompanyName() == null || userType != UserTypeEnum.EMPLOYEE) {
             CompanyInfo companyInfo = new CompanyInfo();
-
             insertUserInfo(companyInfo, userType);
         }
 
@@ -90,7 +88,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 添加用户信息
+     * 创建公司用户信息
      *
      */
     @Override
@@ -98,15 +96,15 @@ public class UserServiceImpl implements UserService {
         Date date = new Date();
         CompanyInfo userDo = keepUserInfo(companyInfo);
         userDo.setCreatorId(companyInfo.getCreatorId());
+        userDo.setCreateDate(date);
         userDo.setCompanyStatus(userType == UserTypeEnum.ADMIN ? 1 : 0);
         userDo.setCompanyType(userType.getId());
-        userDo.setCreateDate(date);
-        log.info("userInfo ===> {}", userDo);
+        log.info("insertUserInfo ===> {}", userDo);
        return userInfoMapper.insertUserInfo(userDo);
     }
 
     /**
-     * 更新用户信息
+     * 更新公司用户信息
      *
      */
     @Override
@@ -114,7 +112,7 @@ public class UserServiceImpl implements UserService {
         CompanyInfo userDo = keepUserInfo(companyInfo);
         userDo.setCreatorId(companyInfo.getCreatorId());
         userDo.setCreateDate(companyInfo.getCreateDate());
-        log.info("==========> {}", userDo);
+        log.info("updateUserInfo ==========> {}", userDo);
         userInfoMapper.updateUserInfo(userDo);
     }
 
