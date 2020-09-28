@@ -110,6 +110,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserInfo(CompanyInfo companyInfo) {
         CompanyInfo userDo = keepUserInfo(companyInfo);
+        userDo.setId(companyInfo.getId());
         userDo.setCreatorId(companyInfo.getCreatorId());
         userDo.setCreateDate(companyInfo.getCreateDate());
         log.info("updateUserInfo ==========> {}", userDo);
@@ -119,7 +120,6 @@ public class UserServiceImpl implements UserService {
     private CompanyInfo keepUserInfo(CompanyInfo companyInfo) {
         Date date = new Date();
         CompanyInfo userDo = new CompanyInfo();
-        userDo.setId(companyInfo.getId());
         userDo.setCompanyName(companyInfo.getCompanyName());
         userDo.setCompanyTax(companyInfo.getCompanyTax());
         userDo.setCompanyLocation(companyInfo.getCompanyLocation());
