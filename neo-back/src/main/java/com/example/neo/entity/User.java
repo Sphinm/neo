@@ -23,10 +23,9 @@ public class User {
     /**
      * 关联id，关联neo_company表id
      */
-    String relatedId;
-
-    String creatorId;
-    String updateId;
+    Integer relatedId;
+    Integer creatorId;
+    Integer updateId;
     Date createDate;
     Date updateDate;
 }

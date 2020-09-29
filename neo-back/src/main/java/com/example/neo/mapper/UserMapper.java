@@ -1,5 +1,6 @@
 package com.example.neo.mapper;
 
+import com.example.neo.entity.CompanyInfo;
 import com.example.neo.model.IChangePassword;
 import com.example.neo.entity.User;
 import com.example.neo.entity.Role;
@@ -13,6 +14,8 @@ public interface UserMapper {
     User findByUserId(@Param("userId") String userId);
 
     Role findRoleByUserId(@Param("roleId") int roleId);
+
+    CompanyInfo findCompanyInfo(@Param("relatedId") int relatedId);
 
     void createUser(User user);
 

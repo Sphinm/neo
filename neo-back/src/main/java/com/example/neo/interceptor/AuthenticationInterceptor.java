@@ -33,7 +33,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
-//        String cookies = httpServletRequest.getHeader("Cookie"); // 从 http 请求头获取 token
         String token = CookieUtils.getRaw(Constants.TOKEN_KEY);
         // 如果不是映射到方法直接通过
         if (!(object instanceof HandlerMethod)) {

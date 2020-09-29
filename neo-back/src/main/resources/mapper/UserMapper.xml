@@ -22,6 +22,6 @@
     </insert>
 
     <update id="changePassword">
-        UPDATE neo_user SET password = #{pwd.newPwd} WHERE user_id=#{userId}
+        UPDATE neo_user SET password = #{pwd.newPwd} WHERE id=#{userId}
     </update>
 </mapper>

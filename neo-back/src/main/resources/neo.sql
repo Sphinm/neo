@@ -11,7 +11,7 @@
  Target Server Version : 80012
  File Encoding         : 65001
 
- Date: 27/09/2020 00:12:26
+ Date: 27/09/2020 23:52:20
 */
 
 SET NAMES utf8mb4;
@@ -37,19 +37,20 @@ CREATE TABLE `neo_company` (
   `recipient_tel` varchar(255) DEFAULT NULL COMMENT '收件人电话',
   `recipient_address` varchar(255) DEFAULT NULL COMMENT '收件人地址',
   `company_status` tinyint(1) DEFAULT NULL COMMENT '公司状态(0:待定，1：待定)',
-  `creator_id` int(10) unsigned DEFAULT NULL COMMENT '创建人',
+  `creator_id` int(45) unsigned DEFAULT NULL COMMENT '创建人',
   `create_date` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_id` int(11) DEFAULT NULL COMMENT '更新人',
+  `update_id` int(45) DEFAULT NULL COMMENT '更新人',
   `update_date` datetime DEFAULT NULL COMMENT '更新时间',
-  `company_type` tinyint(1) DEFAULT NULL COMMENT '公司类型（0：代理商，1：客户公司）',
+  `company_type` tinyint(1) DEFAULT NULL COMMENT '公司类型（0: 管理员，1：代理商，2：客户公司）',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='公司客户';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='公司客户';
 
 -- ----------------------------
 -- Records of neo_company
 -- ----------------------------
 BEGIN;
-INSERT INTO `neo_company` VALUES (1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3);
+INSERT INTO `neo_company` VALUES (2, '马大哈', '10292398394757', '北京望京', '北京银行', '10203223423523423', '计算机科学与技术', '12', '苏敏', '010-123131234', '13211112222', '苏敏', '193828237474', '上海哈哈哈哈', NULL, NULL, '2020-09-27 10:28:17', NULL, '2020-09-27 10:28:17', NULL);
+INSERT INTO `neo_company` VALUES (3, '123', '123', '123', '123', '23', '123', '123', '123', '123', '123', '123', '123', '123', NULL, NULL, '2020-09-27 10:39:35', NULL, '2020-09-27 10:39:35', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -303,7 +304,7 @@ CREATE TABLE `neo_user` (
 -- Records of neo_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `neo_user` VALUES (1, NULL, '123456', 'min.su', '131', '111@11.cn', 0, 1, NULL, 1, '2020-09-27 00:09:37', 1, '2020-09-27 00:09:45');
+INSERT INTO `neo_user` VALUES (1, NULL, '123', 'min.su', '131', '111@11.cn', 0, 1, NULL, 1, '2020-09-27 00:09:37', 1, '2020-09-27 00:09:45');
 COMMIT;
 
 -- ----------------------------

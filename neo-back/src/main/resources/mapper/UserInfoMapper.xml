@@ -3,23 +3,21 @@
 <mapper namespace="com.example.neo.mapper.UserInfoMapper">
 
     <select id="fetchUserInfo" resultType="com.example.neo.entity.CompanyInfo">
-      SELECT * FROM user_info where user_id = #{userId}
+      SELECT * FROM neo_company where id = #{userId}
     </select>
 
     <insert id="insertUserInfo" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO user_info (
-         user_id, user_name, company, tax_number, company_mobile, company_address, fixed_telephone, rate, industry, bank, bank_account,
-         receiver_name, receiver_mobile, receiver_address, create_timestamp, update_timestamp
-        ) VALUES (
-        #{userId},#{userName},#{company},#{taxNumber},#{companyMobile},#{companyAddress},#{fixedTelephone},#{rate},
-        #{industry},#{bank},#{bankAccount},#{receiverName},#{receiverMobile},#{receiverAddress},#{createTimestamp},#{updateTimestamp}
-        )
+        INSERT INTO neo_company (company_name, company_tax, company_location, company_bank_name, company_bank_number, company_industry, company_rate,company_fixed_tel, contact_name, contact_tel, recipient_name, recipient_tel, recipient_address, company_status,creator_id, create_date, update_id, update_date, company_type)
+        VALUES (
+        #{companyName},#{companyTax},#{companyLocation},#{companyBankName},#{companyBankNumber},#{companyIndustry},#{companyRate},#{companyFixedTel},#{contactName},#{contactTel},#{recipientName},#{recipientTel},#{recipientAddress},#{companyStatus},#{creatorId},#{createDate},#{updateId},#{updateDate},#{companyType})
     </insert>
 
     <update id="updateUserInfo">
-        UPDATE user_info SET user_name=#{userName},company=#{company},tax_number=#{taxNumber},company_mobile=#{companyMobile},company_address=#{companyAddress},
-        fixed_telephone=#{fixedTelephone},rate=#{rate},industry=#{industry},bank=#{bank},bank_account=#{bankAccount},receiver_name=#{receiverName},
-        receiver_mobile=#{receiverMobile},receiver_address=#{receiverAddress},update_timestamp=#{updateTimestamp}
-        WHERE user_id=#{userId}
+        UPDATE neo_company SET company_name=#{companyName},company_tax=#{companyTax},company_location=#{companyLocation},company_bank_name=#{companyBankName},
+        company_bank_number=#{companyBankNumber},company_industry=#{companyIndustry},company_rate=#{companyRate},contact_name=#{contactName},company_fixed_tel=#{companyFixedTel},
+        contact_tel=#{contactTel},recipient_name=#{recipientName},recipient_tel=#{recipientTel},recipient_address=#{recipientAddress},
+        company_status=#{companyStatus},creator_id=#{creatorId},create_date=#{createDate},update_id=#{updateId},
+        update_date=#{updateDate},company_type=#{companyType}
+        WHERE id=#{id}
     </update>
 </mapper>
