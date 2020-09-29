@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+    PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+    "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <classPathEntry location="C:\xuhr\apache-maven-3.6.3\repository\mysql\mysql-connector-java\8.0.20\mysql-connector-java-8.0.20.jar" />
+
+    <context id="my" targetRuntime="MyBatis3">
+
+        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"></plugin>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"></plugin>
+        <commentGenerator>
+            <!-- 这个元素用来去除指定生成的注释中是否包含生成的日期 false:表示保护 -->
+            <!-- 如果生成日期，会造成即使修改一个字段，整个实体类所有属性都会发生变化，不利于版本控制，所以设置为true -->
+            <property name="suppressDate" value="true" />
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="false" />
+        </commentGenerator>
+        <!--数据库链接URL，用户名、密码 -->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/neo?characterEncoding=UTF-8&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai"
+                        userId="root"
+                        password="root">
+        </jdbcConnection>
+        <javaTypeResolver>
+            <!-- This property is used to specify whether MyBatis Generator should
+             force the use of java.math.BigDecimal for DECIMAL and NUMERIC fields, -->
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+        <!-- 指定javaBean的生成策略  文件夹自己定义-->
+        <!--同样Mac用户：targetProject 为全路径-->
+        <javaModelGenerator targetPackage="com.example.neo.mybatis.model"
+                            targetProject=".\src\main\java">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!-- sqlMapGenerator：sql映射生成策略： -->
+        <!--同样Mac用户：targetProject 为全路径-->
+        <sqlMapGenerator targetPackage="com.example.neo.mybatis.model.mapper.xml"
+                         targetProject=".\src\main\java">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <!-- javaClientGenerator:指定mapper接口所在的位置 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.neo.mybatis.model.mapper"
+                             targetProject=".\src\main\java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <!-- 指定要逆向分析哪些表：根据表要创建javaBean -->
+        <table tableName="neo_user" domainObjectName="neoUser"></table>
+        <table tableName="neo_company" domainObjectName="neoCompany"></table>
+        <table tableName="neo_company_relation" domainObjectName="neoCompanyRelation"></table>
+        <table tableName="neo_company_tax" domainObjectName="neoCompanyTax"></table>
+        <table tableName="neo_employee" domainObjectName="neoEmployee"></table>
+        <table tableName="neo_finance" domainObjectName="neoFinance"></table>
+        <table tableName="neo_functions" domainObjectName="neoFunctions"></table>
+        <table tableName="neo_invoice" domainObjectName="neoInvoice"></table>
+        <table tableName="neo_issue" domainObjectName="neoIssue"></table>
+        <table tableName="neo_issue_detail" domainObjectName="neoIssueDetail"></table>
+        <table tableName="neo_recharge_record" domainObjectName="neoRechargeRecord"></table>
+        <table tableName="neo_role" domainObjectName="neoRole"></table>
+        <table tableName="neo_role_function" domainObjectName="neoRoleFunction"></table>
+        <table tableName="neo_sp" domainObjectName="neoSp"></table>
+        <table tableName="neo_withdraw" domainObjectName="neoWithdraw"></table>
+    </context>
+</generatorConfiguration>
