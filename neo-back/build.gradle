@@ -4,10 +4,14 @@ buildscript {
         springBootVersion = '2.3.3.RELEASE'
     }
     repositories {
+        mavenLocal()
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         maven { url 'https://maven.aliyun.com/nexus/content/repositories/gradle-plugin'}
-        mavenLocal()
+        maven { url 'https://maven.aliyun.com/nexus/content/repositories/spring'}
+        maven { url 'https://maven.aliyun.com/nexus/content/repositories/google'}
+        maven { url 'https://maven.aliyun.com/nexus/content/repositories/central'}
         mavenCentral()
+
         /*
 		 google()
         jcenter()
@@ -20,6 +24,7 @@ buildscript {
     }
 }
 apply plugin: 'base'
+apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 //引入 mybatis-generator 插件
@@ -30,10 +35,14 @@ sourceCompatibility = '1.8'
 
 allprojects {
     repositories {
+        mavenLocal()
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         maven { url 'https://maven.aliyun.com/nexus/content/repositories/gradle-plugin'}
-        mavenLocal()
+        maven { url 'https://maven.aliyun.com/nexus/content/repositories/spring'}
+        maven { url 'https://maven.aliyun.com/nexus/content/repositories/google'}
+        maven { url 'https://maven.aliyun.com/nexus/content/repositories/central'}
         mavenCentral()
+
         /*
 		 google()
         jcenter()
@@ -46,13 +55,11 @@ dependencies {
     implementation 'com.auth0:java-jwt:3.10.2'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.3.3.RELEASE'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools:2.3.3.RELEASE'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.3.3.RELEASE'
     runtimeOnly 'mysql:mysql-connector-java:8.0.11'
     implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.2")
     testImplementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.2")
-    testImplementation('org.springframework.boot:spring-boot-starter-test:2.3.3.RELEASE') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
+    testImplementation('org.springframework.boot:spring-boot-starter-test:2.3.3.RELEASE')
     compileOnly 'org.projectlombok:lombok:1.18.2'
     annotationProcessor 'org.projectlombok:lombok:1.18.2'
     testCompileOnly 'org.projectlombok:lombok:1.18.2'
