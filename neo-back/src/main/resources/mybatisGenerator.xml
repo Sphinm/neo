@@ -7,7 +7,7 @@
 
     <context id="my" targetRuntime="MyBatis3">
 
-        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"></plugin>
+        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"></plugin>
         <commentGenerator>
@@ -50,7 +50,7 @@
         </javaClientGenerator>
 
         <!-- 指定要逆向分析哪些表：根据表要创建javaBean -->
-        <table tableName="neo_user" domainObjectName="neoUser"></table>
+        <table tableName="neo_user" domainObjectName="neoUser"/>
         <table tableName="neo_company" domainObjectName="neoCompany"></table>
         <table tableName="neo_company_relation" domainObjectName="neoCompanyRelation"></table>
         <table tableName="neo_company_tax" domainObjectName="neoCompanyTax"></table>

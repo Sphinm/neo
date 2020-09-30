@@ -9,9 +9,11 @@ import com.example.neo.mapper.UserMapper;
 import com.example.neo.model.ICreateUser;
 import com.example.neo.model.IGetUser;
 import com.example.neo.service.UserService;
+import com.example.neo.utils.ContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 
@@ -65,18 +67,23 @@ public class UserServiceImpl implements UserService {
     public void createUser(ICreateUser user, UserTypeEnum userType) {
         Date date = new Date();
         User userDto = new User();
+        int insertId = -1;
         if (user.getCompanyName() == null || userType != UserTypeEnum.EMPLOYEE) {
             CompanyInfo companyInfo = new CompanyInfo();
-            insertUserInfo(companyInfo, userType);
+            insertId = insertUserInfo(companyInfo, userType);
         }
 
+        String userId = ContextHolder.getCurrentUserId();
+
         // 创建用户表
+//        userDto.setAccount(user.getAccount());
+//        userDto.setEmail(user.getEmail());
         userDto.setUserName(user.getUserName());
         userDto.setMobile(user.getMobile());
         userDto.setRoleId(userType.getId());
-//        userDto.setRelatedId();
-//        userDto.setCreatorId();
-//        userDto.setUpdateId();
+        userDto.setRelatedId(insertId > 0 ? insertId : null);
+        userDto.setCreatorId(!StringUtils.isEmpty(userId) ? Integer.parseInt(userId) : null);
+        userDto.setUpdateId(!StringUtils.isEmpty(userId) ? Integer.parseInt(userId) : null);
         userDto.setCreateDate(date);
         userDto.setUpdateDate(date);
 
