@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/neo?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true&zeroDateTimeBehavior=convertToNull&connectTimeout=2000&sessionVariables=character_set_connection=utf8mb4&character_set_client=utf8mb4
+    url: jdbc:mysql://localhost:3306/neo?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true&connectTimeout=2000&serverTimezone=Asia/Shanghai
     username: root
     password: root
   profiles:
