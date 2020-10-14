@@ -8,6 +8,7 @@ import com.example.neo.service.NeoFunctionsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * @Mail: 969858212@qq.com
  * @Date: 2020/10/14 13:26
  */
+@Service
 public class NeoFunctionsServiceImpl implements NeoFunctionsService {
     private static final Logger logger = LoggerFactory.getLogger(NeoFunctionsServiceImpl.class);
 
