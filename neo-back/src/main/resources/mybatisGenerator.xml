@@ -3,7 +3,7 @@
     PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
     "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
-    <classPathEntry location="C:\xuhr\apache-maven-3.6.3\repository\mysql\mysql-connector-java\8.0.20\mysql-connector-java-8.0.20.jar" />
+    <classPathEntry location="lib\mysql-connector\mysql-connector-java-8.0.20.jar" />
 
     <context id="my" targetRuntime="MyBatis3">
 
@@ -50,20 +50,20 @@
         </javaClientGenerator>
 
         <!-- 指定要逆向分析哪些表：根据表要创建javaBean -->
-        <table tableName="neo_user" domainObjectName="neoUser"></table>
-        <table tableName="neo_company" domainObjectName="neoCompany"></table>
-        <table tableName="neo_company_relation" domainObjectName="neoCompanyRelation"></table>
-        <table tableName="neo_company_tax" domainObjectName="neoCompanyTax"></table>
-        <table tableName="neo_employee" domainObjectName="neoEmployee"></table>
-        <table tableName="neo_finance" domainObjectName="neoFinance"></table>
-        <table tableName="neo_functions" domainObjectName="neoFunctions"></table>
-        <table tableName="neo_invoice" domainObjectName="neoInvoice"></table>
-        <table tableName="neo_issue" domainObjectName="neoIssue"></table>
-        <table tableName="neo_issue_detail" domainObjectName="neoIssueDetail"></table>
-        <table tableName="neo_recharge_record" domainObjectName="neoRechargeRecord"></table>
-        <table tableName="neo_role" domainObjectName="neoRole"></table>
-        <table tableName="neo_role_function" domainObjectName="neoRoleFunction"></table>
-        <table tableName="neo_sp" domainObjectName="neoSp"></table>
-        <table tableName="neo_withdraw" domainObjectName="neoWithdraw"></table>
+        <table tableName="neo_user" domainObjectName="NeoUser"></table>
+        <table tableName="neo_company" domainObjectName="NoCompany"></table>
+        <table tableName="neo_company_relation" domainObjectName="NeoCompanyRelation"></table>
+        <table tableName="neo_company_tax" domainObjectName="NeoCompanyTax"></table>
+        <table tableName="neo_employee" domainObjectName="NeoEmployee"></table>
+        <table tableName="neo_finance" domainObjectName="NeoFinance"></table>
+        <table tableName="neo_functions" domainObjectName="NeoFunctions"></table>
+        <table tableName="neo_invoice" domainObjectName="NeoInvoice"></table>
+        <table tableName="neo_issue" domainObjectName="NeoIssue"></table>
+        <table tableName="neo_issue_detail" domainObjectName="NeoIssueDetail"></table>
+        <table tableName="neo_recharge_record" domainObjectName="NeoRechargeRecord"></table>
+        <table tableName="neo_role" domainObjectName="NeoRole"></table>
+        <table tableName="neo_role_function" domainObjectName="NeoRoleFunction"></table>
+        <table tableName="neo_sp" domainObjectName="NeoSp"></table>
+        <table tableName="neo_withdraw" domainObjectName="NeoWithdraw"></table>
     </context>
 </generatorConfiguration>
