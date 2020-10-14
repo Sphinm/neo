@@ -55,7 +55,7 @@ public class JwtUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return isLocked==0?true:false;
+        return isLocked==0;
     }
 
     @Override
