@@ -1,14 +1,32 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/neo?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true&connectTimeout=2000&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/neo?useUnicode=true&useSSL=false&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true&connectTimeout=2000&serverTimezone=Asia/Shanghai
     username: root
     password: root
   profiles:
     active: local
   logging:
     config: logback-spring.xml
-
+##  redis config
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+  # 最大空闲连接数
+    jedis:
+      pool:
+        max-active: 8
+  # 最小空闲连接数
+        max-idle: 8
+  # 等待可用连接的最大时间，负数为不限制
+        max-wait: -1
+  # 最大活跃连接数，负数为不限制
+        min-idle: 1
+  # 数据库连接超时时间，2.0 中该参数的类型为Duration，这里在配置的时候需要指明单位  1.x可以将此参数配置10000 单位是ms
+  # 连接池配置，2.0中直接使用jedis或者lettuce配置连接池
+    timeout: 60s
+    database: 0
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
   configuration:

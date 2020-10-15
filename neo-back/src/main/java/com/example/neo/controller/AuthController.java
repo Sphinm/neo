@@ -43,7 +43,11 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseBean login(@RequestBody ILogin login) {
-        User userInfo = AuthService.login(login.getMobile());
+
+
+
+
+        User userInfo = AuthService.login(login.getUserName());
         log.info("userInfo ===> {}", userInfo);
         if (userInfo == null) {
             return ResponseBean.fail(ResponseCodeEnum.USER_NOTFOUND);

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,13 +40,22 @@ public class NeoFunctionsServiceImpl implements NeoFunctionsService {
         if (neoUsers==null||neoUsers.size()!=1){
             logger.info("用户不存在，或者数量超过一个,userName = %d",userName);
             //TODO：抛出异常
+            throw new RuntimeException("用户异常");
         }
         //根据用户role_id找到function_id
         NeoUser neoUser = neoUsers.get(0);
         NeoRoleFunctionExample neoRoleFunctionExample = new NeoRoleFunctionExample();
-        neoRoleFunctionExample.createCriteria().andRoleIdEqualTo(neoUser.getRoleId());
+        neoRoleFunctionExample.createCriteria().andRoleIdEqualTo(neoUser.getRoleId())
+            .andIsLockedEqualTo(false);
         List<NeoRoleFunction> neoRoleFunctions = neoRoleFunctionMapper.selectByExample(neoRoleFunctionExample);
-
-        return null;
+        List<Integer> functionIds = new ArrayList<>();
+        for(NeoRoleFunction neoRoleFunction:neoRoleFunctions){
+            functionIds.add(neoRoleFunction.getFunctionId());
+        }
+        //根据functionid查询权限列表
+        NeoFunctionsExample neoFunctionsExample = new NeoFunctionsExample();
+        neoFunctionsExample.createCriteria().andIdIn(functionIds);
+        List<NeoFunctions> functions = neoFunctionsMapper.selectByExample(neoFunctionsExample);
+        return functions;
     }
 }
