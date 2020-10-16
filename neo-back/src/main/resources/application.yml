@@ -27,7 +27,8 @@ spring:
   # 连接池配置，2.0中直接使用jedis或者lettuce配置连接池
     timeout: 60s
     database: 0
-mybatis:
+
+mybatis-plus:
   mapper-locations: classpath*:mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
@@ -38,3 +39,8 @@ server:
   port: 8008
   servlet:
     context-path: /api
+
+neo:
+  token:
+    expired-seconds: 604800
+    secret-key: 'uiewfb7busagf32yr'

@@ -10,7 +10,7 @@ public enum ResponseCodeEnum {
     USER_NOTFOUND("登录失败，用户不存在"),
     PARAMETER_ERROR("system.validate.error"),
     NOT_FOUND("system.error.not_found"),
-
+    LOGIN_FAILED("用户名或密码错误"),
     @Deprecated
     PASSWORD_INCORRECT("password incorrect"),
     @Deprecated
