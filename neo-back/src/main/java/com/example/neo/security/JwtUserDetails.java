@@ -34,8 +34,7 @@ public class JwtUserDetails implements UserDetails {
         for(NeoFunctions neoFunctions:authorities){
             functions.add(neoFunctions.getFunctionInfo());
         }
-        List<GrantedAuthority> authorityList = AuthorityUtils.commaSeparatedStringToAuthorityList(functions.toString());
-        return authorityList;
+        return AuthorityUtils.commaSeparatedStringToAuthorityList(functions.toString());
     }
 
     @Override
