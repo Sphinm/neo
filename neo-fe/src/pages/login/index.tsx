@@ -16,10 +16,10 @@ const Login = () => {
   const handleSubmit = async () => {
     try {
       const values = await validateFields()
-      const { mobile, password } = values
+      const { username, password } = values
       setLoading(true)
       const { data } = await login({
-        mobile,
+        username,
         password,
       })
       if (data?.mobile) {
@@ -36,7 +36,7 @@ const Login = () => {
     <div className={styles['login-container']}>
       <Form form={form} className={styles['login-form']} onFinish={handleSubmit}>
         <h1>NEO</h1>
-        <Form.Item name="mobile" rules={[{ required: true, message: 'Please input your mobile!' }]}>
+        <Form.Item name="username" rules={[{ required: true, message: 'Please input your mobile!' }]}>
           <Input prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Mobile" />
         </Form.Item>
         <Form.Item name="password" rules={[{ required: true, message: 'Please input your Password!' }]}>
