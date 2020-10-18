@@ -1,7 +1,7 @@
 import ajax from '@/libs/axios'
 
 /** 登录 */
-export const login = (params: { username: string; password: string }) => {
+export const login = (params: { userName: string; password: string }) => {
   return ajax.post(`/newLogin`, params)
 }
 
