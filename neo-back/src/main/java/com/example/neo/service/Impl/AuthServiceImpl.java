@@ -14,6 +14,8 @@ import com.example.neo.service.AuthService;
 import com.example.neo.utils.CookieUtils;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -81,11 +83,11 @@ public class AuthServiceImpl implements AuthService {
     private NeoUser checkPassword(ILogin iLogin){
         NeoUserExample neoUserExample = new NeoUserExample();
         neoUserExample.createCriteria().andMobileEqualTo(iLogin.getUserName());
-        log.info("1222 {}", neoUserExample);
         List<NeoUser> results = neoUserMapper.selectByExample(neoUserExample);
         if (results==null||results.size()!=0){
             return null;
         }
+        log.info("111{}",neoUserExample);
         if (passwordEncoder.matches(iLogin.getPassword(),results.get(0).getPassword())){
             return results.get(0);
         }
