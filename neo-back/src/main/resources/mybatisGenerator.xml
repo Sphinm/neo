@@ -37,13 +37,13 @@
 
         <!-- sqlMapGenerator：sql映射生成策略： -->
         <!--同样Mac用户：targetProject 为全路径-->
-        <sqlMapGenerator targetPackage="com.example.neo.mybatis.model.mapper.xml"
+        <sqlMapGenerator targetPackage="com.example.neo.mybatis.mapper.xml"
                          targetProject=".\src\main\java">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
 
         <!-- javaClientGenerator:指定mapper接口所在的位置 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.neo.mybatis.model.mapper"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.neo.mybatis.mapper"
                              targetProject=".\src\main\java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>

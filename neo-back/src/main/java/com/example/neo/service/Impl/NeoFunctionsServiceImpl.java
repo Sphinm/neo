@@ -1,9 +1,9 @@
 package com.example.neo.service.Impl;
 
+import com.example.neo.mybatis.mapper.NeoFunctionsMapper;
+import com.example.neo.mybatis.mapper.NeoRoleFunctionMapper;
+import com.example.neo.mybatis.mapper.NeoUserMapper;
 import com.example.neo.mybatis.model.*;
-import com.example.neo.mybatis.model.mapper.NeoFunctionsMapper;
-import com.example.neo.mybatis.model.mapper.NeoRoleFunctionMapper;
-import com.example.neo.mybatis.model.mapper.NeoUserMapper;
 import com.example.neo.service.NeoFunctionsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

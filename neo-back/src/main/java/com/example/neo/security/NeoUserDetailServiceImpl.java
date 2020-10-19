@@ -2,19 +2,14 @@ package com.example.neo.security;
 
 import com.example.neo.mybatis.model.NeoFunctions;
 import com.example.neo.mybatis.model.NeoUser;
-import com.example.neo.mybatis.model.mapper.NeoUserMapper;
 import com.example.neo.service.NeoFunctionsService;
 import com.example.neo.service.NeoUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @Author: xuhr

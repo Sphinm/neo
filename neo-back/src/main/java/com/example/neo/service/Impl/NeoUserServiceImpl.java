@@ -1,8 +1,8 @@
 package com.example.neo.service.Impl;
 
+import com.example.neo.mybatis.mapper.NeoUserMapper;
 import com.example.neo.mybatis.model.NeoUser;
 import com.example.neo.mybatis.model.NeoUserExample;
-import com.example.neo.mybatis.model.mapper.NeoUserMapper;
 import com.example.neo.service.NeoUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

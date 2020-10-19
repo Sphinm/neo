@@ -28,12 +28,19 @@ spring:
     timeout: 60s
     database: 0
 
-mybatis-plus:
-  mapper-locations: classpath*:mapper/*.xml
+mybatis:
+  mapper-locations: classpath*:/com/example/neo/mybatis/mapper/xml/*.xml
   configuration:
     map-underscore-to-camel-case: true
   type-aliases-package: com.example.neo.mybatis.model
   check-config-location: true
+#mybatis:
+#  mapper-locations: classpath*:com/example/neo/mybatis/mapper/xml/*.xml
+#  #配置别名
+#  type-aliases-package: com.example.neo.mybatis.model
+#  #驼峰命名
+#  configuration:
+#    map-underscore-to-camel-case: true
 
 server:
   port: 8008

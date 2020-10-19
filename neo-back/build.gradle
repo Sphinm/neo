@@ -50,12 +50,6 @@ allprojects {
     }
 }
 dependencies {
-    compile group: 'gradle.plugin.com.arenagod.gradle', name: 'mybatis-generator-plugin', version: '1.4'
-    compile group: 'org.mybatis', name: 'mybatis-spring', version: '2.0.5'
-    compile group: 'org.mybatis', name: 'mybatis', version: '3.5.5'
-    compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.1.3'
-    compile group: 'tk.mybatis', name: 'mapper', version: '4.1.5'
-    compile group: 'tk.mybatis', name: 'mapper-spring-boot-starter', version: '2.1.5'
     compile group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     implementation 'com.alibaba:fastjson:1.2.73'
@@ -66,15 +60,20 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.3.3.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.3.3.RELEASE'
     runtimeOnly 'mysql:mysql-connector-java:8.0.11'
-    implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.2")
     testImplementation('org.springframework.boot:spring-boot-starter-test:2.3.3.RELEASE')
     compileOnly 'org.projectlombok:lombok:1.18.2'
     annotationProcessor 'org.projectlombok:lombok:1.18.2'
     testCompileOnly 'org.projectlombok:lombok:1.18.2'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.2'
     //mybatis-generator core 包
+    compile group: 'tk.mybatis', name: 'mapper', version: '3.5.3'
+    compile group: 'tk.mybatis', name: 'mapper-spring-boot-starter', version: '2.1.0'
     compile group: 'org.mybatis.generator', name: 'mybatis-generator-core', version: '1.3.3'
     compile group: 'org.mybatis.generator', name: 'mybatis-generator-maven-plugin', version: '1.3.2'
+    compile group: 'org.mybatis', name: 'mybatis-spring', version: '2.0.5'
+    compile group: 'org.mybatis', name: 'mybatis', version: '3.4.0'
+    compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '1.3.2'
+    compile group: 'gradle.plugin.com.arenagod.gradle', name: 'mybatis-generator-plugin', version: '1.4'
 }
 
 test {
@@ -85,16 +84,23 @@ configurations {
     mybatisGenerator
 }
 // mybatis-generator.xml 配置路径
-//这里会遇到个问题：MyBatis Generator 通过xml生成，有日志但是没有生成文件成功的问题，
-//原因：mac下是找不到 ./src 路径的，需要全路径，如下配置。windows则为src/main/resources/generator.xml
+//这里会遇到个问题：MyBats Generator 通过xml生成，有日志但是没有生成文件成功的问题，
+////原因：mac下是找不到 ./src 路径的，需要全路径，如下配置。windiows则为src/main/resources/generator.xml
 mybatisGenerator {
     verbose = true
     configFile = 'src/main/resources/mybatisGenerator.xml'
 }
-processResources {
-    from('src/main/java') {
-        include '**/*.xml'
+sourceSets {
+    main {
+        resources {
+            //可以将java目录下的所有非.java资源打包到classes下
+            srcDirs = ['src/main/java', 'src/main/resources']
+        }
     }
 }
-sourceSets.main.resources.srcDirs = ["src/main/java","src/main/resources"]
-
+apply plugin: 'java'
+jar {
+    from('src/main/java'){
+        include '**/*Mapper.xml'
+    }
+}
