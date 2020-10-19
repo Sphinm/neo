@@ -24,9 +24,7 @@ public class NeoUserServiceImpl implements NeoUserService {
     @Override
     public NeoUser findUserByMobileOrEmail(String userName) {
         NeoUserExample neoUserExample = new NeoUserExample();
-        NeoUserExample.Criteria c1= neoUserExample.createCriteria().andAccountEqualTo(userName);
-        NeoUserExample.Criteria c2= neoUserExample.createCriteria().andEmailEqualTo(userName);
-        neoUserExample.or(c2);
+        neoUserExample.createCriteria().andMobileEqualTo(userName);
         List<NeoUser> results = neoUserMapper.selectByExample(neoUserExample);
         if (results==null||results.size()==0){
             logger.info("无对应用户，userName=%d",userName);

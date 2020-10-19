@@ -5,14 +5,17 @@ import { Button, Input, Form } from 'antd'
 import { login } from '@/apis/auth'
 import { handleError } from '@/libs/axios'
 import styles from './index.styl'
+import { RoleStore } from '@/store/roleStore'
+// import { useObserver } from 'mobx-react'
 import { AuthType } from '@/enums/role'
 
 const Login = () => {
   const [form] = Form.useForm()
   const history = useHistory()
   const { validateFields } = form
-
   const [loading, setLoading] = React.useState(false)
+
+
   const handleSubmit = async () => {
     try {
       const values = await validateFields()
@@ -22,8 +25,11 @@ const Login = () => {
         userName,
         password,
       })
-      if (data?.mobile) {
-        data.role === AuthType.EMPLOYEE ? history.push('/main/report') : history.push('/main')
+      if (data?.token) {
+        localStorage.setItem('token', data.token)
+        await RoleStore.fetchCurrentRole()
+        console.log(112, RoleStore.currentRole?.roleType)
+        // data.role === AuthType.EMPLOYEE ? history.push('/main/report') : history.push('/main')
       }
     } catch (e) {
       handleError(e)

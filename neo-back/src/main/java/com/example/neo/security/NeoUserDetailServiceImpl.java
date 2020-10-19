@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 /**
@@ -22,6 +23,7 @@ public class NeoUserDetailServiceImpl implements UserDetailsService {
     private NeoUserService neoUserService;
     @Autowired
     private NeoFunctionsService neoFunctionsService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         NeoUser user = neoUserService.findUserByMobileOrEmail(username);
@@ -30,6 +32,6 @@ public class NeoUserDetailServiceImpl implements UserDetailsService {
         }
         // 用户权限列表，根据用户拥有的权限标识与如 @PreAuthorize("hasAuthority('sys:menu:view')") 标注的接口对比，决定是否可以调用接口
         List<NeoFunctions> functions = neoFunctionsService.getFunctionsByUserName(username);
-        return new JwtUserDetails(user.getUsername(), user.getPassword(), user.getIsLocked()==true?1:0, functions);
+        return new JwtUserDetails(user.getUsername(), user.getPassword(), user.getIsLocked() ? 1 : 0, functions);
     }
 }

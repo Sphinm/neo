@@ -14,8 +14,6 @@ import com.example.neo.service.AuthService;
 import com.example.neo.utils.CookieUtils;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -26,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -68,29 +67,31 @@ public class AuthServiceImpl implements AuthService {
     public ResponseBean newLogin(ILogin iLogin) {
         //首先判断用户是否存在，密码是否正确
         NeoUser user = checkPassword(iLogin);
-        if (user==null){
+        if (user == null) {
             return ResponseBean.fail(ResponseCodeEnum.LOGIN_FAILED);
         }
         //生成token，放入redis
-        String token = JwtTokenUtil.generatorJwtToken(user.getId(),user.getUsername(),expiredTime,secretKey);
-        log.info("token = {}",token);
-        redisTemplate.opsForValue().set(token,user.getMobile(),expiredTime);
-        Map<String,String> tokenMap = new HashMap<>();
-        tokenMap.put("token",token);
+        String token = JwtTokenUtil.generatorJwtToken(user.getId(), user.getUsername(), expiredTime, secretKey);
+        log.info("token11112 = {}", token);
+        redisTemplate.opsForValue().set(token, user.getMobile(), expiredTime, TimeUnit.SECONDS);
+        Map<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("token", token);
         return ResponseBean.success(tokenMap);
     }
 
-    private NeoUser checkPassword(ILogin iLogin){
+    private NeoUser checkPassword(ILogin iLogin) {
         NeoUserExample neoUserExample = new NeoUserExample();
         neoUserExample.createCriteria().andMobileEqualTo(iLogin.getUserName());
         List<NeoUser> results = neoUserMapper.selectByExample(neoUserExample);
-        if (results==null||results.size()!=0){
+        if (results == null || results.size() != 1) {
             return null;
         }
-        log.info("111{}",neoUserExample);
-        if (passwordEncoder.matches(iLogin.getPassword(),results.get(0).getPassword())){
+        if (iLogin.getPassword().equals(results.get(0).getPassword())) {
             return results.get(0);
         }
+//        if (passwordEncoder.matches(iLogin.getPassword(), results.get(0).getPassword())) {
+//            return results.get(0);
+//        }
         return null;
     }
 }

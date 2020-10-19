@@ -1,4 +1,4 @@
-package com.example.demo.cache;
+package com.example.neo.redis;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -58,9 +58,9 @@ public class RedisConfig extends CachingConfigurerSupport {
         //设置默认超过期时间是30秒
         defaultCacheConfig.entryTtl(Duration.ofSeconds(30));
         //初始化RedisCacheManager
-        RedisCacheManager cacheManager = new RedisCacheManager(redisCacheWriter, defaultCacheConfig);
-        return cacheManager;
+        return new RedisCacheManager(redisCacheWriter, defaultCacheConfig);
     }
+
     @Bean
     public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory factory) {
         StringRedisTemplate template = new StringRedisTemplate(factory);

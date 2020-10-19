@@ -1,5 +1,6 @@
 package com.example.neo.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,7 @@ import java.io.IOException;
  *
  * token filter bean.
  */
+@Slf4j
 @Component
 public class LindTokenAuthenticationFilter extends OncePerRequestFilter {
 
@@ -49,9 +51,10 @@ public class LindTokenAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader(this.tokenHeader);
         if (authHeader != null && authHeader.startsWith(tokenHead)) {
             final String authToken = authHeader.substring(tokenHead.length()); // The part after "Bearer "
-            if (authToken != null && redisTemplate.hasKey(authToken)) {
+            Boolean hasKey = redisTemplate.hasKey(authToken);
+            if (authToken.length() != 0 && hasKey) {
                 String username = redisTemplate.opsForValue().get(authToken);
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                if (username.length() != 0 && SecurityContextHolder.getContext().getAuthentication() == null) {
                     UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
                     //可以校验token和username是否有效，目前由于token对应username存在redis，都以默认都是有效的
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

@@ -1,21 +1,22 @@
 package com.example.neo.controller;
 
 import com.example.neo.annotation.UserLoginToken;
-import com.example.neo.constant.Constants;
+import com.example.neo.entity.User;
+import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.IChangePassword;
 import com.example.neo.model.IGetUser;
 import com.example.neo.model.ILogin;
-import com.example.neo.enums.ResponseCodeEnum;
-import com.example.neo.entity.User;
 import com.example.neo.service.AuthService;
 import com.example.neo.service.UserService;
 import com.example.neo.utils.ContextHolder;
-import com.example.neo.utils.CookieUtils;
 import com.example.neo.utils.ResponseBean;
 import com.example.neo.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -31,7 +32,7 @@ public class AuthController {
 
     @UserLoginToken
     @GetMapping("/me")
-    public ResponseBean getUserInfo()  {
+    public ResponseBean getUserInfo() {
         String userId = ContextHolder.getCurrentUserId();
         log.info("fetch userId ===> {}", userId);
         IGetUser user = userService.findByUserId(userId);
@@ -48,14 +49,12 @@ public class AuthController {
         if (!userInfo.getPassword().equals(login.getPassword())) {
             return ResponseBean.fail(ResponseCodeEnum.PASSWORD_ERROR);
         } else {
-            String token = TokenUtils.getToken(userInfo);
-            CookieUtils.setRaw(Constants.TOKEN_KEY, token, true);
             return ResponseBean.success(userInfo);
         }
     }
 
     @PostMapping("/newLogin")
-    public ResponseBean newLogin(@RequestBody ILogin login){
+    public ResponseBean newLogin(@RequestBody ILogin login) {
         return AuthService.newLogin(login);
     }
 
