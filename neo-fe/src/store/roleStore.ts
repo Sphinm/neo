@@ -8,10 +8,15 @@ class Role {
   @action
   fetchCurrentRole = async () => {
     try {
-      const { data } = await fetchInfo()
-      runInAction(() => {
-        this.currentRole = data
-      })
+      const { data, code } = await fetchInfo()
+      console.log(11,code)
+      if (code === 'SUCCESS' && data) {
+        runInAction(() => {
+          this.currentRole = data
+        })
+      } else {
+        window.location.href = '/login'
+      }
     } catch (e) {
       handleError(e)
       window.location.href = '/login'

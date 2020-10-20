@@ -15,8 +15,6 @@ public interface UserMapper {
 
     Role findRoleByUserId(@Param("roleId") int roleId);
 
-    CompanyInfo findCompanyInfo(@Param("relatedId") int relatedId);
-
     void createUser(User user);
 
     void changePassword(@Param("pwd") IChangePassword pwd, @Param("userId") String userId);

@@ -17,11 +17,6 @@ public interface UserService {
     void createUser(ICreateUser user, UserTypeEnum userType);
 
     /**
-     * 根据 userId 获取用户公司信息
-     */
-    CompanyInfo fetchUserInfo(String userId);
-
-    /**
      * 添加用户公司信息
      */
     int insertUserInfo(CompanyInfo companyInfo, UserTypeEnum userType);

@@ -1,7 +1,6 @@
 package com.example.neo.service.Impl;
 
 import com.example.neo.entity.CompanyInfo;
-import com.example.neo.entity.Role;
 import com.example.neo.entity.User;
 import com.example.neo.enums.UserTypeEnum;
 import com.example.neo.mapper.UserInfoMapper;
@@ -10,10 +9,8 @@ import com.example.neo.model.ICreateUser;
 import com.example.neo.model.IGetUser;
 import com.example.neo.mybatis.mapper.NeoRoleMapper;
 import com.example.neo.mybatis.mapper.NeoUserMapper;
-import com.example.neo.mybatis.model.NeoRole;
-import com.example.neo.mybatis.model.NeoRoleExample;
-import com.example.neo.mybatis.model.NeoUser;
-import com.example.neo.mybatis.model.NeoUserExample;
+import com.example.neo.mybatis.mapper.NoCompanyMapper;
+import com.example.neo.mybatis.model.*;
 import com.example.neo.service.UserService;
 import com.example.neo.utils.ContextHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -37,43 +34,44 @@ public class UserServiceImpl implements UserService {
     private NeoUserMapper neoUserMapper;
     @Autowired
     private NeoRoleMapper neoRoleMapper;
+    @Autowired
+    private NoCompanyMapper companyMapper;
 
     public IGetUser findByMobile(String mobile) {
         IGetUser u = new IGetUser();
         NeoUserExample userExample = new NeoUserExample();
         userExample.createCriteria().andMobileEqualTo(mobile);
         List<NeoUser> users = neoUserMapper.selectByExample(userExample);
-        if (users==null||users.size()!=1){
+        if (users == null || users.size() != 1) {
             return null;
         }
         NeoUser user = users.get(0);
+
+        NoCompanyExample companyExample = new NoCompanyExample();
+        companyExample.createCriteria().andIdEqualTo(users.get(0).getId());
+        List<NoCompany> companyInfo = companyMapper.selectByExample(companyExample);
+        if (companyInfo != null && companyInfo.size() == 1) {
+            u.setUserInfo(companyInfo.get(0));
+        }
+
         NeoRoleExample roleExample = new NeoRoleExample();
         roleExample.createCriteria().andIdEqualTo(users.get(0).getRoleId());
         List<NeoRole> roles = neoRoleMapper.selectByExample(roleExample);
-        if (roles!=null&&roles.size()==1){
+        if (roles != null && roles.size() == 1) {
             u.setRoleName(roles.get(0).getRoleName());
             u.setRoleType(roles.get(0).getRoleType());
         }
         u.setUserName(user.getUsername());
         u.setEmail(user.getEmail());
         u.setMobile(user.getMobile());
-        u.setIsLocked(user.getIsLocked()==true?1:0);
+        u.setIsLocked(user.getIsLocked() ? 1 : 0);
         return u;
     }
 
     /**
-     * 根据 userId 获取用户信息
-     *
-     */
-    @Override
-    public CompanyInfo fetchUserInfo(String userId) {
-        return userInfoMapper.fetchUserInfo(userId);
-    }
-
-
-    /**
      * 创建代理商和公司用户
      * 也可以创建公司和员工
+     *
      * @param user 用户信息
      * 创建用户的时候先判断用户有无公司信息，如果没有则不创建公司信息，同时无关联id
      */
@@ -109,7 +107,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 创建公司用户信息
-     *
      */
     @Override
     public int insertUserInfo(CompanyInfo companyInfo, UserTypeEnum userType) {
@@ -120,12 +117,11 @@ public class UserServiceImpl implements UserService {
         userDo.setCompanyStatus(userType == UserTypeEnum.ADMIN ? 1 : 0);
         userDo.setCompanyType(userType.getId());
         log.info("insertUserInfo ===> {}", userDo);
-       return userInfoMapper.insertUserInfo(userDo);
+        return userInfoMapper.insertUserInfo(userDo);
     }
 
     /**
      * 更新公司用户信息
-     *
      */
     @Override
     public void updateUserInfo(CompanyInfo companyInfo) {

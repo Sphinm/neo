@@ -17,5 +17,5 @@ export const changePwd = (params: { oldPwd: string; newPwd: string }) => {
 
 /** 获取用户信息 */
 export const fetchInfo = () => {
-  return ajax.get(`/me`)
+  return ajax.get(`/userInfo`)
 }

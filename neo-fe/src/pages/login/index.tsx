@@ -28,8 +28,7 @@ const Login = () => {
       if (data?.token) {
         localStorage.setItem('token', data.token)
         await RoleStore.fetchCurrentRole()
-        console.log(112, RoleStore.currentRole?.roleType)
-        // data.role === AuthType.EMPLOYEE ? history.push('/main/report') : history.push('/main')
+        RoleStore.currentRole?.roleType === AuthType.EMPLOYEE ? history.push('/main/report') : history.push('/main')
       }
     } catch (e) {
       handleError(e)

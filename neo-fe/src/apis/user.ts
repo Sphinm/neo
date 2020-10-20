@@ -6,11 +6,6 @@ export const createNewUser = (params: any, type: AuthType) => {
   return ajax.post(`/create/user?type=${type}`, params)
 }
 
-/** 获取用户详细信息 */
-export const fetchUserInfo = () => {
-  return ajax.get(`/get/userInfo`)
-}
-
 /** 添加用户详细信息 */
 export const insertUserInfo = (params: any, type: AuthType) => {
   return ajax.post(`/insert/userInfo?type=${type}`, params)

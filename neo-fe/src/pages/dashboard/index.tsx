@@ -8,7 +8,7 @@ import 'echarts/lib/chart/line'
 import { options } from '@/setting/echartConfig'
 import style from './index.styl'
 import { AuthType } from '@/enums/role'
-import { fetchUserInfo, insertUserInfo, updateUserInfo } from '@/apis/user'
+import { insertUserInfo, updateUserInfo } from '@/apis/user'
 import { handleError } from '@/libs/axios'
 
 const textMessage = [
@@ -45,20 +45,10 @@ const Dashboard = () => {
 
   useEffect(() => {
     setLoaded(true)
-    RoleStore.fetchCurrentRole()
-    fetchUserDetailInfo()
+    const userInfo = RoleStore.currentRole?.userInfo
+    setUserInfo(userInfo ? userInfo : {})
+    setLoaded(false)
   }, [])
-
-  const fetchUserDetailInfo = async () => {
-    try {
-      const { data } = await fetchUserInfo()
-      setUserInfo(data ? data : {})
-    } catch (error) {
-      handleError(error)
-    } finally {
-      setLoaded(false)
-    }
-  }
 
   const goFinance = () => {
     if (RoleStore.currentRole?.roleType === AuthType.MERCHANT) {

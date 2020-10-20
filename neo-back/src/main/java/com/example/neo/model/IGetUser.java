@@ -1,5 +1,6 @@
 package com.example.neo.model;
 
+import com.example.neo.mybatis.model.NoCompany;
 import lombok.Data;
 
 @Data
@@ -10,5 +11,5 @@ public class IGetUser {
     Integer isLocked;
     String roleName;
     String roleType;
-    Object userInfo;
+    NoCompany userInfo;
 }
