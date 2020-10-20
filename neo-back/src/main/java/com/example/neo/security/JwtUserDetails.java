@@ -1,6 +1,7 @@
 package com.example.neo.security;
 
 import com.example.neo.mybatis.model.NeoFunctions;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,7 @@ import java.util.List;
  * @Mail: 969858212@qq.com
  * @Date: 2020/9/29 15:53
  */
+@Slf4j
 public class JwtUserDetails implements UserDetails {
     private static final long serialVersionUID = 1L;
     private String username;
@@ -34,7 +36,7 @@ public class JwtUserDetails implements UserDetails {
         for(NeoFunctions neoFunctions:authorities){
             functions.add(neoFunctions.getFunctionInfo());
         }
-        return AuthorityUtils.commaSeparatedStringToAuthorityList(functions.toString());
+        return AuthorityUtils.commaSeparatedStringToAuthorityList(functions.toString().substring(1,functions.toString().indexOf("]")));
     }
 
     @Override

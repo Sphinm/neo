@@ -32,20 +32,19 @@ public class NeoFunctionsServiceImpl implements NeoFunctionsService {
     private NeoFunctionsMapper neoFunctionsMapper;
 
     @Override
-    public List<NeoFunctions> getFunctionsByUserName(String userName) {
+    public List<NeoFunctions> getFunctionsByMobile(String mobile) {
         //找到用户
         NeoUserExample neoUserExample = new NeoUserExample();
-        neoUserExample.createCriteria().andMobileEqualTo(userName);
+        neoUserExample.createCriteria().andMobileEqualTo(mobile);
         List<NeoUser> neoUsers = neoUserMapper.selectByExample(neoUserExample);
 
         if (neoUsers == null || neoUsers.size() != 1) {
-            logger.info("用户不存在，或者数量超过一个,userName = %d", userName);
+            logger.info("用户不存在，或者数量超过一个,userName = %d", mobile);
             //TODO：抛出异常
             throw new RuntimeException("用户异常");
         }
         //根据用户role_id找到function_id
         NeoUser neoUser = neoUsers.get(0);
-        log.info("3332 {}", neoUsers);
         NeoRoleFunctionExample neoRoleFunctionExample = new NeoRoleFunctionExample();
         neoRoleFunctionExample.createCriteria().andRoleIdEqualTo(neoUser.getRoleId())
             .andIsLockedEqualTo(false);
@@ -53,6 +52,9 @@ public class NeoFunctionsServiceImpl implements NeoFunctionsService {
         List<Integer> functionIds = new ArrayList<>();
         for (NeoRoleFunction neoRoleFunction : neoRoleFunctions) {
             functionIds.add(neoRoleFunction.getFunctionId());
+        }
+        if (functionIds==null||functionIds.size()==0){
+            return null;
         }
         //根据functionid查询权限列表
         NeoFunctionsExample neoFunctionsExample = new NeoFunctionsExample();

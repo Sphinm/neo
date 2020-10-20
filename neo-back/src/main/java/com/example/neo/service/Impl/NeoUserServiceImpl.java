@@ -4,6 +4,7 @@ import com.example.neo.mybatis.mapper.NeoUserMapper;
 import com.example.neo.mybatis.model.NeoUser;
 import com.example.neo.mybatis.model.NeoUserExample;
 import com.example.neo.service.NeoUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +18,17 @@ import java.util.List;
  * @Date: 2020/9/29 16:41
  */
 @Service
+@Slf4j
 public class NeoUserServiceImpl implements NeoUserService {
-    private static final Logger logger = LoggerFactory.getLogger(NeoUserServiceImpl.class);
     @Autowired
     private NeoUserMapper neoUserMapper;
     @Override
-    public NeoUser findUserByMobileOrEmail(String userName) {
+    public NeoUser findUserByMobile(String mobile) {
         NeoUserExample neoUserExample = new NeoUserExample();
-        neoUserExample.createCriteria().andMobileEqualTo(userName);
+        neoUserExample.createCriteria().andMobileEqualTo(mobile);
         List<NeoUser> results = neoUserMapper.selectByExample(neoUserExample);
         if (results==null||results.size()==0){
-            logger.info("无对应用户，userName=%d",userName);
+            log.info("无对应用户，userName=%d",mobile);
             return null;
         }
         return results.get(0);

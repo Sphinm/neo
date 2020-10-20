@@ -15,7 +15,7 @@ public interface NeoUserService {
      * @param userName
      * @return
      */
-    NeoUser findUserByMobileOrEmail(String userName);
+    NeoUser findUserByMobile(String mobile);
 
     /**
      * 根据用户名找到权限信息

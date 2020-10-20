@@ -8,6 +8,12 @@ import com.example.neo.mapper.UserInfoMapper;
 import com.example.neo.mapper.UserMapper;
 import com.example.neo.model.ICreateUser;
 import com.example.neo.model.IGetUser;
+import com.example.neo.mybatis.mapper.NeoRoleMapper;
+import com.example.neo.mybatis.mapper.NeoUserMapper;
+import com.example.neo.mybatis.model.NeoRole;
+import com.example.neo.mybatis.model.NeoRoleExample;
+import com.example.neo.mybatis.model.NeoUser;
+import com.example.neo.mybatis.model.NeoUserExample;
 import com.example.neo.service.UserService;
 import com.example.neo.utils.ContextHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -26,25 +33,31 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserMapper userMapper;
 
-    public IGetUser findByUserId(String userId) {
-        User user = userMapper.findByUserId(userId);
-        Role role = userMapper.findRoleByUserId(user.getRoleId());
-//        CompanyInfo companyInfo = new CompanyInfo();
-//        log.info("info1111 => {}", companyInfo);
-//        if (user.getRelatedId() > 0) {
-//            companyInfo = userMapper.findCompanyInfo(user.getRelatedId());
-//        } else {
-//            companyInfo = {}
-//        }
+    @Autowired
+    private NeoUserMapper neoUserMapper;
+    @Autowired
+    private NeoRoleMapper neoRoleMapper;
+
+    public IGetUser findByMobile(String mobile) {
         IGetUser u = new IGetUser();
-        u.setUserName(user.getUserName());
+        NeoUserExample userExample = new NeoUserExample();
+        userExample.createCriteria().andMobileEqualTo(mobile);
+        List<NeoUser> users = neoUserMapper.selectByExample(userExample);
+        if (users==null||users.size()!=1){
+            return null;
+        }
+        NeoUser user = users.get(0);
+        NeoRoleExample roleExample = new NeoRoleExample();
+        roleExample.createCriteria().andIdEqualTo(users.get(0).getRoleId());
+        List<NeoRole> roles = neoRoleMapper.selectByExample(roleExample);
+        if (roles!=null&&roles.size()==1){
+            u.setRoleName(roles.get(0).getRoleName());
+            u.setRoleType(roles.get(0).getRoleType());
+        }
+        u.setUserName(user.getUsername());
         u.setEmail(user.getEmail());
         u.setMobile(user.getMobile());
-        u.setIsLocked(user.getIsLocked());
-        u.setRoleName(role.getRoleName());
-        u.setRoleType(role.getRoleType());
-//        u.setUserInfo(companyInfo);
-        log.info("111 => {}", u);
+        u.setIsLocked(user.getIsLocked()==true?1:0);
         return u;
     }
 

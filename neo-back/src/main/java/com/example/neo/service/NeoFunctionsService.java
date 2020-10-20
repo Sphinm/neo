@@ -11,5 +11,5 @@ import java.util.List;
  */
 public interface NeoFunctionsService {
     //根据用户名获取权限信息
-    List<NeoFunctions> getFunctionsByUserName(String userName);
+    List<NeoFunctions> getFunctionsByMobile(String userName);
 }

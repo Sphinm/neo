@@ -54,8 +54,12 @@ public class LindTokenAuthenticationFilter extends OncePerRequestFilter {
             Boolean hasKey = redisTemplate.hasKey(authToken);
             if (authToken.length() != 0 && hasKey) {
                 String username = redisTemplate.opsForValue().get(authToken);
+                log.info("username = {}",username);
                 if (username.length() != 0 && SecurityContextHolder.getContext().getAuthentication() == null) {
                     UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+                    if (userDetails==null){
+                        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    }
                     //可以校验token和username是否有效，目前由于token对应username存在redis，都以默认都是有效的
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
