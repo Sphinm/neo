@@ -25,11 +25,9 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    UserInfoMapper userInfoMapper;
-
-    @Autowired
     UserMapper userMapper;
-
+    @Autowired
+    UserInfoMapper userInfoMapper;
     @Autowired
     private NeoUserMapper neoUserMapper;
     @Autowired
