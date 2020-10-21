@@ -66,11 +66,13 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 创建代理商和公司用户
-     * 也可以创建公司和员工
-     *
-     * @param user 用户信息
      * 创建用户的时候先判断用户有无公司信息，如果没有则不创建公司信息，同时无关联id
+     *
+     * 涉及到的表有 neo_user、neo_company、neo_company_relation 和 neo_employee 四张表
+     * neo_user 表是所有角色都要的
+     * neo_company 是非员工角色可以创建的，但是在创建用户的时候可以缺省（原则上一次填完，可修改）
+     * neo_company_relation 记录非员工角色的关联关系（管理员 - 代理商，代理商 - 公司， 管理员 - 公司）
+     * neo_employee 记录员工角色与公司的关联关系
      */
     public void createUser(ICreateUser user, UserTypeEnum userType) {
         Date date = new Date();
