@@ -11,6 +11,7 @@ import com.example.neo.service.UserService;
 import com.example.neo.utils.ContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -26,15 +27,28 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private NoCompanyMapper companyMapper;
 
-    public IGetUser findByMobile(String mobile) {
-        IGetUser u = new IGetUser();
+    /**
+     * 根据手机号获取用户信息
+     * @return
+     */
+    private NeoUser fetchUserByMobile() {
+        String mobile = SecurityContextHolder.getContext().getAuthentication().getName();
         NeoUserExample userExample = new NeoUserExample();
         userExample.createCriteria().andMobileEqualTo(mobile);
         List<NeoUser> users = neoUserMapper.selectByExample(userExample);
         if (users == null || users.size() != 1) {
             return null;
         }
-        NeoUser user = users.get(0);
+        return users.get(0);
+    }
+
+    /**
+     * 获取用户信息
+     * @return
+     */
+    public IGetUser fetchUserInfo() {
+        IGetUser u = new IGetUser();
+        NeoUser user = fetchUserByMobile();
         NoCompanyExample companyExample = new NoCompanyExample();
         companyExample.createCriteria().andIdEqualTo(user.getId());
         List<NoCompany> companyInfo = companyMapper.selectByExample(companyExample);
@@ -66,6 +80,8 @@ public class UserServiceImpl implements UserService {
      * neo_employee 记录员工角色与公司的关联关系
      */
     public void createUser(ICreateUser user, UserTypeEnum userType) {
+        String mobile = SecurityContextHolder.getContext().getAuthentication().getName();
+
         Date date = new Date();
         NeoUserExample userDto = new NeoUserExample();
         int insertId = -1;

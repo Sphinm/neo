@@ -9,7 +9,7 @@ public interface UserService {
     /**
      * 根据 userId 获取用户
      */
-    IGetUser findByMobile(String mobile);
+    IGetUser fetchUserInfo();
 
     /**
      * 创建新用户

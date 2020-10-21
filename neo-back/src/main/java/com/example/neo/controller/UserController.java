@@ -10,7 +10,6 @@ import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -22,8 +21,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('user_view')")
     @GetMapping("/userInfo")
     public ResponseBean getUserInfo() {
-        String mobile = SecurityContextHolder.getContext().getAuthentication().getName();
-        IGetUser user = userService.findByMobile(mobile);
+        IGetUser user = userService.fetchUserInfo();
         return ResponseBean.success(user);
     }
 
