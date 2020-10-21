@@ -149,13 +149,13 @@ public class UserServiceImpl implements UserService {
      * 创建公司用户信息
      */
     @Override
-    private int insertUserInfo(NoCompany companyInfo, UserTypeEnum userType) {
+    public int insertUserInfo(NoCompany companyInfo, UserTypeEnum userType) {
         Date date = new Date();
         NoCompany company = commonUserInfo(companyInfo);
         company.setCreatorId(companyInfo.getCreatorId());
         company.setCreateDate(date);
         company.setCompanyStatus(userType == UserTypeEnum.ADMIN);
-        company.setCompanyType(userType.getId()); // TODO: 这里不能为 Boolean 类型
+//        company.setCompanyType(userType.getId()); // TODO: 这里不能为 Boolean 类型
         log.info("insertUserInfo ===> {}", company);
         return companyMapper.insert(company);
     }
@@ -170,7 +170,7 @@ public class UserServiceImpl implements UserService {
         userDo.setCreatorId(companyInfo.getCreatorId());
         userDo.setCreateDate(companyInfo.getCreateDate());
         log.info("updateUserInfo ==========> {}", userDo);
-        companyMapper.updateByExample(userDo);
+//        companyMapper.updateByExample(userDo);
     }
 
     /**
