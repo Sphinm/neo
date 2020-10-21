@@ -1,9 +1,7 @@
 package com.example.neo.service.Impl;
 
 import com.example.neo.constant.Constants;
-import com.example.neo.entity.User;
 import com.example.neo.enums.ResponseCodeEnum;
-import com.example.neo.mapper.UserMapper;
 import com.example.neo.model.IChangePassword;
 import com.example.neo.model.ILogin;
 import com.example.neo.mybatis.mapper.NeoUserMapper;
@@ -33,8 +31,6 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
-    private UserMapper UserMapper;
-    @Autowired
     private NeoUserMapper neoUserMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -43,23 +39,19 @@ public class AuthServiceImpl implements AuthService {
     @Value("${neo.token.secret-key}")
     public String secretKey;
 
-    public User login(String mobile) {
-        return UserMapper.findByUserMobile(mobile);
-    }
-
     public void logout() {
         CookieUtils.clean(Constants.TOKEN_KEY);
     }
 
     public ResponseCodeEnum changePwd(IChangePassword pwd, String userId) {
-        User userInfo = UserMapper.findByUserId(userId);
-        if (!pwd.getOldPwd().equals(userInfo.getPassword())) {
-            return ResponseCodeEnum.INIT_PASSWORD_ERROR;
-        }
-        if (pwd.getOldPwd().equals(pwd.getNewPwd())) {
-            return ResponseCodeEnum.PASSWORD_EQUALS;
-        }
-        UserMapper.changePassword(pwd, userId);
+//        NeoUserExample userInfo = neoUserMapper.findByUserId(userId);
+//        if (!pwd.getOldPwd().equals(userInfo.getPassword())) {
+//            return ResponseCodeEnum.INIT_PASSWORD_ERROR;
+//        }
+//        if (pwd.getOldPwd().equals(pwd.getNewPwd())) {
+//            return ResponseCodeEnum.PASSWORD_EQUALS;
+//        }
+//        neoUserMapper.changePassword(pwd, userId);
         return ResponseCodeEnum.SUCCESS;
     }
 

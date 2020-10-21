@@ -1,10 +1,6 @@
 package com.example.neo.service.Impl;
 
-import com.example.neo.entity.CompanyInfo;
-import com.example.neo.entity.User;
 import com.example.neo.enums.UserTypeEnum;
-import com.example.neo.mapper.UserInfoMapper;
-import com.example.neo.mapper.UserMapper;
 import com.example.neo.model.ICreateUser;
 import com.example.neo.model.IGetUser;
 import com.example.neo.mybatis.mapper.NeoRoleMapper;
@@ -16,7 +12,6 @@ import com.example.neo.utils.ContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -24,10 +19,6 @@ import java.util.List;
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    UserMapper userMapper;
-    @Autowired
-    UserInfoMapper userInfoMapper;
     @Autowired
     private NeoUserMapper neoUserMapper;
     @Autowired
@@ -76,10 +67,10 @@ public class UserServiceImpl implements UserService {
      */
     public void createUser(ICreateUser user, UserTypeEnum userType) {
         Date date = new Date();
-        User userDto = new User();
+        NeoUserExample userDto = new NeoUserExample();
         int insertId = -1;
         if (user.getCompanyName() == null || userType != UserTypeEnum.EMPLOYEE) {
-            CompanyInfo companyInfo = new CompanyInfo();
+            NoCompanyExample companyInfo = new NoCompanyExample();
             insertId = insertUserInfo(companyInfo, userType);
         }
 
@@ -88,70 +79,71 @@ public class UserServiceImpl implements UserService {
         // 创建用户表
 //        userDto.setAccount(user.getAccount());
 //        userDto.setEmail(user.getEmail());
-        userDto.setUserName(user.getUserName());
-        userDto.setMobile(user.getMobile());
-        userDto.setRoleId(userType.getId());
-        userDto.setRelatedId(insertId > 0 ? insertId : null);
-        userDto.setCreatorId(!StringUtils.isEmpty(userId) ? Integer.parseInt(userId) : null);
-        userDto.setUpdateId(!StringUtils.isEmpty(userId) ? Integer.parseInt(userId) : null);
-        userDto.setCreateDate(date);
-        userDto.setUpdateDate(date);
-
-        try {
-            userMapper.createUser(userDto);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("用户创建失败");
-        }
+//        userDto.setUserName(user.getUserName());
+//        userDto.setMobile(user.getMobile());
+//        userDto.setRoleId(userType.getId());
+//        userDto.setRelatedId(insertId > 0 ? insertId : null);
+//        userDto.setCreatorId(!StringUtils.isEmpty(userId) ? Integer.parseInt(userId) : null);
+//        userDto.setUpdateId(!StringUtils.isEmpty(userId) ? Integer.parseInt(userId) : null);
+//        userDto.setCreateDate(date);
+//        userDto.setUpdateDate(date);
+//
+//        try {
+//            userMapper.createUser(userDto);
+//        } catch (RuntimeException e) {
+//            throw new RuntimeException("用户创建失败");
+//        }
     }
 
     /**
      * 创建公司用户信息
      */
     @Override
-    public int insertUserInfo(CompanyInfo companyInfo, UserTypeEnum userType) {
+    public int insertUserInfo(NoCompanyExample companyInfo, UserTypeEnum userType) {
         Date date = new Date();
-        CompanyInfo userDo = keepUserInfo(companyInfo);
-        userDo.setCreatorId(companyInfo.getCreatorId());
-        userDo.setCreateDate(date);
-        userDo.setCompanyStatus(userType == UserTypeEnum.ADMIN ? 1 : 0);
-        userDo.setCompanyType(userType.getId());
-        log.info("insertUserInfo ===> {}", userDo);
-        return userInfoMapper.insertUserInfo(userDo);
+        NoCompanyExample userDo = keepUserInfo(companyInfo);
+//        userDo.setCreatorId(companyInfo.getCreatorId());
+//        userDo.setCreateDate(date);
+//        userDo.setCompanyStatus(userType == UserTypeEnum.ADMIN ? 1 : 0);
+//        userDo.setCompanyType(userType.getId());
+//        log.info("insertUserInfo ===> {}", userDo);
+//        return userInfoMapper.insertUserInfo(userDo);
+        return 1;
     }
 
     /**
      * 更新公司用户信息
      */
     @Override
-    public void updateUserInfo(CompanyInfo companyInfo) {
-        CompanyInfo userDo = keepUserInfo(companyInfo);
-        userDo.setId(companyInfo.getId());
-        userDo.setCreatorId(companyInfo.getCreatorId());
-        userDo.setCreateDate(companyInfo.getCreateDate());
-        log.info("updateUserInfo ==========> {}", userDo);
-        userInfoMapper.updateUserInfo(userDo);
+    public void updateUserInfo(NoCompanyExample companyInfo) {
+        NoCompanyExample userDo = keepUserInfo(companyInfo);
+//        userDo.setId(companyInfo.getId());
+//        userDo.setCreatorId(companyInfo.getCreatorId());
+//        userDo.setCreateDate(companyInfo.getCreateDate());
+//        log.info("updateUserInfo ==========> {}", userDo);
+//        userInfoMapper.updateUserInfo(userDo);
     }
 
-    private CompanyInfo keepUserInfo(CompanyInfo companyInfo) {
+    private NoCompanyExample keepUserInfo(NoCompanyExample companyInfo) {
         Date date = new Date();
-        CompanyInfo userDo = new CompanyInfo();
-        userDo.setCompanyName(companyInfo.getCompanyName());
-        userDo.setCompanyTax(companyInfo.getCompanyTax());
-        userDo.setCompanyLocation(companyInfo.getCompanyLocation());
-        userDo.setCompanyBankName(companyInfo.getCompanyBankName());
-        userDo.setCompanyBankNumber(companyInfo.getCompanyBankNumber());
-        userDo.setCompanyIndustry(companyInfo.getCompanyIndustry());
-        userDo.setCompanyRate(companyInfo.getCompanyRate());
-        userDo.setCompanyFixedTel(companyInfo.getCompanyFixedTel());
-        userDo.setContactName(companyInfo.getContactName());
-        userDo.setContactTel(companyInfo.getContactTel());
-        userDo.setRecipientName(companyInfo.getRecipientName());
-        userDo.setRecipientTel(companyInfo.getRecipientTel());
-        userDo.setRecipientAddress(companyInfo.getRecipientAddress());
-        userDo.setCompanyStatus(companyInfo.getCompanyStatus());
-        userDo.setCompanyType(companyInfo.getCompanyType());
-        userDo.setUpdateId(companyInfo.getUpdateId());
-        userDo.setUpdateDate(date);
+        NoCompanyExample userDo = new NoCompanyExample();
+//        userDo.setCompanyName(companyInfo.getCompanyName());
+//        userDo.setCompanyTax(companyInfo.getCompanyTax());
+//        userDo.setCompanyLocation(companyInfo.getCompanyLocation());
+//        userDo.setCompanyBankName(companyInfo.getCompanyBankName());
+//        userDo.setCompanyBankNumber(companyInfo.getCompanyBankNumber());
+//        userDo.setCompanyIndustry(companyInfo.getCompanyIndustry());
+//        userDo.setCompanyRate(companyInfo.getCompanyRate());
+//        userDo.setCompanyFixedTel(companyInfo.getCompanyFixedTel());
+//        userDo.setContactName(companyInfo.getContactName());
+//        userDo.setContactTel(companyInfo.getContactTel());
+//        userDo.setRecipientName(companyInfo.getRecipientName());
+//        userDo.setRecipientTel(companyInfo.getRecipientTel());
+//        userDo.setRecipientAddress(companyInfo.getRecipientAddress());
+//        userDo.setCompanyStatus(companyInfo.getCompanyStatus());
+//        userDo.setCompanyType(companyInfo.getCompanyType());
+//        userDo.setUpdateId(companyInfo.getUpdateId());
+//        userDo.setUpdateDate(date);
         return userDo;
     }
 }
