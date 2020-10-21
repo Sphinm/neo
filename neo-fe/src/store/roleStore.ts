@@ -9,7 +9,6 @@ class Role {
   fetchCurrentRole = async () => {
     try {
       const { data, code } = await fetchInfo()
-      console.log(11,code)
       if (code === 'SUCCESS' && data) {
         runInAction(() => {
           this.currentRole = data

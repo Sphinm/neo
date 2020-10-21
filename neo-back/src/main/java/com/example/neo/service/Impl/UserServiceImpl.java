@@ -44,16 +44,15 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         NeoUser user = users.get(0);
-
         NoCompanyExample companyExample = new NoCompanyExample();
-        companyExample.createCriteria().andIdEqualTo(users.get(0).getId());
+        companyExample.createCriteria().andIdEqualTo(user.getId());
         List<NoCompany> companyInfo = companyMapper.selectByExample(companyExample);
         if (companyInfo != null && companyInfo.size() == 1) {
             u.setUserInfo(companyInfo.get(0));
         }
 
         NeoRoleExample roleExample = new NeoRoleExample();
-        roleExample.createCriteria().andIdEqualTo(users.get(0).getRoleId());
+        roleExample.createCriteria().andIdEqualTo(user.getRoleId());
         List<NeoRole> roles = neoRoleMapper.selectByExample(roleExample);
         if (roles != null && roles.size() == 1) {
             u.setRoleName(roles.get(0).getRoleName());

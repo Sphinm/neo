@@ -18,6 +18,35 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
+-- Table structure for neo_user
+-- ----------------------------
+DROP TABLE IF EXISTS `neo_user`;
+CREATE TABLE `neo_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+  `account` varchar(50) DEFAULT NULL COMMENT '用户名',
+  `password` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '123456' COMMENT '密码',
+  `username` varchar(50) DEFAULT NULL COMMENT '姓名',
+  `mobile` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '手机号',
+  `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
+  `is_locked` tinyint(1) DEFAULT '0' COMMENT '是否锁定（0:未锁定，1:锁定）',
+  `role_id` int(11) DEFAULT NULL COMMENT '角色id，关联neo_role表id',
+  `related_id` int(11) DEFAULT NULL COMMENT '关联id（关联公司id）',
+  `creator_id` int(11) DEFAULT NULL COMMENT '创建人id',
+  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` int(11) DEFAULT NULL COMMENT '更新者id',
+  `update_date` datetime DEFAULT NULL COMMENT '更新日期',
+  PRIMARY KEY (`id`),
+  KEY `u_idx_tel` (`mobile`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
+
+-- ----------------------------
+-- Records of neo_user
+-- ----------------------------
+BEGIN;
+INSERT INTO `neo_user` VALUES (1, NULL, '123', 'min.su', '131', '111@11.cn', 0, 1, NULL, 1, '2020-09-27 00:09:37', 1, '2020-09-27 00:09:45');
+COMMIT;
+
+-- ----------------------------
 -- Table structure for neo_company
 -- ----------------------------
 DROP TABLE IF EXISTS `neo_company`;
@@ -128,19 +157,6 @@ CREATE TABLE `neo_finance` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='公司财务表';
 
 -- ----------------------------
--- Table structure for neo_functions
--- ----------------------------
-DROP TABLE IF EXISTS `neo_functions`;
-CREATE TABLE `neo_functions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
-  `function_name` varchar(50) DEFAULT NULL COMMENT '功能名称（中文）',
-  `function_type` varchar(50) DEFAULT NULL COMMENT '功能类别',
-  `function_info` varchar(50) DEFAULT NULL COMMENT '功能信息（英文）',
-  `is_locked` tinyint(1) DEFAULT NULL COMMENT '是否锁定（0：否，1：是）',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='权限表';
-
--- ----------------------------
 -- Table structure for neo_invoice
 -- ----------------------------
 DROP TABLE IF EXISTS `neo_invoice`;
@@ -225,40 +241,6 @@ CREATE TABLE `neo_recharge_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='公司充值记录表';
 
 -- ----------------------------
--- Table structure for neo_role
--- ----------------------------
-DROP TABLE IF EXISTS `neo_role`;
-CREATE TABLE `neo_role` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增id',
-  `role_name` varchar(50) DEFAULT NULL COMMENT '角色名称',
-  `role_type` varchar(50) DEFAULT NULL COMMENT '角色类型',
-  `is_locked` tinyint(1) DEFAULT NULL COMMENT '是否锁定（0：否，1：是）',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色表';
-
--- ----------------------------
--- Records of neo_role
--- ----------------------------
-BEGIN;
-INSERT INTO `neo_role` VALUES (1, '管理员', 'ADMIN', 0);
-INSERT INTO `neo_role` VALUES (2, '代理商', 'MERCHANT', 0);
-INSERT INTO `neo_role` VALUES (3, '客户公司', 'COMPANY', 0);
-INSERT INTO `neo_role` VALUES (4, '员工', 'EMPLOYEE', 0);
-COMMIT;
-
--- ----------------------------
--- Table structure for neo_role_function
--- ----------------------------
-DROP TABLE IF EXISTS `neo_role_function`;
-CREATE TABLE `neo_role_function` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
-  `role_id` int(11) DEFAULT NULL COMMENT '关联neo_role中的id',
-  `function_id` int(11) DEFAULT NULL COMMENT '关联neo_functions中的id',
-  `is_locked` tinyint(1) DEFAULT NULL COMMENT '是否锁定（0：否，1：是）',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色权限关联表';
-
--- ----------------------------
 -- Table structure for neo_sp
 -- ----------------------------
 DROP TABLE IF EXISTS `neo_sp`;
@@ -277,35 +259,6 @@ CREATE TABLE `neo_sp` (
   `is_deleted` tinyint(1) DEFAULT NULL COMMENT '是否删除（0：否，1：是）',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='个体独资管理';
-
--- ----------------------------
--- Table structure for neo_user
--- ----------------------------
-DROP TABLE IF EXISTS `neo_user`;
-CREATE TABLE `neo_user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
-  `account` varchar(50) DEFAULT NULL COMMENT '用户名',
-  `password` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '123456' COMMENT '密码',
-  `username` varchar(50) DEFAULT NULL COMMENT '姓名',
-  `mobile` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '手机号',
-  `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
-  `is_locked` tinyint(1) DEFAULT '0' COMMENT '是否锁定（0:未锁定，1:锁定）',
-  `role_id` int(11) DEFAULT NULL COMMENT '角色id，关联neo_role表id',
-  `related_id` int(11) DEFAULT NULL COMMENT '关联id（关联公司id）',
-  `creator_id` int(11) DEFAULT NULL COMMENT '创建人id',
-  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_id` int(11) DEFAULT NULL COMMENT '更新者id',
-  `update_date` datetime DEFAULT NULL COMMENT '更新日期',
-  PRIMARY KEY (`id`),
-  KEY `u_idx_tel` (`mobile`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
-
--- ----------------------------
--- Records of neo_user
--- ----------------------------
-BEGIN;
-INSERT INTO `neo_user` VALUES (1, NULL, '123', 'min.su', '131', '111@11.cn', 0, 1, NULL, 1, '2020-09-27 00:09:37', 1, '2020-09-27 00:09:45');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for neo_withdraw
@@ -328,3 +281,51 @@ CREATE TABLE `neo_withdraw` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='提现记录表';
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ----------------------------
+-- Table structure for neo_functions
+-- ----------------------------
+DROP TABLE IF EXISTS `neo_functions`;
+CREATE TABLE `neo_functions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+  `function_name` varchar(50) DEFAULT NULL COMMENT '功能名称（中文）',
+  `function_type` varchar(50) DEFAULT NULL COMMENT '功能类别',
+  `function_info` varchar(50) DEFAULT NULL COMMENT '功能信息（英文）',
+  `is_locked` tinyint(1) DEFAULT NULL COMMENT '是否锁定（0：否，1：是）',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='API 功能权限表';
+
+-- ----------------------------
+-- Table structure for neo_role_function
+-- ----------------------------
+DROP TABLE IF EXISTS `neo_role_function`;
+CREATE TABLE `neo_role_function` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+  `role_id` int(11) DEFAULT NULL COMMENT '关联neo_role中的id',
+  `function_id` int(11) DEFAULT NULL COMMENT '关联neo_functions中的id',
+  `is_locked` tinyint(1) DEFAULT NULL COMMENT '是否锁定（0：否，1：是）',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色权限关联表';
+
+
+-- ----------------------------
+-- Table structure for neo_role
+-- ----------------------------
+DROP TABLE IF EXISTS `neo_role`;
+CREATE TABLE `neo_role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `role_name` varchar(50) DEFAULT NULL COMMENT '角色名称',
+  `role_type` varchar(50) DEFAULT NULL COMMENT '角色类型',
+  `is_locked` tinyint(1) DEFAULT NULL COMMENT '是否锁定（0：否，1：是）',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色表';
+
+-- ----------------------------
+-- Records of neo_role
+-- ----------------------------
+BEGIN;
+INSERT INTO `neo_role` VALUES (1, '管理员', 'ADMIN', 0);
+INSERT INTO `neo_role` VALUES (2, '代理商', 'MERCHANT', 0);
+INSERT INTO `neo_role` VALUES (3, '客户公司', 'COMPANY', 0);
+INSERT INTO `neo_role` VALUES (4, '员工', 'EMPLOYEE', 0);
+COMMIT;
