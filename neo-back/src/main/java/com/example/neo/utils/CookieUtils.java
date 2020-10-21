@@ -12,6 +12,10 @@ import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * 已废弃
+ */
+@Deprecated
 public class CookieUtils {
 
     /**

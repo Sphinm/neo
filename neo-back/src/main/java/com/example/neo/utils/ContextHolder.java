@@ -2,6 +2,10 @@ package com.example.neo.utils;
 
 import lombok.Data;
 
+/**
+ * 已废弃
+ */
+@Deprecated
 public class ContextHolder {
     private static final ThreadLocal<UserContext> userContext = new ThreadLocal<>();
 
