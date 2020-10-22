@@ -101,8 +101,8 @@ public class UserServiceImpl implements UserService {
                     break;
                 // 创建 employee 用户，涉及 neo_user 和 neo_employee 表，注意这里 admin 可以指定 neo_employee 公司
                 case EMPLOYEE:
-                    // TODO: 基本上不会出现这种情况
-                    break;
+                // TODO: 基本上不会出现这种情况
+                break;
             }
         }
         // 当前用户是 merchant, 创建 company 用户，涉及 neo_user、neo_company 和 neo_company_relation 表

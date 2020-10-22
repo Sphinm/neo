@@ -40,7 +40,6 @@ public class NeoFunctionsServiceImpl implements NeoFunctionsService {
 
         if (neoUsers == null || neoUsers.size() != 1) {
             logger.info("用户不存在，或者数量超过一个,userName = %d", mobile);
-            //TODO：抛出异常
             throw new RuntimeException("用户异常");
         }
         //根据用户role_id找到function_id
