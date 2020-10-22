@@ -70,7 +70,7 @@ CREATE TABLE `neo_company` (
   `create_date` datetime DEFAULT NULL COMMENT '创建时间',
   `update_id` int(45) DEFAULT NULL COMMENT '更新人',
   `update_date` datetime DEFAULT NULL COMMENT '更新时间',
-  `company_type` tinyint(1) DEFAULT NULL COMMENT '公司类型（0: 管理员，1：代理商，2：客户公司）',
+  `company_type` tinyint(1) DEFAULT NULL COMMENT '公司类型（0：代理商，1：客户公司）',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='公司客户';
 

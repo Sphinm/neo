@@ -72,10 +72,11 @@ const Dashboard = () => {
       if (Object.keys(userInfo).length) {
         // update
         const { data } = await updateUserInfo({ ...userInfo, ...values })
-        setUserInfo(data ? data : {})
+        setUserInfo(data)
       } else {
         // insert
-        await insertUserInfo(values, AuthType.ADMIN)
+        const { data } = await insertUserInfo(values, AuthType.ADMIN)
+        setUserInfo(data)
       }
     } catch (error) {
       handleError(error)

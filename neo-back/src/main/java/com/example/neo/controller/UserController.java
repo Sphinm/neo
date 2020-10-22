@@ -1,6 +1,5 @@
 package com.example.neo.controller;
 
-import com.example.neo.annotation.UserLoginToken;
 import com.example.neo.enums.UserTypeEnum;
 import com.example.neo.model.ICreateUser;
 import com.example.neo.model.IGetUser;
@@ -25,22 +24,21 @@ public class UserController {
         return ResponseBean.success(user);
     }
 
-
-    @UserLoginToken
+    @PreAuthorize("hasAnyAuthority('user_view')")
     @PostMapping("/create/user")
     public ResponseBean createUser(@RequestBody ICreateUser user, @RequestParam("type") UserTypeEnum userType) {
         userService.createUser(user, userType);
         return ResponseBean.success(user);
     }
 
-    @UserLoginToken
+    @PreAuthorize("hasAnyAuthority('user_view')")
     @PostMapping("/insert/userInfo")
     public ResponseBean insertUserInfo(@RequestBody NoCompany companyInfo, @RequestParam("type") UserTypeEnum userType) {
         userService.insertUserInfo(companyInfo, userType);
-        return ResponseBean.success();
+        return ResponseBean.success(companyInfo);
     }
 
-    @UserLoginToken
+    @PreAuthorize("hasAnyAuthority('user_view')")
     @PostMapping("/update/userInfo")
     public ResponseBean updateUserInfo(@RequestBody NoCompany companyInfo) {
         userService.updateUserInfo(companyInfo);

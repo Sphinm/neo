@@ -1,6 +1,5 @@
 package com.example.neo.controller;
 
-import com.example.neo.annotation.UserLoginToken;
 import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.IChangePassword;
 import com.example.neo.model.ILogin;
@@ -11,7 +10,6 @@ import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,7 +39,7 @@ public class AuthController {
         AuthService.logout();
     }
 
-    @UserLoginToken
+    @PreAuthorize("hasAnyAuthority('changePassword')")
     @PostMapping("/change/password")
     public ResponseBean changePassword(@RequestBody IChangePassword pwd) {
         String userId = ContextHolder.getCurrentUserId();

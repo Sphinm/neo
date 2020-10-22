@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         IGetUser u = new IGetUser();
         NeoUser user = fetchUserByMobile();
         NoCompanyExample companyExample = new NoCompanyExample();
-        companyExample.createCriteria().andIdEqualTo(user.getId());
+        companyExample.createCriteria().andCreatorIdEqualTo(user.getId());
         List<NoCompany> companyInfo = companyMapper.selectByExample(companyExample);
         if (companyInfo != null && companyInfo.size() == 1) {
             u.setUserInfo(companyInfo.get(0));
@@ -74,7 +74,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 创建用户的时候先判断用户有无公司信息，如果没有则不创建公司信息，同时无关联id
-     * <p>
      * 涉及到的表有 neo_user、neo_company、neo_company_relation 和 neo_employee 四张表
      * neo_user 表是所有角色都要的
      * neo_company 是非员工角色可以创建的，但是在创建用户的时候可以缺省（原则上一次填完，可修改）
@@ -89,20 +88,13 @@ public class UserServiceImpl implements UserService {
         // 当前用户是 admin
         if (neoUser.getRoleId() == 1) {
             switch (userType) {
-                // 创建 admin 用户，涉及 neo_user 和 neo_company 表
-                case ADMIN:
-                    createInfo(user, userType, userId);
-                    break;
                 // 创建 merchant 用户，涉及 neo_user、neo_company 和 neo_company_relation 表
                 case MERCHANT:
+                    createInfo(user, userType, userId);
                     break;
                 // 创建 company 用户，涉及 neo_user、neo_company 和 neo_company_relation 表
                 case COMPANY:
                     break;
-                // 创建 employee 用户，涉及 neo_user 和 neo_employee 表，注意这里 admin 可以指定 neo_employee 公司
-                case EMPLOYEE:
-                // TODO: 基本上不会出现这种情况
-                break;
             }
         }
         // 当前用户是 merchant, 创建 company 用户，涉及 neo_user、neo_company 和 neo_company_relation 表
@@ -151,11 +143,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public int insertUserInfo(NoCompany companyInfo, UserTypeEnum userType) {
         Date date = new Date();
-        NoCompany company = commonUserInfo(companyInfo);
-        company.setCreatorId(companyInfo.getCreatorId());
+        NeoUser neoUser = fetchUserByMobile();
+        NoCompany company = commonUserInfo(companyInfo, neoUser);
+        company.setCreatorId(neoUser.getId());
         company.setCreateDate(date);
         company.setCompanyStatus(userType == UserTypeEnum.ADMIN);
-//        company.setCompanyType(userType.getId()); // TODO: 这里不能为 Boolean 类型
+        company.setCompanyType(userType.getId() != 0);
         log.info("insertUserInfo ===> {}", company);
         return companyMapper.insert(company);
     }
@@ -165,20 +158,20 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void updateUserInfo(NoCompany companyInfo) {
-        NoCompany userDo = commonUserInfo(companyInfo);
-        userDo.setId(companyInfo.getId());
+        NeoUser neoUser = fetchUserByMobile();
+        NoCompanyExample example = new NoCompanyExample();
+        NoCompany userDo = commonUserInfo(companyInfo, neoUser);
+        userDo.setId(neoUser.getId());
         userDo.setCreatorId(companyInfo.getCreatorId());
         userDo.setCreateDate(companyInfo.getCreateDate());
         log.info("updateUserInfo ==========> {}", userDo);
-//        companyMapper.updateByExample(userDo);
+        companyMapper.updateByExample(userDo, example);
     }
 
     /**
      * 插入公共的信息
-     * @param companyInfo
-     * @return
      */
-    private NoCompany commonUserInfo(NoCompany companyInfo) {
+    private NoCompany commonUserInfo(NoCompany companyInfo, NeoUser user) {
         Date date = new Date();
         NoCompany userDo = new NoCompany();
         userDo.setCompanyName(companyInfo.getCompanyName());
@@ -196,7 +189,7 @@ public class UserServiceImpl implements UserService {
         userDo.setRecipientAddress(companyInfo.getRecipientAddress());
         userDo.setCompanyStatus(companyInfo.getCompanyStatus());
         userDo.setCompanyType(companyInfo.getCompanyType());
-        userDo.setUpdateId(companyInfo.getUpdateId());
+        userDo.setUpdateId(user.getId());
         userDo.setUpdateDate(date);
         return userDo;
     }
