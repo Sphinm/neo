@@ -78,12 +78,9 @@ public class AuthServiceImpl implements AuthService {
         if (results == null || results.size() != 1) {
             return null;
         }
-        if (iLogin.getPassword().equals(results.get(0).getPassword())) {
+        if (passwordEncoder.matches(iLogin.getPassword(), results.get(0).getPassword())) {
             return results.get(0);
         }
-//        if (passwordEncoder.matches(iLogin.getPassword(), results.get(0).getPassword())) {
-//            return results.get(0);
-//        }
         return null;
     }
 }
