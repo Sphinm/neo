@@ -8,9 +8,9 @@ import com.example.neo.mybatis.mapper.NeoUserMapper;
 import com.example.neo.mybatis.mapper.NoCompanyMapper;
 import com.example.neo.mybatis.model.*;
 import com.example.neo.service.UserService;
+import com.example.neo.utils.FetchUserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -27,21 +27,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private NoCompanyMapper companyMapper;
 
-    /**
-     * 根据手机号获取用户信息
-     *
-     * @return user
-     */
-    private NeoUser fetchUserByMobile() {
-        String mobile = SecurityContextHolder.getContext().getAuthentication().getName();
-        NeoUserExample userExample = new NeoUserExample();
-        userExample.createCriteria().andMobileEqualTo(mobile);
-        List<NeoUser> users = neoUserMapper.selectByExample(userExample);
-        if (users == null || users.size() != 1) {
-            return null;
-        }
-        return users.get(0);
-    }
 
     /**
      * 获取用户信息
@@ -50,7 +35,8 @@ public class UserServiceImpl implements UserService {
      */
     public IGetUser fetchUserInfo() {
         IGetUser u = new IGetUser();
-        NeoUser user = fetchUserByMobile();
+        FetchUserInfo info = new FetchUserInfo();
+        NeoUser user = info.fetchUserByMobile();
         NoCompanyExample companyExample = new NoCompanyExample();
         companyExample.createCriteria().andCreatorIdEqualTo(user.getId());
         List<NoCompany> companyInfo = companyMapper.selectByExample(companyExample);
@@ -81,7 +67,8 @@ public class UserServiceImpl implements UserService {
      * neo_employee 记录员工角色与公司的关联关系
      */
     public void createUser(ICreateUser user, UserTypeEnum userType) {
-        NeoUser neoUser = fetchUserByMobile();
+        FetchUserInfo info = new FetchUserInfo();
+        NeoUser neoUser = info.fetchUserByMobile();
         int userId = neoUser.getId();
         log.info("neoUser =====>>>", neoUser);
 
@@ -143,7 +130,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public int insertUserInfo(NoCompany companyInfo, UserTypeEnum userType) {
         Date date = new Date();
-        NeoUser neoUser = fetchUserByMobile();
+        FetchUserInfo info = new FetchUserInfo();
+        NeoUser neoUser = info.fetchUserByMobile();
         NoCompany company = commonUserInfo(companyInfo, neoUser);
         company.setCreatorId(neoUser.getId());
         company.setCreateDate(date);
@@ -158,7 +146,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void updateUserInfo(NoCompany companyInfo) {
-        NeoUser neoUser = fetchUserByMobile();
+        FetchUserInfo info = new FetchUserInfo();
+        NeoUser neoUser = info.fetchUserByMobile();
         NoCompanyExample example = new NoCompanyExample();
         NoCompany userDo = commonUserInfo(companyInfo, neoUser);
         userDo.setId(neoUser.getId());

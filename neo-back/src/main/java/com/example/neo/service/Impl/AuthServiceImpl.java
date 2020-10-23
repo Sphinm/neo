@@ -10,6 +10,7 @@ import com.example.neo.mybatis.model.NeoUserExample;
 import com.example.neo.security.JwtTokenUtil;
 import com.example.neo.service.AuthService;
 import com.example.neo.utils.CookieUtils;
+import com.example.neo.utils.FetchUserInfo;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,16 +44,19 @@ public class AuthServiceImpl implements AuthService {
         CookieUtils.clean(Constants.TOKEN_KEY);
     }
 
-    public ResponseCodeEnum changePwd(IChangePassword pwd, String userId) {
-//        NeoUserExample userInfo = neoUserMapper.findByUserId(userId);
-//        if (!pwd.getOldPwd().equals(userInfo.getPassword())) {
-//            return ResponseCodeEnum.INIT_PASSWORD_ERROR;
-//        }
-//        if (pwd.getOldPwd().equals(pwd.getNewPwd())) {
-//            return ResponseCodeEnum.PASSWORD_EQUALS;
-//        }
-//        neoUserMapper.changePassword(pwd, userId);
-        return ResponseCodeEnum.SUCCESS;
+    public ResponseBean changePwd(IChangePassword pwd) {
+        NeoUser user = new NeoUser();
+        FetchUserInfo info = new FetchUserInfo();
+        NeoUser userInfo = info.fetchUserByMobile();
+        if (!pwd.getOldPwd().equals(userInfo.getPassword())) {
+            return ResponseBean.fail(ResponseCodeEnum.INIT_PASSWORD_ERROR);
+        }
+        if (pwd.getOldPwd().equals(pwd.getNewPwd())) {
+            return ResponseBean.fail(ResponseCodeEnum.PASSWORD_EQUALS);
+        }
+        user.setPassword(pwd.getNewPwd());
+        neoUserMapper.updateByPrimaryKeySelective(user);
+        return ResponseBean.success();
     }
 
     @Override
@@ -81,9 +85,9 @@ public class AuthServiceImpl implements AuthService {
         if (iLogin.getPassword().equals(results.get(0).getPassword())) {
             return results.get(0);
         }
-//        if (passwordEncoder.matches(iLogin.getPassword(), results.get(0).getPassword())) {
-//            return results.get(0);
-//        }
+        if (passwordEncoder.matches(iLogin.getPassword(), results.get(0).getPassword())) {
+            return results.get(0);
+        }
         return null;
     }
 }

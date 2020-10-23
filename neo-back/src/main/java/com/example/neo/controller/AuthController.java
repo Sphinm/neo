@@ -1,11 +1,9 @@
 package com.example.neo.controller;
 
-import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.IChangePassword;
 import com.example.neo.model.ILogin;
 import com.example.neo.service.AuthService;
 import com.example.neo.service.UserService;
-import com.example.neo.utils.ContextHolder;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,18 +37,10 @@ public class AuthController {
         AuthService.logout();
     }
 
-    @PreAuthorize("hasAnyAuthority('changePassword')")
+    @PreAuthorize("hasAnyAuthority('change_password')")
     @PostMapping("/change/password")
     public ResponseBean changePassword(@RequestBody IChangePassword pwd) {
-        String userId = ContextHolder.getCurrentUserId();
-        ResponseCodeEnum code = AuthService.changePwd(pwd, userId);
-        if (code == ResponseCodeEnum.INIT_PASSWORD_ERROR) {
-            return ResponseBean.fail(ResponseCodeEnum.INIT_PASSWORD_ERROR);
-        }
-        if (code == ResponseCodeEnum.PASSWORD_EQUALS) {
-            return ResponseBean.fail(ResponseCodeEnum.PASSWORD_EQUALS);
-        }
-        return ResponseBean.success();
+        return AuthService.changePwd(pwd);
     }
 
     @PreAuthorize("hasAnyAuthority('pass')")
