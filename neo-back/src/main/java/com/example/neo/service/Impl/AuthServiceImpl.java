@@ -10,7 +10,6 @@ import com.example.neo.mybatis.model.NeoUserExample;
 import com.example.neo.security.JwtTokenUtil;
 import com.example.neo.service.AuthService;
 import com.example.neo.utils.CookieUtils;
-import com.example.neo.utils.FetchUserInfo;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +34,8 @@ public class AuthServiceImpl implements AuthService {
     private NeoUserMapper neoUserMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private CommonService commonService;
     @Value("${neo.token.expired-seconds}")
     public Long expiredTime;
     @Value("${neo.token.secret-key}")
@@ -46,14 +47,14 @@ public class AuthServiceImpl implements AuthService {
 
     public ResponseBean changePwd(IChangePassword pwd) {
         NeoUser user = new NeoUser();
-        FetchUserInfo info = new FetchUserInfo();
-        NeoUser userInfo = info.fetchUserByMobile();
+        NeoUser userInfo = commonService.fetchUserByMobile();
         if (!pwd.getOldPwd().equals(userInfo.getPassword())) {
             return ResponseBean.fail(ResponseCodeEnum.INIT_PASSWORD_ERROR);
         }
         if (pwd.getOldPwd().equals(pwd.getNewPwd())) {
             return ResponseBean.fail(ResponseCodeEnum.PASSWORD_EQUALS);
         }
+        user.setId(userInfo.getId());
         user.setPassword(pwd.getNewPwd());
         neoUserMapper.updateByPrimaryKeySelective(user);
         return ResponseBean.success();
@@ -68,7 +69,6 @@ public class AuthServiceImpl implements AuthService {
         }
         //生成token，放入redis
         String token = JwtTokenUtil.generatorJwtToken(user.getId(), user.getUsername(), expiredTime, secretKey);
-        log.info("token11112 = {}", token);
         redisTemplate.opsForValue().set(token, user.getMobile(), expiredTime, TimeUnit.SECONDS);
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
@@ -82,12 +82,13 @@ public class AuthServiceImpl implements AuthService {
         if (results == null || results.size() != 1) {
             return null;
         }
+        // TODO: 先不加解密密码
         if (iLogin.getPassword().equals(results.get(0).getPassword())) {
             return results.get(0);
         }
-        if (passwordEncoder.matches(iLogin.getPassword(), results.get(0).getPassword())) {
-            return results.get(0);
-        }
+//        if (passwordEncoder.matches(iLogin.getPassword(), results.get(0).getPassword())) {
+//            return results.get(0);
+//        }
         return null;
     }
 }
