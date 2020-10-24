@@ -15,7 +15,6 @@ export const handleError = (e: AxiosError) => {
 }
 
 const requestInterceptor = (config: AxiosRequestConfig) => {
-  console.log(11111, config.url)
   if (config.url === '/newLogin') return config
   const headers = {
     'Authorization': `Bearer ` + localStorage.getItem('token'),

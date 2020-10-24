@@ -42,17 +42,16 @@ public class AuthServiceImpl implements AuthService {
     public void logout() {
         NeoUser user = commonService.fetchUserByMobile();
         String token = JwtTokenUtil.generatorJwtToken(user.getId(), user.getUsername(), expiredTime, secretKey);
-        log.info("6666 {}", token);
         redisTemplate.delete(token);
     }
 
     public ResponseBean changePwd(IChangePassword pwd) {
         NeoUser user = new NeoUser();
         NeoUser userInfo = commonService.fetchUserByMobile();
-        if (!pwd.getOldPwd().equals(userInfo.getPassword())) {
+        if (!passwordEncoder.matches(pwd.getOldPwd(), userInfo.getPassword())) {
             return ResponseBean.fail(ResponseCodeEnum.INIT_PASSWORD_ERROR);
         }
-        if (pwd.getOldPwd().equals(pwd.getNewPwd())) {
+        if (passwordEncoder.matches(pwd.getOldPwd(), pwd.getNewPwd())) {
             return ResponseBean.fail(ResponseCodeEnum.PASSWORD_EQUALS);
         }
         user.setId(userInfo.getId());

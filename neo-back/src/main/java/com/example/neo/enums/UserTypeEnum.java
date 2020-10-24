@@ -1,10 +1,10 @@
 package com.example.neo.enums;
 
 public enum UserTypeEnum {
-    ADMIN(0),//管理员
-    MERCHANT(1),//代理商
-    COMPANY(2),//公司
-    EMPLOYEE(3);//员工
+    ADMIN(1),//管理员
+    MERCHANT(2),//代理商
+    COMPANY(3),//公司
+    EMPLOYEE(4);//员工
 
     int id;
 

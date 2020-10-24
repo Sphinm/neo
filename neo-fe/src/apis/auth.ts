@@ -7,7 +7,7 @@ export const login = (params: { userName: string; password: string }) => {
 
 /** 退出登录 */
 export const logout = () => {
-  return ajax.post(`/logout`)
+  return ajax.post(`/userLogout`)
 }
 
 /** 更改密码 */

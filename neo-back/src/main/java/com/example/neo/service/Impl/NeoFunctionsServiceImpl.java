@@ -52,7 +52,7 @@ public class NeoFunctionsServiceImpl implements NeoFunctionsService {
         for (NeoRoleFunction neoRoleFunction : neoRoleFunctions) {
             functionIds.add(neoRoleFunction.getFunctionId());
         }
-        if (functionIds==null||functionIds.size()==0){
+        if (functionIds.size()==0){
             return null;
         }
         //根据functionid查询权限列表

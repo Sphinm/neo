@@ -12,7 +12,6 @@ import java.util.List;
 public interface NeoUserService {
     /**
      * 手机号/邮箱找到用户实体
-     * @param userName
      * @return
      */
     NeoUser findUserByMobile(String mobile);

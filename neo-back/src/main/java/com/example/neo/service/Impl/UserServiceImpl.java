@@ -142,9 +142,10 @@ public class UserServiceImpl implements UserService {
         NoCompany company = commonUserInfo(companyInfo, neoUser);
         company.setCreatorId(neoUser.getId());
         company.setCreateDate(date);
-        company.setCompanyStatus(userType == UserTypeEnum.ADMIN);
-        company.setCompanyType(userType.getId() != 0);
-        log.info("insertUserInfo ===> {}", company);
+        // 如果是 roleId 为 1 则是管理员创建， status 为 1，表示正常，其他则需要审核
+        company.setCompanyStatus(neoUser.getRoleId() == 1);
+        // companyType 为2 是代理商、3是公司
+        company.setCompanyType(userType.getId() == 3);
         companyMapper.insert(company);
     }
 

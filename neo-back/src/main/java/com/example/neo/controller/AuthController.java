@@ -32,8 +32,8 @@ public class AuthController {
         return AuthService.newLogin(login);
     }
 
-    @PreAuthorize("hasAnyAuthority('logout')")
-    @PostMapping("/logout")
+    @PreAuthorize("hasAnyAuthority('user_logout')")
+    @PostMapping("/userLogout")
     public void logout() {
         AuthService.logout();
     }
