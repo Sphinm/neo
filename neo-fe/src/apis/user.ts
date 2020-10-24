@@ -15,3 +15,8 @@ export const insertUserInfo = (params: any, type: AuthType) => {
 export const updateUserInfo = (params: any) => {
   return ajax.post(`/update/userInfo`, params)
 }
+
+/** 查询代理商详细信息 */
+export const fetchMerchant = (type: AuthType) => {
+  return ajax.get(`/fetch/merchant?type=${type}`)
+}

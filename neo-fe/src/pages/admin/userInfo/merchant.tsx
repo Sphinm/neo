@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { Card, Table, Popconfirm, Badge, Button, Divider, Modal, Input, Form, Row, Col } from 'antd'
-import { createNewUser } from "@/apis/user"
+import React, { useEffect, useState } from 'react'
+import { Card, Table, Popconfirm, Badge, Button, Divider, Modal, Input, Form, Row, Col, Spin } from 'antd'
+import { createNewUser, fetchMerchant } from "@/apis/user"
 import { AuthType } from '@/enums/role'
 import { handleError } from '@/libs/axios'
 import styles from './index.styl'
@@ -10,6 +10,7 @@ export const Merchant = () => {
   const [formUser] = Form.useForm()
   const [visible, setVisible] = useState(false)
   const [isEdit, setEdit] = useState(false)
+  const [isLoaded, setLoaded] = useState<boolean>(false)
 
   const columns = [
     {
@@ -18,7 +19,7 @@ export const Merchant = () => {
       key: 'id',
     },
     {
-      title: '代理商名称',
+      title: '代理商公司',
       dataIndex: 'username',
       key: 'username',
     },
@@ -116,6 +117,22 @@ export const Merchant = () => {
     },
   ]
 
+  useEffect(() => {
+    fetchMerchantInfo()
+  }, [])
+
+  const fetchMerchantInfo = async() => {
+    try {
+      setLoaded(true)
+      const { data } = await fetchMerchant(AuthType.MERCHANT);
+      console.log('1312312312',data)
+    } catch (error) {
+      
+    } finally {
+      setLoaded(false)
+    }
+  }
+
   const changeMerchant = (values: any) => {
     formConpany.setFieldsValue({
       username: values.name,
@@ -157,7 +174,7 @@ export const Merchant = () => {
   }
 
   return (
-    <>
+    <Spin spinning={isLoaded}>
       <Card title="代理商档案">
         <Button type="primary" onClick={createMerchant}>
           新增代理商
@@ -281,6 +298,6 @@ export const Merchant = () => {
           </Row>
         </Form>
       </Modal>
-    </>
+    </Spin>
   )
 }

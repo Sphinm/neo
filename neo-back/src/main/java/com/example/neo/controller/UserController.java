@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 public class UserController {
@@ -43,6 +45,13 @@ public class UserController {
     public ResponseBean updateUserInfo(@RequestBody NoCompany companyInfo) {
         userService.updateUserInfo(companyInfo);
         return ResponseBean.success();
+    }
+
+    @PreAuthorize("hasAnyAuthority('user_merchant')")
+    @GetMapping("/fetch/merchant")
+    public ResponseBean fetchMerchantInfoByType(@RequestParam("type") UserTypeEnum userType) {
+        List<NoCompany> companyList = userService.fetchMerchantInfo(userType);
+        return ResponseBean.success(companyList);
     }
 
 }

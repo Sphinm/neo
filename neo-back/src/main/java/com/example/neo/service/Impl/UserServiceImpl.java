@@ -189,4 +189,13 @@ public class UserServiceImpl implements UserService {
         userDo.setUpdateDate(date);
         return userDo;
     }
+
+    // 返回 merchant 信息
+    @Override
+    public List<NoCompany> fetchMerchantInfo(UserTypeEnum userType) {
+        NoCompanyExample example = new NoCompanyExample();
+        // merchant 为 0 所以找个和 merchant 无关的
+        example.createCriteria().andCompanyTypeEqualTo(userType == UserTypeEnum.COMPANY);
+        return companyMapper.selectByExample(example);
+    }
 }
