@@ -251,8 +251,8 @@ const Dashboard = () => {
           <Form.Item label="公司地址" name="companyLocation" rules={[{ required: true, message: '请输入公司地址' }]}>
             <Input placeholder="请输入公司地址"></Input>
           </Form.Item>
-          <Form.Item label="收件人" name="recipientName" rules={[{ required: true, message: '请输入收件人手机号' }]}>
-            <Input placeholder="请输入收件人手机号"></Input>
+          <Form.Item label="收件人" name="recipientName" rules={[{ required: true, message: '请输入收件人姓名' }]}>
+            <Input placeholder="请输入收件人姓名"></Input>
           </Form.Item>
           <Form.Item
             label="收件人手机号"

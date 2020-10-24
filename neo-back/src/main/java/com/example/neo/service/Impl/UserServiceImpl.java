@@ -97,13 +97,30 @@ public class UserServiceImpl implements UserService {
         // 公司名称不为空或者创建的用户类型不为员工则创建公司信息
         int insertId = -1;
         if (user.getCompanyName() == null || userType != UserTypeEnum.EMPLOYEE) {
-            NoCompany companyInfo = new NoCompany();
-            insertId = insertUserInfo(companyInfo, userType);
+            NoCompany userDo = new NoCompany();
+            userDo.setCompanyName(user.getCompanyName());
+            userDo.setCompanyTax(user.getCompanyTax());
+            userDo.setCompanyLocation(user.getCompanyLocation());
+            userDo.setCompanyBankName(user.getCompanyBankName());
+            userDo.setCompanyBankNumber(user.getCompanyBankNumber());
+            userDo.setCompanyIndustry(user.getCompanyIndustry());
+            userDo.setCompanyRate(user.getCompanyRate());
+            userDo.setCompanyFixedTel(user.getCompanyFixedTel());
+            userDo.setContactName(user.getContactName());
+            userDo.setContactTel(user.getContactTel());
+            userDo.setRecipientName(user.getRecipientName());
+            userDo.setRecipientTel(user.getRecipientTel());
+            userDo.setRecipientAddress(user.getRecipientAddress());
+            userDo.setCompanyStatus(user.getCompanyStatus());
+            userDo.setCompanyType(user.getCompanyType());
+            userDo.setUpdateId(userId);
+            userDo.setUpdateDate(date);
+            insertId = insertUserInfo(userDo, userType);
         }
 
         // 创建用户表
-        userDto.setAccount(user.getAccount());
-        userDto.setEmail(user.getEmail());
+//        userDto.setAccount(user.getMobile()); // account 暂时不用
+//        userDto.setEmail(user.getEmail());
         userDto.setUsername(user.getUserName());
         userDto.setMobile(user.getMobile());
         userDto.setRoleId(userType.getId());

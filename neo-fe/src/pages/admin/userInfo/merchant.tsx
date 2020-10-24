@@ -1,8 +1,13 @@
 import React, { useState } from 'react'
-import { Card, Table, Popconfirm, Badge, Button, Divider, Modal, Input, Form } from 'antd'
+import { Card, Table, Popconfirm, Badge, Button, Divider, Modal, Input, Form, Row, Col } from 'antd'
+import { createNewUser } from "@/apis/user"
+import { AuthType } from '@/enums/role'
+import { handleError } from '@/libs/axios'
+import styles from './index.styl'
 
 export const Merchant = () => {
-  const [form] = Form.useForm()
+  const [formConpany] = Form.useForm()
+  const [formUser] = Form.useForm()
   const [visible, setVisible] = useState(false)
   const [isEdit, setEdit] = useState(false)
 
@@ -112,7 +117,7 @@ export const Merchant = () => {
   ]
 
   const changeMerchant = (values: any) => {
-    form.setFieldsValue({
+    formConpany.setFieldsValue({
       username: values.name,
       status: values.status,
       type: values.type,
@@ -127,7 +132,21 @@ export const Merchant = () => {
   }
 
   const handleOk = async () => {
-    const values = await form.validateFields()
+    const values = await formConpany.validateFields()
+    console.log(11, values)
+    try {
+      const params = {
+        userInfo: {
+          account: values.contactTel,
+        },
+        companyInfo: {},
+      }
+      const { data } = await createNewUser(params, AuthType.MERCHANT)
+      console.log(222, data)
+      // 查询 merchant 列表
+    } catch (error) {
+      handleError(error)
+    }
     console.log(11, values)
     setVisible(false)
   }
@@ -135,7 +154,8 @@ export const Merchant = () => {
   const createMerchant = () => {
     setVisible(true)
     setEdit(false)
-    form.resetFields()
+    formUser.resetFields()
+    formConpany.resetFields()
   }
 
   return (
@@ -162,27 +182,78 @@ export const Merchant = () => {
           </Button>,
         ]}
       >
-        <Form form={form}>
-          <Form.Item label="公司名称" name="username" rules={[{ required: true, message: '请填写公司名称' }]}>
+        <Form form={formUser} className={styles['conpany-form']}>
+        <Row gutter={24}>
+          <Col span={7}>
+            <Form.Item label="对接人" name="contactName" rules={[{ required: true, message: '请输入对接人' }]}>
+              <Input placeholder="请输入对接人"></Input>
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+          <Form.Item label="对接人手机号" name="contactTel" rules={[{ required: true, message: '请输入对接人手机号' }]}>
+            <Input placeholder="请输入对接人手机号"></Input>
+          </Form.Item>
+          </Col>
+          <Col span={8}>
+          <Form.Item label="公司名称" name="companyName" rules={[{ required: true, message: '请输入公司名称' }]}>
             <Input placeholder="请输入公司名称"></Input>
           </Form.Item>
-          <Form.Item label="公司地址" name="username1" rules={[{ required: true, message: '请填写公司地址' }]}>
-            <Input placeholder="请输入公司地址"></Input>
+          </Col>
+          <Col span={8}>
+          <Form.Item label="公司税号" name="companyTax" rules={[{ required: true, message: '请输入公司税号' }]}>
+            <Input placeholder="请输入公司税号"></Input>
           </Form.Item>
-          <Form.Item label="联系人" name="username2" rules={[{ required: true, message: '请填写公司联系人' }]}>
-            <Input placeholder="请输入联系人"></Input>
+          </Col>
+        </Row>
+          
+        </Form>
+        <Form form={formConpany} className={styles['conpany-form']}>
+          <Form.Item label="对接人" name="contactName" rules={[{ required: true, message: '请输入对接人' }]}>
+            <Input placeholder="请输入对接人"></Input>
           </Form.Item>
-          <Form.Item label="联系电话" name="username3" rules={[{ required: true, message: '请填写公司联系电话' }]}>
-            <Input placeholder="请输入联系电话"></Input>
+          <Form.Item label="对接人手机号" name="contactTel" rules={[{ required: true, message: '请输入对接人手机号' }]}>
+            <Input placeholder="请输入对接人手机号"></Input>
           </Form.Item>
-          <Form.Item label="费率" name="username4" rules={[{ required: true, message: '请填写费率' }]}>
+          <Form.Item label="公司名称" name="companyName" rules={[{ required: true, message: '请输入公司名称' }]}>
+            <Input placeholder="请输入公司名称"></Input>
+          </Form.Item>
+          <Form.Item label="公司税号" name="companyTax" rules={[{ required: true, message: '请输入公司税号' }]}>
+            <Input placeholder="请输入公司税号"></Input>
+          </Form.Item>
+          <Form.Item
+            label="公司固话"
+            name="companyFixedTel"
+            rules={[{ required: true, message: '请输入公司固定电话' }]}
+          >
+            <Input placeholder="请输入公司固定电话"></Input>
+          </Form.Item>
+          <Form.Item label="费率" name="companyRate" rules={[{ required: true, message: '请输入费率' }]}>
             <Input placeholder="请输入费率"></Input>
           </Form.Item>
-          <Form.Item label="账号" name="username" rules={[{ required: true, message: '请填写代理商账号' }]}>
-            <Input placeholder="请输入账号"></Input>
+          <Form.Item label="所属行业" name="companyIndustry" rules={[{ required: true, message: '请输入所属行业' }]}>
+            <Input placeholder="请输入所属行业"></Input>
           </Form.Item>
-          <Form.Item label="密码" name="username" rules={[{ required: true, message: '请填写代理商密码' }]}>
-            <Input placeholder="请输入密码"></Input>
+          <Form.Item label="公司地址" name="companyLocation" rules={[{ required: true, message: '请输入公司地址' }]}>
+            <Input placeholder="请输入公司地址"></Input>
+          </Form.Item>
+          <Form.Item label="收件人" name="recipientName" rules={[{ required: true, message: '请输入收件人姓名' }]}>
+            <Input placeholder="请输入收件人姓名"></Input>
+          </Form.Item>
+          <Form.Item
+            label="收件人手机号"
+            name="recipientTel"
+            rules={[{ required: true, message: '请输入收件人手机号' }]}
+          >
+            <Input placeholder="收件人手机号"></Input>
+          </Form.Item>
+          <Form.Item label="开户行" name="companyBankName" rules={[{ required: true, message: '请输入开户行' }]}>
+            <Input placeholder="请输入开户行"></Input>
+          </Form.Item>
+          <Form.Item label="银行账号" name="companyBankNumber" rules={[{ required: true, message: '请输入银行账号' }]}>
+            <Input placeholder="请输入银行账号"></Input>
+          </Form.Item>
+          <Form.Item label="收件地址" name="recipientAddress" rules={[{ required: true, message: '请输入收件人地址' }]}>
+            <Input placeholder="请输入收件人地址"></Input>
           </Form.Item>
         </Form>
       </Modal>
