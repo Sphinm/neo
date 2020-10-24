@@ -1,6 +1,5 @@
 package com.example.neo.service.Impl;
 
-import com.example.neo.constant.Constants;
 import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.IChangePassword;
 import com.example.neo.model.ILogin;
@@ -9,7 +8,6 @@ import com.example.neo.mybatis.model.NeoUser;
 import com.example.neo.mybatis.model.NeoUserExample;
 import com.example.neo.security.JwtTokenUtil;
 import com.example.neo.service.AuthService;
-import com.example.neo.utils.CookieUtils;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +40,10 @@ public class AuthServiceImpl implements AuthService {
     public String secretKey;
 
     public void logout() {
-        CookieUtils.clean(Constants.TOKEN_KEY);
+        NeoUser user = commonService.fetchUserByMobile();
+        String token = JwtTokenUtil.generatorJwtToken(user.getId(), user.getUsername(), expiredTime, secretKey);
+        log.info("6666 {}", token);
+        redisTemplate.delete(token);
     }
 
     public ResponseBean changePwd(IChangePassword pwd) {
@@ -55,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
             return ResponseBean.fail(ResponseCodeEnum.PASSWORD_EQUALS);
         }
         user.setId(userInfo.getId());
-        user.setPassword(pwd.getNewPwd());
+        user.setPassword(passwordEncoder.encode(pwd.getNewPwd()));
         neoUserMapper.updateByPrimaryKeySelective(user);
         return ResponseBean.success();
     }
@@ -82,13 +83,9 @@ public class AuthServiceImpl implements AuthService {
         if (results == null || results.size() != 1) {
             return null;
         }
-        // TODO: 先不加解密密码
-        if (iLogin.getPassword().equals(results.get(0).getPassword())) {
+        if (passwordEncoder.matches(iLogin.getPassword(), results.get(0).getPassword())) {
             return results.get(0);
         }
-//        if (passwordEncoder.matches(iLogin.getPassword(), results.get(0).getPassword())) {
-//            return results.get(0);
-//        }
         return null;
     }
 }

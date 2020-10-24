@@ -19,7 +19,7 @@ public interface UserService {
     /**
      * 添加用户公司信息
      */
-    int insertUserInfo(NoCompany companyInfo, UserTypeEnum userType);
+    void insertUserInfo(NoCompany companyInfo, UserTypeEnum userType);
 
     /**
      * 更新用户公司信息

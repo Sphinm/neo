@@ -28,21 +28,21 @@ public class UserController {
     @PostMapping("/create/user")
     public ResponseBean createUser(@RequestBody ICreateUser user, @RequestParam("type") UserTypeEnum userType) {
         userService.createUser(user, userType);
-        return ResponseBean.success(user);
+        return ResponseBean.success();
     }
 
     @PreAuthorize("hasAnyAuthority('user_view')")
     @PostMapping("/insert/userInfo")
     public ResponseBean insertUserInfo(@RequestBody NoCompany companyInfo, @RequestParam("type") UserTypeEnum userType) {
         userService.insertUserInfo(companyInfo, userType);
-        return ResponseBean.success(companyInfo);
+        return ResponseBean.success();
     }
 
     @PreAuthorize("hasAnyAuthority('user_view')")
     @PostMapping("/update/userInfo")
     public ResponseBean updateUserInfo(@RequestBody NoCompany companyInfo) {
         userService.updateUserInfo(companyInfo);
-        return ResponseBean.success(companyInfo);
+        return ResponseBean.success();
     }
 
 }
