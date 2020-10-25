@@ -13,7 +13,21 @@ public interface UserService {
      */
     IGetUser fetchUserInfo();
 
-    List<NoCompany> fetchMerchantInfo(UserTypeEnum userType);
+    /**
+     * 查询商户信息
+     */
+    List<ICreateUser> fetchMerchantInfo(UserTypeEnum userType);
+
+    /**
+     * 更新代理公司信息
+     */
+    void updateMerchantInfo(ICreateUser user, UserTypeEnum userType);
+
+    /**
+     * 删除代理公司信息
+     * 这里是逻辑删除，仅把该代理商的 is_locked 字段更改
+     */
+    void deleteMerchantInfo(int id);
 
     /**
      * 创建新用户

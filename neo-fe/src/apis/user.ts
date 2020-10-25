@@ -20,3 +20,13 @@ export const updateUserInfo = (params: any) => {
 export const fetchMerchant = (type: AuthType) => {
   return ajax.get(`/fetch/merchant?type=${type}`)
 }
+
+/** 查询代理商详细信息 */
+export const updateMerchant = (params: any, type: AuthType) => {
+  return ajax.post(`/update/merchant?type=${type}`, params)
+}
+
+/** 查询代理商详细信息 */
+export const deleteMerchant = (merchantId: string) => {
+  return ajax.post(`/delete/merchant?merchantId=${merchantId}`)
+}

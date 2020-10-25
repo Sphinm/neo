@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -116,7 +117,7 @@ public class UserServiceImpl implements UserService {
         userDto.setEmail(userInfo.getEmail());
         userDto.setUsername(userInfo.getUsername());
         userDto.setMobile(userInfo.getMobile());
-        userDto.setPassword(passwordEncoder.encode("123456"));
+        userDto.setPassword(passwordEncoder.encode(userInfo.getPassword() != null ? userInfo.getPassword() : "123456"));
         userDto.setIsLocked(userType != null);
         userDto.setRoleId(userType.getId());
         userDto.setRelatedId(companyId);
@@ -154,14 +155,16 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void updateUserInfo(NoCompany companyInfo) {
-        NeoUser neoUser = commonService.fetchUserByMobile();
-        NoCompanyExample example = new NoCompanyExample();
-        NoCompany userDo = commonUserInfo(companyInfo, neoUser);
-        userDo.setId(neoUser.getId());
+        NeoUser user = commonService.fetchUserByMobile();
+        updateCommonUser(companyInfo, user, "user");
+    }
+
+    private void updateCommonUser(NoCompany companyInfo, NeoUser user, String from) {
+        NoCompany userDo = commonUserInfo(companyInfo, user);
+        userDo.setId(from.equals("user") ? user.getId() : companyInfo.getId());
         userDo.setCreatorId(companyInfo.getCreatorId());
         userDo.setCreateDate(companyInfo.getCreateDate());
-        log.info("updateUserInfo ==========> {}", userDo);
-        companyMapper.updateByExample(userDo, example);
+        companyMapper.updateByPrimaryKeySelective(userDo);
     }
 
     /**
@@ -169,33 +172,91 @@ public class UserServiceImpl implements UserService {
      */
     private NoCompany commonUserInfo(NoCompany companyInfo, NeoUser user) {
         Date date = new Date();
-        NoCompany userDo = new NoCompany();
-        userDo.setCompanyName(companyInfo.getCompanyName());
-        userDo.setCompanyTax(companyInfo.getCompanyTax());
-        userDo.setCompanyLocation(companyInfo.getCompanyLocation());
-        userDo.setCompanyBankName(companyInfo.getCompanyBankName());
-        userDo.setCompanyBankNumber(companyInfo.getCompanyBankNumber());
-        userDo.setCompanyIndustry(companyInfo.getCompanyIndustry());
-        userDo.setCompanyRate(companyInfo.getCompanyRate());
-        userDo.setCompanyFixedTel(companyInfo.getCompanyFixedTel());
-        userDo.setContactName(companyInfo.getContactName());
-        userDo.setContactTel(companyInfo.getContactTel());
-        userDo.setRecipientName(companyInfo.getRecipientName());
-        userDo.setRecipientTel(companyInfo.getRecipientTel());
-        userDo.setRecipientAddress(companyInfo.getRecipientAddress());
-        userDo.setCompanyStatus(companyInfo.getCompanyStatus());
-        userDo.setCompanyType(companyInfo.getCompanyType());
-        userDo.setUpdateId(user.getId());
-        userDo.setUpdateDate(date);
-        return userDo;
+        NoCompany company = new NoCompany();
+        company.setCompanyName(companyInfo.getCompanyName());
+        company.setCompanyTax(companyInfo.getCompanyTax());
+        company.setCompanyLocation(companyInfo.getCompanyLocation());
+        company.setCompanyBankName(companyInfo.getCompanyBankName());
+        company.setCompanyBankNumber(companyInfo.getCompanyBankNumber());
+        company.setCompanyIndustry(companyInfo.getCompanyIndustry());
+        company.setCompanyRate(companyInfo.getCompanyRate());
+        company.setCompanyFixedTel(companyInfo.getCompanyFixedTel());
+        company.setContactName(companyInfo.getContactName());
+        company.setContactTel(companyInfo.getContactTel());
+        company.setRecipientName(companyInfo.getRecipientName());
+        company.setRecipientTel(companyInfo.getRecipientTel());
+        company.setRecipientAddress(companyInfo.getRecipientAddress());
+        company.setCompanyStatus(companyInfo.getCompanyStatus());
+        company.setCompanyType(companyInfo.getCompanyType());
+        company.setUpdateId(user.getId());
+        company.setUpdateDate(date);
+        return company;
     }
 
-    // 返回 merchant 信息
+    /**
+     * 查询 merchant 信息
+     * @param userType 代理商
+     */
     @Override
-    public List<NoCompany> fetchMerchantInfo(UserTypeEnum userType) {
+    public List<ICreateUser> fetchMerchantInfo(UserTypeEnum userType) {
+        NeoUserExample userExample = new NeoUserExample();
         NoCompanyExample example = new NoCompanyExample();
+        userExample.createCriteria().andRoleIdEqualTo(userType.getId());
         // merchant 为 0 所以找个和 merchant 无关的
         example.createCriteria().andCompanyTypeEqualTo(userType == UserTypeEnum.COMPANY);
-        return companyMapper.selectByExample(example);
+        List<NeoUser> userList = neoUserMapper.selectByExample(userExample);
+        List<NoCompany> companyList = companyMapper.selectByExample(example);
+
+        List<ICreateUser> list = new ArrayList<>();
+        for (NoCompany company : companyList) {
+            for (NeoUser user : userList) {
+                if (user.getRelatedId().equals(company.getId()) && user.getIsLocked()) {
+                    ICreateUser createUser = new ICreateUser();
+                    createUser.setUserInfo(user);
+                    createUser.setCompanyInfo(company);
+                    list.add(createUser);
+                }
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public void updateMerchantInfo(ICreateUser user, UserTypeEnum userType) {
+        NeoUser userInfo = user.getUserInfo();
+        NoCompany companyInfo = user.getCompanyInfo();
+        updateCommonUser(companyInfo, userInfo, "company");
+        updateUser(userInfo);
+    }
+
+    private void updateUser(NeoUser user) {
+        Date date = new Date();
+        NeoUser userDto = new NeoUser();
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        userDto.setUsername(user.getUsername());
+        userDto.setMobile(user.getMobile());
+        userDto.setIsLocked(user.getIsLocked());
+        userDto.setRoleId(user.getRoleId());
+        userDto.setRelatedId(user.getRelatedId());
+        userDto.setCreatorId(user.getCreatorId());
+        userDto.setUpdateId(user.getUpdateId());
+        userDto.setCreateDate(user.getCreateDate());
+        userDto.setUpdateDate(date);
+        if (user.getPassword() != null && user.getPassword().length() > 0) {
+            userDto.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        neoUserMapper.updateByPrimaryKeySelective(userDto);
+    }
+
+    @Override
+    public void deleteMerchantInfo(int id) {
+        NeoUserExample userExample = new NeoUserExample();
+        userExample.createCriteria().andRelatedIdEqualTo(id);
+        List<NeoUser> userList = neoUserMapper.selectByExample(userExample);
+        if (userList != null && userList.size() == 1) {
+            userList.get(0).setIsLocked(userList.size() > 1);
+            neoUserMapper.updateByExample(userList.get(0), userExample);
+        }
     }
 }

@@ -50,8 +50,22 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('user_merchant')")
     @GetMapping("/fetch/merchant")
     public ResponseBean fetchMerchantInfoByType(@RequestParam("type") UserTypeEnum userType) {
-        List<NoCompany> companyList = userService.fetchMerchantInfo(userType);
+        List<ICreateUser> companyList = userService.fetchMerchantInfo(userType);
         return ResponseBean.success(companyList);
+    }
+
+    @PreAuthorize("hasAnyAuthority('user_merchant')")
+    @PostMapping("/update/merchant")
+    public ResponseBean updateMerchantInfoByType(@RequestBody ICreateUser user, @RequestParam("type") UserTypeEnum userType) {
+        userService.updateMerchantInfo(user, userType);
+        return ResponseBean.success();
+    }
+
+    @PreAuthorize("hasAnyAuthority('user_merchant')")
+    @PostMapping("/delete/merchant")
+    public ResponseBean deleteMerchantInfoByType(@RequestParam("merchantId") int merchantId) {
+        userService.deleteMerchantInfo(merchantId);
+        return ResponseBean.success();
     }
 
 }

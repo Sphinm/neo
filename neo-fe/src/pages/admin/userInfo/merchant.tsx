@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Table, Popconfirm, Badge, Button, Divider, Modal, Input, Form, Row, Col, Spin } from 'antd'
-import { createNewUser, fetchMerchant } from "@/apis/user"
+import { Card, Table, Popconfirm, Button, Divider, Modal, Input, Form, Row, Col, Spin } from 'antd'
+import { createNewUser, fetchMerchant, updateMerchant, deleteMerchant } from "@/apis/user"
 import { AuthType } from '@/enums/role'
 import { handleError } from '@/libs/axios'
 import styles from './index.styl'
@@ -11,53 +11,44 @@ export const Merchant = () => {
   const [visible, setVisible] = useState(false)
   const [isEdit, setEdit] = useState(false)
   const [isLoaded, setLoaded] = useState<boolean>(false)
+  const [tableData, setTableData] = useState([])
+  const [selectValue, setSelectValue] = useState<any>();
 
   const columns = [
     {
       title: 'ID',
       dataIndex: 'id',
-      key: 'id',
     },
     {
       title: '代理商公司',
-      dataIndex: 'username',
-      key: 'username',
+      dataIndex: 'companyName',
     },
     {
       title: '代理商地址',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'companyLocation',
     },
     {
       title: '联系人',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'contactName',
     },
     {
       title: '联系人电话',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      dataIndex: 'contactTel',
     },
     {
       title: '费率',
-      key: 'task',
-      render: (text: any, record: any) => <div>绑定任务</div>,
+      dataIndex: 'companyRate',
     },
     {
       title: '账号',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
+    render: (text: any, record: any) => <div>{record.userInfo.mobile}</div>,
     },
-    {
-      title: '密码',
-      key: 'task',
-      render: (text: any, record: any) => {
-        return <Badge status="processing" text="等待审核"></Badge>
-      },
-    },
+    // {
+    //   title: '密码',
+    //   render: (text: any, record: any) => <div>{record.userInfo.password}</div>,
+    // },
     {
       title: '操作',
-      key: 'task',
       render: (text: any, record: any) => {
         return (
           <>
@@ -67,7 +58,7 @@ export const Merchant = () => {
 
             <Popconfirm
               title="将该代理商从列表中移除"
-              onConfirm={() => deleteMerchant(record.id)}
+              onConfirm={() => deleteMerchantFn(record.id)}
               okText="确认"
               cancelText="取消"
             >
@@ -79,44 +70,6 @@ export const Merchant = () => {
     },
   ]
 
-  const data = [
-    {
-      id: '1312312',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      id: '13122312',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      id: '13123121',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      id: '1312313',
-      name: 'John Brown1',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      id: '1312316',
-      name: 'Jim Green1',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-  ]
-
   useEffect(() => {
     fetchMerchantInfo()
   }, [])
@@ -125,7 +78,13 @@ export const Merchant = () => {
     try {
       setLoaded(true)
       const { data } = await fetchMerchant(AuthType.MERCHANT);
-      console.log('1312312312',data)
+      const newData = data.map((item: { companyInfo: any; userInfo: any }) => {
+        return {
+          ...item.companyInfo,
+         userInfo: item.userInfo,
+        }
+      })
+      setTableData(newData)
     } catch (error) {
       
     } finally {
@@ -134,32 +93,60 @@ export const Merchant = () => {
   }
 
   const changeMerchant = (values: any) => {
+    setSelectValue(values)
     formConpany.setFieldsValue({
-      username: values.name,
-      status: values.status,
-      type: values.type,
-      code: values.code,
+      contactName: values.contactName,
+      contactTel: values.contactTel,
+      companyName: values.companyName,
+      companyTax: values.companyTax,
+      companyFixedTel: values.companyFixedTel,
+      companyRate: values.companyRate,
+      companyIndustry: values.companyIndustry,
+      companyLocation: values.companyLocation,
+      recipientName: values.recipientName,
+      recipientTel: values.recipientTel,
+      companyBankName: values.companyBankName,
+      companyBankNumber: values.companyBankNumber,
+      recipientAddress: values.recipientAddress,
+    })
+    formUser.setFieldsValue({
+      username: values.userInfo.username,
+      mobile: values.userInfo.mobile,
+      // password: values.userInfo.password,
+      email: values.userInfo.email,
     })
     setVisible(true)
     setEdit(true)
   }
 
-  const deleteMerchant = (id: any) => {
-    console.log('deleteMerchant', id)
+  const deleteMerchantFn = async(id: any) => {
+    try {
+      await deleteMerchant(id)
+      fetchMerchantInfo()
+    } catch (error) {
+      
+    }
   }
 
   const handleOk = async () => {
     const companyInfo = await formConpany.validateFields()
     const userInfo = await formUser.validateFields()
-    console.log(11, userInfo, companyInfo)
     try {
-      const params = {
-        userInfo,
-        companyInfo,
+      if (isEdit) {
+        const params = {
+          userInfo: { ...selectValue?.userInfo, ...userInfo },
+          companyInfo: { ...selectValue, ...companyInfo },
+        }
+        console.log(params)
+        await updateMerchant(params, AuthType.MERCHANT)
+      } else {
+        const params = {
+          userInfo,
+          companyInfo,
+        }
+        await createNewUser(params, AuthType.MERCHANT)
       }
-      const { data } = await createNewUser(params, AuthType.MERCHANT)
-      console.log(222, data)
-      // 查询 merchant 列表
+      fetchMerchantInfo()
     } catch (error) {
       handleError(error)
     }
@@ -180,7 +167,7 @@ export const Merchant = () => {
           新增代理商
         </Button>
         <Divider />
-        <Table bordered rowKey="name" columns={columns as any} dataSource={data} />
+        <Table bordered rowKey="id" columns={columns as any} dataSource={tableData} />
       </Card>
       <Modal
         getContainer={false}
@@ -211,7 +198,12 @@ export const Merchant = () => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item label="用户邮箱" name="email" rules={[{ required: true, message: '请输入邮箱' }]}>
+              <Form.Item label="用户密码" name="password">
+                <Input placeholder="请输入密码，不填默认为 123456"></Input>
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item label="用户邮箱" name="email">
                 <Input placeholder="请输入邮箱"></Input>
               </Form.Item>
             </Col>
