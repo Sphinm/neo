@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Table, Popconfirm, Badge, Button, Divider, Modal, Input, Form, Spin, Row, Col } from 'antd'
+import { Card, Table, Popconfirm, Button, Divider, Modal, Input, Form, Spin, Row, Col } from 'antd'
 import { AuthType } from '@/enums/role'
-import { createNewUser, fetchCompany, deleteCompany, updateCompany } from '@/apis/user'
+import { createNewUser, fetchMerchant, deleteMerchant, updateMerchant } from '@/apis/user'
 import { handleError } from '@/libs/axios'
 
 export const Company = () => {
@@ -17,89 +17,58 @@ export const Company = () => {
     {
       title: 'ID',
       dataIndex: 'id',
-      key: 'id',
-    },
-    {
-      title: '代理商ID',
-      dataIndex: 'merchantId',
-      key: 'merchantId',
-    },
-    {
-      title: '代理商名称',
-      dataIndex: 'username1',
-      key: 'username1',
     },
     {
       title: '公司名称',
-      dataIndex: 'username',
-      key: 'username',
+      dataIndex: 'companyName',
     },
     {
       title: '公司税号',
-      dataIndex: 'tax',
-      key: 'tax',
+      dataIndex: 'companyTax',
     },
     {
       title: '公司地址',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'companyLocation',
     },
     {
       title: '联系人',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'contactName',
     },
     {
       title: '联系人电话',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      dataIndex: 'contactTel',
     },
     {
       title: '费率',
-      key: 'task',
-      render: (text: any, record: any) => <div>绑定任务</div>,
+      dataIndex: 'companyRate',
     },
     {
       title: '开户行',
-      dataIndex: 'bank',
-      key: 'bank',
+      dataIndex: 'companyBankName',
     },
     {
       title: '银行账号',
-      dataIndex: 'bankcode',
-      key: 'bankcode',
+      dataIndex: 'companyBankNumber',
     },
     {
       title: '账号',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
-    },
-    {
-      title: '密码',
-      key: 'task',
-      render: (text: any, record: any) => {
-        return <Badge status="processing" text="等待审核"></Badge>
-      },
+      render: (text: any, record: any) => <div>{record.userInfo.mobile}</div>,
     },
     {
       title: '绑定任务',
       dataIndex: 'task',
-      key: 'task',
     },
     {
       title: '收件人',
-      dataIndex: 'bankcode',
-      key: 'bankcode',
+      dataIndex: 'recipientName',
     },
     {
       title: '收件人电话',
-      dataIndex: 'bank',
-      key: 'bank',
+      dataIndex: 'recipientTel',
     },
     {
       title: '收件人地址',
-      dataIndex: 'bankcode',
-      key: 'bankcode',
+      dataIndex: 'recipientAddress',
     },
     {
       title: '操作',
@@ -133,7 +102,7 @@ export const Company = () => {
   const fetchCompanyInfo = async() => {
     try {
       setLoaded(true)
-      const { data } = await fetchCompany(AuthType.COMPANY);
+      const { data } = await fetchMerchant(AuthType.COMPANY);
       const newData = data.map((item: { companyInfo: any; userInfo: any }) => {
         return {
           ...item.companyInfo,
@@ -176,7 +145,7 @@ export const Company = () => {
 
   const deleteCompanyFn = async(id: any) => {
     try {
-      await deleteCompany(id)
+      await deleteMerchant(id)
       fetchCompanyInfo()
     } catch (error) {
       handleError(error)
@@ -193,7 +162,7 @@ export const Company = () => {
           companyInfo: { ...selectValue, ...companyInfo },
         }
         console.log(params)
-        await updateCompany(params, AuthType.COMPANY)
+        await updateMerchant(params, AuthType.COMPANY)
       } else {
         const params = {
           userInfo,

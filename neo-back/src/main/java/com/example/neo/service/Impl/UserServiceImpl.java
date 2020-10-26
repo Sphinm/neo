@@ -194,7 +194,7 @@ public class UserServiceImpl implements UserService {
         NeoUserExample userExample = new NeoUserExample();
         NoCompanyExample example = new NoCompanyExample();
         userExample.createCriteria().andRoleIdEqualTo(userType.getId());
-        // merchant 为 0 所以找个和 merchant 无关的
+        // userType 为 merchant，需要为 false，为 company 则为 true
         example.createCriteria().andCompanyTypeEqualTo(userType == UserTypeEnum.COMPANY);
         List<NeoUser> userList = neoUserMapper.selectByExample(userExample);
         List<NoCompany> companyList = companyMapper.selectByExample(example);
