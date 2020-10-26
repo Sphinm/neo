@@ -3,6 +3,7 @@ package com.example.neo.controller;
 import com.example.neo.enums.UserTypeEnum;
 import com.example.neo.model.ICreateUser;
 import com.example.neo.model.IGetUser;
+import com.example.neo.mybatis.model.NeoEmployee;
 import com.example.neo.mybatis.model.NoCompany;
 import com.example.neo.service.UserService;
 import com.example.neo.utils.ResponseBean;
@@ -68,4 +69,10 @@ public class UserController {
         return ResponseBean.success();
     }
 
+    @PreAuthorize("hasAnyAuthority('user_employee')")
+    @GetMapping("/fetch/employee")
+    public ResponseBean fetchEmployee() {
+        List<NeoEmployee> employeeList = userService.fetchEmployee();
+        return ResponseBean.success(employeeList);
+    }
 }

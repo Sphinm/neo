@@ -3,6 +3,7 @@ package com.example.neo.service.Impl;
 import com.example.neo.enums.UserTypeEnum;
 import com.example.neo.model.ICreateUser;
 import com.example.neo.model.IGetUser;
+import com.example.neo.mybatis.mapper.NeoEmployeeMapper;
 import com.example.neo.mybatis.mapper.NeoRoleMapper;
 import com.example.neo.mybatis.mapper.NeoUserMapper;
 import com.example.neo.mybatis.mapper.NoCompanyMapper;
@@ -26,6 +27,8 @@ public class UserServiceImpl implements UserService {
     private NeoRoleMapper neoRoleMapper;
     @Autowired
     private NoCompanyMapper companyMapper;
+    @Autowired
+    private NeoEmployeeMapper employeeMapper;
     @Autowired
     private CommonService commonService;
     @Autowired
@@ -69,6 +72,7 @@ public class UserServiceImpl implements UserService {
      */
     public void createUser(ICreateUser user, UserTypeEnum userType) {
         NeoUser neoUser = commonService.fetchUserByMobile();
+        // 获取当前用户 id
         int userId = neoUser.getId();
 
         // 当前用户是 admin, 则无需创建对应的关系表
@@ -94,7 +98,7 @@ public class UserServiceImpl implements UserService {
 
         int companyId = -1;
         // 公司名称不为空或者创建的用户类型不为员工则创建公司信息
-        if (user.getCompanyInfo().getCompanyName() == null || userType != UserTypeEnum.EMPLOYEE) {
+        if (user.getCompanyInfo().getCompanyName() == null && userType != UserTypeEnum.EMPLOYEE) {
             insertUserInfo(companyInfo, userType);
             NoCompanyExample example = new NoCompanyExample();
             example.createCriteria().andContactTelEqualTo(companyInfo.getContactTel());
@@ -247,8 +251,14 @@ public class UserServiceImpl implements UserService {
         userExample.createCriteria().andRelatedIdEqualTo(id);
         List<NeoUser> userList = neoUserMapper.selectByExample(userExample);
         if (userList != null && userList.size() == 1) {
-            userList.get(0).setIsLocked(userList.size() > 1);
+            userList.get(0).setIsLocked(false);
             neoUserMapper.updateByExample(userList.get(0), userExample);
         }
+    }
+
+    @Override
+    public List<NeoEmployee> fetchEmployee() {
+        NeoEmployeeExample example = new NeoEmployeeExample();
+        return employeeMapper.selectByExample(example);
     }
 }

@@ -3,6 +3,7 @@ package com.example.neo.service;
 import com.example.neo.enums.UserTypeEnum;
 import com.example.neo.model.ICreateUser;
 import com.example.neo.model.IGetUser;
+import com.example.neo.mybatis.model.NeoEmployee;
 import com.example.neo.mybatis.model.NoCompany;
 
 import java.util.List;
@@ -43,5 +44,10 @@ public interface UserService {
      * 更新用户公司信息
      */
     void updateUserInfo(NoCompany companyInfo);
+
+    /**
+     * 查询员工
+     */
+    List<NeoEmployee> fetchEmployee();
 
 }
