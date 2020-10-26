@@ -30,3 +30,18 @@ export const updateMerchant = (params: any, type: AuthType) => {
 export const deleteMerchant = (merchantId: string) => {
   return ajax.post(`/delete/merchant?merchantId=${merchantId}`)
 }
+
+/** 查询客户公司详细信息 */
+export const fetchCompany = (type: AuthType) => {
+  return ajax.get(`/fetch/company?type=${type}`)
+}
+
+/** 查询客户公司详细信息 */
+export const updateCompany = (params: any, type: AuthType) => {
+  return ajax.post(`/update/company?type=${type}`, params)
+}
+
+/** 查询客户公司详细信息 */
+export const deleteCompany = (merchantId: string) => {
+  return ajax.post(`/delete/company?merchantId=${merchantId}`)
+}

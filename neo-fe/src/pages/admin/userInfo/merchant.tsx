@@ -43,10 +43,6 @@ export const Merchant = () => {
       title: '账号',
     render: (text: any, record: any) => <div>{record.userInfo.mobile}</div>,
     },
-    // {
-    //   title: '密码',
-    //   render: (text: any, record: any) => <div>{record.userInfo.password}</div>,
-    // },
     {
       title: '操作',
       render: (text: any, record: any) => {
@@ -124,7 +120,7 @@ export const Merchant = () => {
       await deleteMerchant(id)
       fetchMerchantInfo()
     } catch (error) {
-      
+      handleError(error)
     }
   }
 

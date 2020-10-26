@@ -71,17 +71,9 @@ public class UserServiceImpl implements UserService {
         NeoUser neoUser = commonService.fetchUserByMobile();
         int userId = neoUser.getId();
 
-        // 当前用户是 admin
+        // 当前用户是 admin, 则无需创建对应的关系表
         if (neoUser.getRoleId() == 1) {
-            switch (userType) {
-                // 创建 merchant 用户，涉及 neo_user、neo_company
-                case MERCHANT:
-                    createInfo(user, userType, userId);
-                    break;
-                // 创建 company 用户，涉及 neo_user、neo_company 和 neo_company_relation 表
-                case COMPANY:
-                    break;
-            }
+            createInfo(user, userType, userId);
         }
         // 当前用户是 merchant, 创建 company 用户，涉及 neo_user、neo_company 和 neo_company_relation 表
         if (neoUser.getRoleId() == 2 && userType == UserTypeEnum.COMPANY) {
