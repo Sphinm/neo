@@ -1,7 +1,7 @@
 package com.example.neo.model;
 
+import com.example.neo.mybatis.model.NeoCompany;
 import com.example.neo.mybatis.model.NeoUser;
-import com.example.neo.mybatis.model.NoCompany;
 import lombok.Data;
 
 @Data
@@ -10,5 +10,5 @@ public class ICreateUser {
     NeoUser userInfo;
 
     // companyInfo
-    NoCompany companyInfo;
+    NeoCompany companyInfo;
 }

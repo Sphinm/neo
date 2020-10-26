@@ -964,6 +964,66 @@ public class NeoEmployeeExample {
             addCriterion("update_date not between", value1, value2, "updateDate");
             return (Criteria) this;
         }
+
+        public Criteria andIsLockedIsNull() {
+            addCriterion("is_locked is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockedIsNotNull() {
+            addCriterion("is_locked is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockedEqualTo(Boolean value) {
+            addCriterion("is_locked =", value, "isLocked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockedNotEqualTo(Boolean value) {
+            addCriterion("is_locked <>", value, "isLocked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockedGreaterThan(Boolean value) {
+            addCriterion("is_locked >", value, "isLocked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockedGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_locked >=", value, "isLocked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockedLessThan(Boolean value) {
+            addCriterion("is_locked <", value, "isLocked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockedLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_locked <=", value, "isLocked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockedIn(List<Boolean> values) {
+            addCriterion("is_locked in", values, "isLocked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockedNotIn(List<Boolean> values) {
+            addCriterion("is_locked not in", values, "isLocked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockedBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_locked between", value1, value2, "isLocked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockedNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_locked not between", value1, value2, "isLocked");
+            return (Criteria) this;
+        }
     }
 
     /**

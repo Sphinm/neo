@@ -523,6 +523,76 @@ public class NeoFunctionsExample {
             addCriterion("is_locked not between", value1, value2, "isLocked");
             return (Criteria) this;
         }
+
+        public Criteria andFunctionApiIsNull() {
+            addCriterion("function_api is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFunctionApiIsNotNull() {
+            addCriterion("function_api is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFunctionApiEqualTo(String value) {
+            addCriterion("function_api =", value, "functionApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andFunctionApiNotEqualTo(String value) {
+            addCriterion("function_api <>", value, "functionApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andFunctionApiGreaterThan(String value) {
+            addCriterion("function_api >", value, "functionApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andFunctionApiGreaterThanOrEqualTo(String value) {
+            addCriterion("function_api >=", value, "functionApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andFunctionApiLessThan(String value) {
+            addCriterion("function_api <", value, "functionApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andFunctionApiLessThanOrEqualTo(String value) {
+            addCriterion("function_api <=", value, "functionApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andFunctionApiLike(String value) {
+            addCriterion("function_api like", value, "functionApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andFunctionApiNotLike(String value) {
+            addCriterion("function_api not like", value, "functionApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andFunctionApiIn(List<String> values) {
+            addCriterion("function_api in", values, "functionApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andFunctionApiNotIn(List<String> values) {
+            addCriterion("function_api not in", values, "functionApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andFunctionApiBetween(String value1, String value2) {
+            addCriterion("function_api between", value1, value2, "functionApi");
+            return (Criteria) this;
+        }
+
+        public Criteria andFunctionApiNotBetween(String value1, String value2) {
+            addCriterion("function_api not between", value1, value2, "functionApi");
+            return (Criteria) this;
+        }
     }
 
     /**

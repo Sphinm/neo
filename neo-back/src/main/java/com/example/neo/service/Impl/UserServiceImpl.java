@@ -3,10 +3,10 @@ package com.example.neo.service.Impl;
 import com.example.neo.enums.UserTypeEnum;
 import com.example.neo.model.ICreateUser;
 import com.example.neo.model.IGetUser;
+import com.example.neo.mybatis.mapper.NeoCompanyMapper;
 import com.example.neo.mybatis.mapper.NeoEmployeeMapper;
 import com.example.neo.mybatis.mapper.NeoRoleMapper;
 import com.example.neo.mybatis.mapper.NeoUserMapper;
-import com.example.neo.mybatis.mapper.NoCompanyMapper;
 import com.example.neo.mybatis.model.*;
 import com.example.neo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private NeoRoleMapper neoRoleMapper;
     @Autowired
-    private NoCompanyMapper companyMapper;
+    private NeoCompanyMapper companyMapper;
     @Autowired
     private NeoEmployeeMapper employeeMapper;
     @Autowired
@@ -40,10 +40,10 @@ public class UserServiceImpl implements UserService {
     public IGetUser fetchUserInfo() {
         IGetUser u = new IGetUser();
         NeoUser user = commonService.fetchUserByMobile();
-        NoCompanyExample companyExample = new NoCompanyExample();
+        NeoCompanyExample companyExample = new NeoCompanyExample();
         // company 主键 id 等于 user 表的 related_id
         companyExample.createCriteria().andIdEqualTo(user.getRelatedId());
-        List<NoCompany> companyInfo = companyMapper.selectByExample(companyExample);
+        List<NeoCompany> companyInfo = companyMapper.selectByExample(companyExample);
         if (companyInfo != null && companyInfo.size() == 1) {
             u.setUserInfo(companyInfo.get(0));
         }
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
     private void createInfo(ICreateUser user, UserTypeEnum userType, Integer userId) {
         NeoUser userInfo = user.getUserInfo();
-        NoCompany companyInfo = user.getCompanyInfo();
+        NeoCompany companyInfo = user.getCompanyInfo();
         NeoUser userDto = new NeoUser();
         Date date = new Date();
 
@@ -100,9 +100,9 @@ public class UserServiceImpl implements UserService {
         // 公司名称不为空或者创建的用户类型不为员工则创建公司信息
         if (user.getCompanyInfo().getCompanyName() == null && userType != UserTypeEnum.EMPLOYEE) {
             insertUserInfo(companyInfo, userType);
-            NoCompanyExample example = new NoCompanyExample();
+            NeoCompanyExample example = new NeoCompanyExample();
             example.createCriteria().andContactTelEqualTo(companyInfo.getContactTel());
-            List<NoCompany> companyList = companyMapper.selectByExample(example);
+            List<NeoCompany> companyList = companyMapper.selectByExample(example);
             if (companyList != null && companyList.size() == 1) {
                 companyId = companyList.get(0).getId();
             }
@@ -133,10 +133,10 @@ public class UserServiceImpl implements UserService {
      * 创建公司用户信息
      */
     @Override
-    public void insertUserInfo(NoCompany companyInfo, UserTypeEnum userType) {
+    public void insertUserInfo(NeoCompany companyInfo, UserTypeEnum userType) {
         Date date = new Date();
         NeoUser neoUser = commonService.fetchUserByMobile();
-        NoCompany company = commonUserInfo(companyInfo, neoUser);
+        NeoCompany company = commonUserInfo(companyInfo, neoUser);
         company.setCreatorId(neoUser.getId());
         company.setCreateDate(date);
         // 如果是 roleId 为 1 则是管理员创建， status 为 1，表示正常，其他则需要审核
@@ -150,13 +150,13 @@ public class UserServiceImpl implements UserService {
      * 更新公司用户信息
      */
     @Override
-    public void updateUserInfo(NoCompany companyInfo) {
+    public void updateUserInfo(NeoCompany companyInfo) {
         NeoUser user = commonService.fetchUserByMobile();
         updateCommonUser(companyInfo, user, "user");
     }
 
-    private void updateCommonUser(NoCompany companyInfo, NeoUser user, String from) {
-        NoCompany userDo = commonUserInfo(companyInfo, user);
+    private void updateCommonUser(NeoCompany companyInfo, NeoUser user, String from) {
+        NeoCompany userDo = commonUserInfo(companyInfo, user);
         userDo.setId(from.equals("user") ? user.getId() : companyInfo.getId());
         userDo.setCreatorId(companyInfo.getCreatorId());
         userDo.setCreateDate(companyInfo.getCreateDate());
@@ -166,9 +166,9 @@ public class UserServiceImpl implements UserService {
     /**
      * 插入公共的信息
      */
-    private NoCompany commonUserInfo(NoCompany companyInfo, NeoUser user) {
+    private NeoCompany commonUserInfo(NeoCompany companyInfo, NeoUser user) {
         Date date = new Date();
-        NoCompany company = new NoCompany();
+        NeoCompany company = new NeoCompany();
         company.setCompanyName(companyInfo.getCompanyName());
         company.setCompanyTax(companyInfo.getCompanyTax());
         company.setCompanyLocation(companyInfo.getCompanyLocation());
@@ -196,15 +196,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<ICreateUser> fetchMerchantInfo(UserTypeEnum userType) {
         NeoUserExample userExample = new NeoUserExample();
-        NoCompanyExample example = new NoCompanyExample();
+        NeoCompanyExample example = new NeoCompanyExample();
         userExample.createCriteria().andRoleIdEqualTo(userType.getId());
         // userType 为 merchant，需要为 false，为 company 则为 true
         example.createCriteria().andCompanyTypeEqualTo(userType == UserTypeEnum.COMPANY);
         List<NeoUser> userList = neoUserMapper.selectByExample(userExample);
-        List<NoCompany> companyList = companyMapper.selectByExample(example);
+        List<NeoCompany> companyList = companyMapper.selectByExample(example);
 
         List<ICreateUser> list = new ArrayList<>();
-        for (NoCompany company : companyList) {
+        for (NeoCompany company : companyList) {
             for (NeoUser user : userList) {
                 if (user.getRelatedId().equals(company.getId()) && user.getIsLocked()) {
                     ICreateUser createUser = new ICreateUser();
@@ -220,7 +220,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateMerchantInfo(ICreateUser user, UserTypeEnum userType) {
         NeoUser userInfo = user.getUserInfo();
-        NoCompany companyInfo = user.getCompanyInfo();
+        NeoCompany companyInfo = user.getCompanyInfo();
         updateCommonUser(companyInfo, userInfo, "company");
         updateUser(userInfo);
     }

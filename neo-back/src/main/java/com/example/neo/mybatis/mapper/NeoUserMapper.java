@@ -3,10 +3,7 @@ package com.example.neo.mybatis.mapper;
 import com.example.neo.mybatis.model.NeoUser;
 import com.example.neo.mybatis.model.NeoUserExample;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 public interface NeoUserMapper {
     /**

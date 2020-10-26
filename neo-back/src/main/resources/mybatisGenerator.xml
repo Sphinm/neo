@@ -30,7 +30,7 @@
         <!-- 指定javaBean的生成策略  文件夹自己定义-->
         <!--同样Mac用户：targetProject 为全路径-->
         <javaModelGenerator targetPackage="com.example.neo.mybatis.model"
-                            targetProject=".\src\main\java">
+                            targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
@@ -38,19 +38,19 @@
         <!-- sqlMapGenerator：sql映射生成策略： -->
         <!--同样Mac用户：targetProject 为全路径-->
         <sqlMapGenerator targetPackage="com.example.neo.mybatis.mapper.xml"
-                         targetProject=".\src\main\java">
+                         targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
 
         <!-- javaClientGenerator:指定mapper接口所在的位置 -->
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.neo.mybatis.mapper"
-                             targetProject=".\src\main\java">
+                             targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
 
         <!-- 指定要逆向分析哪些表：根据表要创建javaBean -->
         <table tableName="neo_user" domainObjectName="NeoUser"></table>
-        <table tableName="neo_company" domainObjectName="NoCompany"></table>
+        <table tableName="neo_company" domainObjectName="NeoCompany"></table>
         <table tableName="neo_company_relation" domainObjectName="NeoCompanyRelation"></table>
         <table tableName="neo_company_tax" domainObjectName="NeoCompanyTax"></table>
         <table tableName="neo_employee" domainObjectName="NeoEmployee"></table>
