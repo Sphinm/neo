@@ -111,7 +111,7 @@ export const Company = () => {
       })
       setTableData(newData)
     } catch (error) {
-      
+      handleError(error)
     } finally {
       setLoaded(false)
     }
@@ -314,6 +314,6 @@ export const Company = () => {
           </Row>
         </Form>
       </Modal>
-      </Spin>
+    </Spin>
   )
 }

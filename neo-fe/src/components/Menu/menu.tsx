@@ -88,7 +88,7 @@ const SideMenu = () => {
         )}
 
         {/* 代理商配置 */}
-        {RoleStore.currentRole?.roleType === AuthType.MERCHANT && (
+        {/* {RoleStore.currentRole?.roleType === AuthType.MERCHANT && (
           <SubMenu
             key="sole"
             title={
@@ -101,7 +101,7 @@ const SideMenu = () => {
             <Menu.Item key="sole/add">新增客户</Menu.Item>
             <Menu.Item key="sole/records">客户列表</Menu.Item>
           </SubMenu>
-        )}
+        )} */}
         {RoleStore.currentRole?.roleType === AuthType.MERCHANT && (
           <SubMenu
             key="flexible"
@@ -112,7 +112,7 @@ const SideMenu = () => {
               </span>
             }
           >
-            <Menu.Item key="flexible/add">新增客户</Menu.Item>
+            {/* <Menu.Item key="flexible/add">新增客户</Menu.Item> */}
             <Menu.Item key="flexible/list">客户列表</Menu.Item>
             <Menu.Item key="flexible/payroll">发放记录</Menu.Item>
             <Menu.Item key="flexible/rebates">返佣记录</Menu.Item>

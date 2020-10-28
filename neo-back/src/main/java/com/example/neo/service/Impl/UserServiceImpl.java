@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
 
         int companyId = -1;
         // 公司名称不为空或者创建的用户类型不为员工则创建公司信息
-        if (user.getCompanyInfo().getCompanyName() == null && userType != UserTypeEnum.EMPLOYEE) {
+        if (user.getCompanyInfo().getCompanyName() != null && userType != UserTypeEnum.EMPLOYEE) {
             insertUserInfo(companyInfo, userType);
             NeoCompanyExample example = new NeoCompanyExample();
             example.createCriteria().andContactTelEqualTo(companyInfo.getContactTel());
@@ -295,10 +295,14 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<IDataQuery> fetchDataQuery() {
+        IDataQuery data = new IDataQuery();
         NeoCompanyExample companyExample = new NeoCompanyExample();
         companyExample.createCriteria().andCompanyTypeEqualTo(false);
         List<NeoCompany> agentList = companyMapper.selectByExample(companyExample);
         log.info("{}", agentList);
+        for (NeoCompany agent : agentList) {
+
+        }
         return null;
     }
 }
