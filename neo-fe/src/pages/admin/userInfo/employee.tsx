@@ -6,41 +6,29 @@ export const Employee = () => {
     {
       title: '用户ID',
       dataIndex: 'id',
-      key: 'id',
     },
     {
       title: '姓名',
       dataIndex: 'name',
-      key: 'name',
     },
     {
       title: '身份证号',
       dataIndex: 'age',
-      key: 'age',
     },
     {
       title: '手机号',
       dataIndex: 'address',
-      key: 'address',
     },
     {
       title: '关联公司',
-      key: 'action',
       render: (text: any, record: any) => <div>等待发放</div>,
     },
     {
-      title: '账号',
-      key: 'task',
-      render: (text: any, record: any) => <div>绑定任务</div>,
-    },
-    {
-      title: '密码',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      title: '是否签约',
+      dataIndex: 'age',
     },
     {
       title: '操作',
-      key: 'task',
       render: (text: any, record: any) => {
         return (
           <Popconfirm
@@ -137,7 +125,7 @@ export const Employee = () => {
 
   return (
     <Card title="员工档案">
-      <Table bordered rowKey="name" columns={columns as any} dataSource={data} />
+      <Table bordered rowKey="id" columns={columns as any} dataSource={data} />
     </Card>
   )
 }

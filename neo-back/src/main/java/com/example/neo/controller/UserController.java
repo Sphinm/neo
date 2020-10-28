@@ -2,6 +2,7 @@ package com.example.neo.controller;
 
 import com.example.neo.enums.UserTypeEnum;
 import com.example.neo.model.ICreateUser;
+import com.example.neo.model.IDataQuery;
 import com.example.neo.model.IGetUser;
 import com.example.neo.mybatis.model.NeoCompany;
 import com.example.neo.mybatis.model.NeoEmployee;
@@ -74,5 +75,12 @@ public class UserController {
     public ResponseBean fetchEmployee() {
         List<NeoEmployee> employeeList = userService.fetchEmployee();
         return ResponseBean.success(employeeList);
+    }
+
+    @PreAuthorize("hasAnyAuthority('user_dataquery')")
+    @GetMapping("/fetch/allData")
+    public ResponseBean fetchDataQuery() {
+        List<IDataQuery> dataQueryListList = userService.fetchDataQuery();
+        return ResponseBean.success(dataQueryListList);
     }
 }

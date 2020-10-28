@@ -2,11 +2,9 @@ package com.example.neo.service.Impl;
 
 import com.example.neo.enums.UserTypeEnum;
 import com.example.neo.model.ICreateUser;
+import com.example.neo.model.IDataQuery;
 import com.example.neo.model.IGetUser;
-import com.example.neo.mybatis.mapper.NeoCompanyMapper;
-import com.example.neo.mybatis.mapper.NeoEmployeeMapper;
-import com.example.neo.mybatis.mapper.NeoRoleMapper;
-import com.example.neo.mybatis.mapper.NeoUserMapper;
+import com.example.neo.mybatis.mapper.*;
 import com.example.neo.mybatis.model.*;
 import com.example.neo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +27,8 @@ public class UserServiceImpl implements UserService {
     private NeoCompanyMapper companyMapper;
     @Autowired
     private NeoEmployeeMapper employeeMapper;
+    @Autowired
+    private NeoCompanyRelationMapper relationMapper;
     @Autowired
     private CommonService commonService;
     @Autowired
@@ -81,16 +81,42 @@ public class UserServiceImpl implements UserService {
         }
         // 当前用户是 merchant, 创建 company 用户，涉及 neo_user、neo_company 和 neo_company_relation 表
         if (neoUser.getRoleId() == 2 && userType == UserTypeEnum.COMPANY) {
-
+           int companyId = createInfo(user, userType, userId);
+            createCompanyRelated(companyId, neoUser);
         }
 
         // 当前用户是 company 且需要创建 employee 的情况，涉及 neo_user 和 neo_employee 表
-        if (neoUser.getRoleId() == 3 && userType == UserTypeEnum.MERCHANT) {
-
+        if (neoUser.getRoleId() == 3 && userType == UserTypeEnum.EMPLOYEE) {
+            createInfo(user, userType, userId);
+            createEmployee(neoUser);
         }
     }
 
-    private void createInfo(ICreateUser user, UserTypeEnum userType, Integer userId) {
+    /**
+     * 创建员工信息
+     * TODO 员工编号怎么生成？
+     * 貌似不能走公共接口创建员工信息
+     */
+    private void createEmployee(NeoUser neoUser) {
+
+    }
+
+    private void createCompanyRelated(int companyId, NeoUser neoUser) {
+        Date date = new Date();
+        NeoCompanyRelation relation = new NeoCompanyRelation();
+
+        relation.setAgentId(neoUser.getRelatedId());
+        relation.setCompanyId(companyId);
+        relation.setIsChecked(false);
+        relation.setIsDeleted(false);
+        relation.setCreatorId(neoUser.getId());
+        relation.setCreateDate(date);
+        relation.setUpdateId(neoUser.getId());
+        relation.setUpdateDate(date);
+        relationMapper.insert(relation);
+    }
+
+    private int createInfo(ICreateUser user, UserTypeEnum userType, Integer userId) {
         NeoUser userInfo = user.getUserInfo();
         NeoCompany companyInfo = user.getCompanyInfo();
         NeoUser userDto = new NeoUser();
@@ -127,6 +153,7 @@ public class UserServiceImpl implements UserService {
         } catch (RuntimeException e) {
             throw new RuntimeException("用户创建失败");
         }
+        return companyId;
     }
 
     /**
@@ -260,5 +287,11 @@ public class UserServiceImpl implements UserService {
     public List<NeoEmployee> fetchEmployee() {
         NeoEmployeeExample example = new NeoEmployeeExample();
         return employeeMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<IDataQuery> fetchDataQuery() {
+
+        return null;
     }
 }

@@ -24,10 +24,9 @@ export const DataQuery = () => {
   }
 
   const columns = [
-    { title: '代理商名称', dataIndex: 'name', key: 'name' },
+    { title: '代理商名称', dataIndex: 'name' },
     { title: '账户余额', dataIndex: 'platform', key: 'platform' },
     { title: '已提现金额', dataIndex: 'version', key: 'version' },
-    { title: 'Date', dataIndex: 'createdAt', key: 'createdAt' },
   ]
 
   const data = []
