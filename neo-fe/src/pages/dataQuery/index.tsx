@@ -1,7 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Table } from 'antd'
+import { fetchAllData } from '@/apis/user';
+import { handleError } from '@/libs/axios';
 
 export const DataQuery = () => {
+
+  useEffect(() => {
+    fetchAgentData()
+  }, []);
+
+  const fetchAgentData = async() => {
+    try {
+      const { data } = await fetchAllData();
+      console.log(data)
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
   const expandedRowRender = () => {
     const columns = [
       { title: '公司名称', dataIndex: 'name', key: 'name' },

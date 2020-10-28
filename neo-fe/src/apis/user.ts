@@ -35,3 +35,8 @@ export const deleteMerchant = (merchantId: string) => {
 export const deleteCompany = (merchantId: string) => {
   return ajax.post(`/delete/company?merchantId=${merchantId}`)
 }
+
+/** 查询代理商和其底下公司的金额信息 */
+export const fetchAllData = () => {
+  return ajax.get(`/fetch/allData`)
+}

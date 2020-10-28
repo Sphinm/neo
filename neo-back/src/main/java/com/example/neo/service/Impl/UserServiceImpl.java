@@ -289,9 +289,16 @@ public class UserServiceImpl implements UserService {
         return employeeMapper.selectByExample(example);
     }
 
+    /**
+     *
+     * @return List<IDataQuery>
+     */
     @Override
     public List<IDataQuery> fetchDataQuery() {
-
+        NeoCompanyExample companyExample = new NeoCompanyExample();
+        companyExample.createCriteria().andCompanyTypeEqualTo(false);
+        List<NeoCompany> agentList = companyMapper.selectByExample(companyExample);
+        log.info("{}", agentList);
         return null;
     }
 }
