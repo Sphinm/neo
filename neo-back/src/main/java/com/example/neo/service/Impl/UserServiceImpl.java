@@ -30,6 +30,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private NeoCompanyRelationMapper relationMapper;
     @Autowired
+    private NeoFinanceMapper financeMapper;
+    @Autowired
+    private NeoWithdrawMapper withdrawMapper;
+    @Autowired
     private CommonService commonService;
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -295,14 +299,39 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<IDataQuery> fetchDataQuery() {
-        IDataQuery data = new IDataQuery();
         NeoCompanyExample companyExample = new NeoCompanyExample();
         companyExample.createCriteria().andCompanyTypeEqualTo(false);
         List<NeoCompany> agentList = companyMapper.selectByExample(companyExample);
-        log.info("{}", agentList);
+        List<IDataQuery> list = new ArrayList<>();
         for (NeoCompany agent : agentList) {
+            IDataQuery data = new IDataQuery();
+            // 查询代理商的余额信息
+            // TODO 这里查询 agent 的余额不对
+            NeoFinance financeItem = financeMapper.selectByPrimaryKey(agent.getId());
+            NeoWithdrawExample withdrawExample = new NeoWithdrawExample();
+            withdrawExample.createCriteria().andUserIdEqualTo(agent.getId());
+            List<NeoWithdraw> withdrawList = withdrawMapper.selectByExample(withdrawExample);
+            int totalWithdraw = 0;
+            for (NeoWithdraw withdraw : withdrawList) {
+                totalWithdraw += withdraw.getAmount();
+            }
+            data.setId(agent.getId());
+            data.setMerchantName(agent.getCompanyName());
+            data.setTotalAmount(totalWithdraw);
+            data.setBalance(financeItem != null ? financeItem.getBalance(): 0);
 
+            // 查询公司的金额信息
+            NeoCompanyRelationExample relationExample = new NeoCompanyRelationExample();
+            relationExample.createCriteria().andAgentIdEqualTo(agent.getId());
+            List<NeoCompanyRelation> relationList = relationMapper.selectByExample(relationExample);
+            for (NeoCompanyRelation relation : relationList) {
+                NeoFinanceExample financeExample = new NeoFinanceExample();
+                financeExample.createCriteria().andCompanyIdEqualTo(relation.getCompanyId());
+                List<NeoFinance> financeList = financeMapper.selectByExample(financeExample);
+                data.setCompanyInfo(financeList);
+            }
+            list.add(data);
         }
-        return null;
+        return list;
     }
 }

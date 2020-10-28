@@ -40,3 +40,8 @@ export const deleteCompany = (merchantId: string) => {
 export const fetchAllData = () => {
   return ajax.get(`/fetch/allData`)
 }
+
+/** 查询代理商创建的公司 */
+export const fetchCompany = () => {
+  return ajax.get(`/fetch/company`)
+}

@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table } from 'antd'
 import { fetchAllData } from '@/apis/user';
 import { handleError } from '@/libs/axios';
 
 export const DataQuery = () => {
+  const [tableData, setTableData] = useState<any>([])
 
   useEffect(() => {
     fetchAgentData()
@@ -12,7 +13,7 @@ export const DataQuery = () => {
   const fetchAgentData = async() => {
     try {
       const { data } = await fetchAllData();
-      console.log(data)
+      setTableData(data)
     } catch (error) {
       handleError(error)
     }
@@ -20,41 +21,21 @@ export const DataQuery = () => {
 
   const expandedRowRender = () => {
     const columns = [
-      { title: '公司名称', dataIndex: 'name', key: 'name' },
-      { title: '充值金额', dataIndex: 'upgradeNum', key: 'upgradeNum' },
-      { title: '发放金额', dataIndex: 'sendMoeny', key: 'upgradeNum1' },
-      { title: '剩余金额', dataIndex: 'leftMoney', key: 'upgradeNum2' },
+      { title: '公司名称', dataIndex: 'companyName' },
+      { title: '充值金额', dataIndex: 'totalRecharge' },
+      { title: '发放金额', dataIndex: 'totalIssued' },
+      { title: '剩余金额', dataIndex: 'balance' },
     ]
-
-    const data = []
-    for (let i = 0; i < 3; ++i) {
-      data.push({
-        key: i,
-        name: '马大哈公司',
-        upgradeNum: 100000,
-        sendMoeny: 80000,
-        leftMoney: 30000,
-      })
-    }
-    return <Table columns={columns} dataSource={data} pagination={false} />
+    
+    return <Table rowKey="id" columns={columns} dataSource={tableData?.companyInfo || []} pagination={false} />
   }
 
   const columns = [
-    { title: '代理商名称', dataIndex: 'name' },
-    { title: '账户余额', dataIndex: 'platform', key: 'platform' },
-    { title: '已提现金额', dataIndex: 'version', key: 'version' },
+    { title: 'ID', dataIndex: 'id' },
+    { title: '代理商名称', dataIndex: 'merchantName' },
+    { title: '账户余额', dataIndex: 'balance' },
+    { title: '已提现金额', dataIndex: 'totalAmount' },
   ]
 
-  const data = []
-  for (let i = 0; i < 3; ++i) {
-    data.push({
-      key: i,
-      name: '某某代理商',
-      platform: 1000,
-      version: 500,
-      createdAt: '2014-12-24 23:12:00',
-    })
-  }
-
-  return <Table columns={columns} expandable={{ expandedRowRender }} dataSource={data} />
+  return <Table rowKey="id" columns={columns} expandable={{ expandedRowRender }} dataSource={tableData} />
 }
