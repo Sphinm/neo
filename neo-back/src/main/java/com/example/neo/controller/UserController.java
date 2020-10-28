@@ -3,9 +3,9 @@ package com.example.neo.controller;
 import com.example.neo.enums.UserTypeEnum;
 import com.example.neo.model.ICreateUser;
 import com.example.neo.model.IDataQuery;
+import com.example.neo.model.IEmployee;
 import com.example.neo.model.IGetUser;
 import com.example.neo.mybatis.model.NeoCompany;
-import com.example.neo.mybatis.model.NeoEmployee;
 import com.example.neo.service.UserService;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
@@ -73,7 +73,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('user_employee')")
     @GetMapping("/fetch/employee")
     public ResponseBean fetchEmployee() {
-        List<NeoEmployee> employeeList = userService.fetchEmployee();
+        List<IEmployee> employeeList = userService.fetchEmployee();
         return ResponseBean.success(employeeList);
     }
 

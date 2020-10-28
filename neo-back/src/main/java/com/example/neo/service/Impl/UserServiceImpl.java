@@ -3,6 +3,7 @@ package com.example.neo.service.Impl;
 import com.example.neo.enums.UserTypeEnum;
 import com.example.neo.model.ICreateUser;
 import com.example.neo.model.IDataQuery;
+import com.example.neo.model.IEmployee;
 import com.example.neo.model.IGetUser;
 import com.example.neo.mybatis.mapper.*;
 import com.example.neo.mybatis.model.*;
@@ -288,9 +289,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<NeoEmployee> fetchEmployee() {
+    public List<IEmployee> fetchEmployee() {
         NeoEmployeeExample example = new NeoEmployeeExample();
-        return employeeMapper.selectByExample(example);
+        // TODO 员工逻辑
+        return null;
     }
 
     /**
