@@ -77,6 +77,13 @@ public class UserController {
         return ResponseBean.success(employeeList);
     }
 
+    @PreAuthorize("hasAnyAuthority('user_employee')")
+    @PostMapping("/delete/employee")
+    public ResponseBean deleteEmployee(@RequestParam("employeeId") int employeeId) {
+        userService.deleteEmployee(employeeId);
+        return ResponseBean.success();
+    }
+
     @PreAuthorize("hasAnyAuthority('user_dataquery')")
     @GetMapping("/fetch/allData")
     public ResponseBean fetchDataQuery() {

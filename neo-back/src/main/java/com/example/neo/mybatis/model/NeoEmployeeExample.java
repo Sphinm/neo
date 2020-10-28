@@ -1024,6 +1024,66 @@ public class NeoEmployeeExample {
             addCriterion("is_locked not between", value1, value2, "isLocked");
             return (Criteria) this;
         }
+
+        public Criteria andIsSignupIsNull() {
+            addCriterion("is_signup is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSignupIsNotNull() {
+            addCriterion("is_signup is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSignupEqualTo(Boolean value) {
+            addCriterion("is_signup =", value, "isSignup");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSignupNotEqualTo(Boolean value) {
+            addCriterion("is_signup <>", value, "isSignup");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSignupGreaterThan(Boolean value) {
+            addCriterion("is_signup >", value, "isSignup");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSignupGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_signup >=", value, "isSignup");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSignupLessThan(Boolean value) {
+            addCriterion("is_signup <", value, "isSignup");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSignupLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_signup <=", value, "isSignup");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSignupIn(List<Boolean> values) {
+            addCriterion("is_signup in", values, "isSignup");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSignupNotIn(List<Boolean> values) {
+            addCriterion("is_signup not in", values, "isSignup");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSignupBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_signup between", value1, value2, "isSignup");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSignupNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_signup not between", value1, value2, "isSignup");
+            return (Criteria) this;
+        }
     }
 
     /**

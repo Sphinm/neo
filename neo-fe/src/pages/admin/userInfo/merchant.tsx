@@ -41,7 +41,7 @@ export const Merchant = () => {
     },
     {
       title: '账号',
-    render: (text: any, record: any) => <div>{record.userInfo.mobile}</div>,
+      render: (text: any, record: any) => <div>{record.userInfo.mobile}</div>,
     },
     {
       title: '操作',

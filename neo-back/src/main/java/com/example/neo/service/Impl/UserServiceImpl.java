@@ -1,10 +1,7 @@
 package com.example.neo.service.Impl;
 
 import com.example.neo.enums.UserTypeEnum;
-import com.example.neo.model.ICreateUser;
-import com.example.neo.model.IDataQuery;
-import com.example.neo.model.IEmployee;
-import com.example.neo.model.IGetUser;
+import com.example.neo.model.*;
 import com.example.neo.mybatis.mapper.*;
 import com.example.neo.mybatis.model.*;
 import com.example.neo.service.UserService;
@@ -291,8 +288,32 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<IEmployee> fetchEmployee() {
         NeoEmployeeExample example = new NeoEmployeeExample();
-        // TODO 员工逻辑
-        return null;
+        example.createCriteria().andIsLockedEqualTo(false);
+        List<NeoEmployee> employeeList = employeeMapper.selectByExample(example);
+        List<IEmployee> list = new ArrayList<>();
+        for (NeoEmployee item : employeeList) {
+            IEmployee employee = new IEmployee();
+            employee.setId(item.getId());
+            NeoCompany companyInfo = companyMapper.selectByPrimaryKey(item.getCompanyId());
+            employee.setCompanyName(companyInfo.getCompanyName());
+            employee.setIdVerify(item.getIdVerify());
+            employee.setIsSignUp(item.getIsSignup());
+            employee.setUserName(item.getName());
+            employee.setUserMobile(item.getTel());
+            list.add(employee);
+        }
+
+        return list;
+    }
+
+    /**
+     * delete user
+     */
+    @Override
+    public void deleteEmployee(Integer employeeId) {
+        NeoEmployee employee = employeeMapper.selectByPrimaryKey(employeeId);
+        employee.setIsLocked(true);
+        employeeMapper.updateByPrimaryKeySelective(employee);
     }
 
     /**
@@ -308,8 +329,10 @@ public class UserServiceImpl implements UserService {
         for (NeoCompany agent : agentList) {
             IDataQuery data = new IDataQuery();
             // 查询代理商的余额信息
-            // TODO 这里查询 agent 的余额不对
-            NeoFinance financeItem = financeMapper.selectByPrimaryKey(agent.getId());
+
+            NeoFinanceExample financeOne = new NeoFinanceExample();
+            financeOne.createCriteria().andCompanyIdEqualTo(agent.getId());
+            List<NeoFinance> financeListOne = financeMapper.selectByExample(financeOne);
             NeoWithdrawExample withdrawExample = new NeoWithdrawExample();
             withdrawExample.createCriteria().andUserIdEqualTo(agent.getId());
             List<NeoWithdraw> withdrawList = withdrawMapper.selectByExample(withdrawExample);
@@ -320,7 +343,7 @@ public class UserServiceImpl implements UserService {
             data.setId(agent.getId());
             data.setMerchantName(agent.getCompanyName());
             data.setTotalAmount(totalWithdraw);
-            data.setBalance(financeItem != null ? financeItem.getBalance(): 0);
+            data.setBalance(financeListOne.size() == 1 ? financeListOne.get(0).getBalance(): 0);
 
             // 查询公司的金额信息
             NeoCompanyRelationExample relationExample = new NeoCompanyRelationExample();
@@ -330,7 +353,18 @@ public class UserServiceImpl implements UserService {
                 NeoFinanceExample financeExample = new NeoFinanceExample();
                 financeExample.createCriteria().andCompanyIdEqualTo(relation.getCompanyId());
                 List<NeoFinance> financeList = financeMapper.selectByExample(financeExample);
-                data.setCompanyInfo(financeList);
+                List<IDataQueryCompany> queryList = new ArrayList<>();
+                for (NeoFinance item : financeList) {
+                    IDataQueryCompany dataOne = new IDataQueryCompany();
+                    dataOne.setId(item.getId());
+                    dataOne.setBalance(item.getBalance());
+                    dataOne.setTotalIssued(item.getTotalIssued());
+                    dataOne.setTotalRecharge(item.getTotalRecharge());
+                    NeoCompany queryCompany = companyMapper.selectByPrimaryKey(item.getCompanyId());
+                    dataOne.setCompanyName(queryCompany.getCompanyName());
+                    queryList.add(dataOne);
+                }
+                data.setCompanyInfo(queryList);
             }
             list.add(data);
         }

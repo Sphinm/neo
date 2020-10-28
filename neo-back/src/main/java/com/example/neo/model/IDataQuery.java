@@ -1,6 +1,5 @@
 package com.example.neo.model;
 
-import com.example.neo.mybatis.model.NeoFinance;
 import lombok.Data;
 
 import java.util.List;
@@ -11,5 +10,5 @@ public class IDataQuery {
     String merchantName;
     Integer totalAmount;
     Double balance;
-    List<NeoFinance> companyInfo;
+    List<IDataQueryCompany> companyInfo;
 }

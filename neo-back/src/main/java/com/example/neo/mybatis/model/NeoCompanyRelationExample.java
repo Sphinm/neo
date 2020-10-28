@@ -375,6 +375,66 @@ public class NeoCompanyRelationExample {
             return (Criteria) this;
         }
 
+        public Criteria andIsCheckedIsNull() {
+            addCriterion("is_checked is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCheckedIsNotNull() {
+            addCriterion("is_checked is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCheckedEqualTo(Boolean value) {
+            addCriterion("is_checked =", value, "isChecked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCheckedNotEqualTo(Boolean value) {
+            addCriterion("is_checked <>", value, "isChecked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCheckedGreaterThan(Boolean value) {
+            addCriterion("is_checked >", value, "isChecked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCheckedGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_checked >=", value, "isChecked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCheckedLessThan(Boolean value) {
+            addCriterion("is_checked <", value, "isChecked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCheckedLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_checked <=", value, "isChecked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCheckedIn(List<Boolean> values) {
+            addCriterion("is_checked in", values, "isChecked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCheckedNotIn(List<Boolean> values) {
+            addCriterion("is_checked not in", values, "isChecked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCheckedBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_checked between", value1, value2, "isChecked");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCheckedNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_checked not between", value1, value2, "isChecked");
+            return (Criteria) this;
+        }
+
         public Criteria andIsDeletedIsNull() {
             addCriterion("is_deleted is null");
             return (Criteria) this;
@@ -672,66 +732,6 @@ public class NeoCompanyRelationExample {
 
         public Criteria andUpdateDateNotBetween(Date value1, Date value2) {
             addCriterion("update_date not between", value1, value2, "updateDate");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCheckedIsNull() {
-            addCriterion("is_checked is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCheckedIsNotNull() {
-            addCriterion("is_checked is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCheckedEqualTo(Boolean value) {
-            addCriterion("is_checked =", value, "isChecked");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCheckedNotEqualTo(Boolean value) {
-            addCriterion("is_checked <>", value, "isChecked");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCheckedGreaterThan(Boolean value) {
-            addCriterion("is_checked >", value, "isChecked");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCheckedGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("is_checked >=", value, "isChecked");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCheckedLessThan(Boolean value) {
-            addCriterion("is_checked <", value, "isChecked");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCheckedLessThanOrEqualTo(Boolean value) {
-            addCriterion("is_checked <=", value, "isChecked");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCheckedIn(List<Boolean> values) {
-            addCriterion("is_checked in", values, "isChecked");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCheckedNotIn(List<Boolean> values) {
-            addCriterion("is_checked not in", values, "isChecked");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCheckedBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_checked between", value1, value2, "isChecked");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCheckedNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_checked not between", value1, value2, "isChecked");
             return (Criteria) this;
         }
     }

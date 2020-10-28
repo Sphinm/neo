@@ -10,6 +10,7 @@ export const DataQuery = () => {
     fetchAgentData()
   }, []);
 
+ 
   const fetchAgentData = async() => {
     try {
       const { data } = await fetchAllData();
@@ -19,15 +20,16 @@ export const DataQuery = () => {
     }
   }
 
-  const expandedRowRender = () => {
+  const expandedRowRender = (data: any) => {
     const columns = [
+      { title: '公司ID', dataIndex: 'id' },
       { title: '公司名称', dataIndex: 'companyName' },
       { title: '充值金额', dataIndex: 'totalRecharge' },
       { title: '发放金额', dataIndex: 'totalIssued' },
       { title: '剩余金额', dataIndex: 'balance' },
     ]
     
-    return <Table rowKey="id" columns={columns} dataSource={tableData?.companyInfo || []} pagination={false} />
+    return <Table rowKey="id" columns={columns} dataSource={data.companyInfo || []} pagination={false} />
   }
 
   const columns = [

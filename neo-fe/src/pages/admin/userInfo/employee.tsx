@@ -1,7 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, Table, Button, Popconfirm } from 'antd'
+import { deleteEmployee, fetchAllEmployee } from '@/apis/user';
+import { handleError } from '@/libs/axios';
 
 export const Employee = () => {
+  const [tableData, setTableData] = useState([])
+
+  useEffect(() => {
+    fetchAllUser()
+  }, []);
+
+  const fetchAllUser = async() => {
+    try {
+      const { data } = await fetchAllEmployee()
+      setTableData(data)
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
   const columns = [
     {
       title: '用户ID',
@@ -9,23 +26,24 @@ export const Employee = () => {
     },
     {
       title: '姓名',
-      dataIndex: 'name',
+      dataIndex: 'userName',
     },
     {
       title: '身份证号',
-      dataIndex: 'age',
+      dataIndex: 'idVerify',
     },
     {
       title: '手机号',
-      dataIndex: 'address',
+      dataIndex: 'userMobile',
     },
     {
       title: '关联公司',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      dataIndex: 'companyName',
     },
     {
       title: '是否签约',
-      dataIndex: 'age',
+      dataIndex: 'isSignUp',
+      render: (text: any, record: any) => <div>{record.isSignUp ? '已签约' : '未签约'}</div>,
     },
     {
       title: '操作',
@@ -44,88 +62,18 @@ export const Employee = () => {
     },
   ]
 
-  const deleteUser = (id: string) => {
-    console.log('delete', id)
+  const deleteUser = async(id: string) => {
+    try {
+      await deleteEmployee(id)
+      fetchAllUser()
+    } catch (error) {
+      handleError(error)
+    }
   }
-
-  const data = [
-    {
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown1',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green1',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black1',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown2',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green2',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black2',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown3',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green3',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black3',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ]
 
   return (
     <Card title="员工档案">
-      <Table bordered rowKey="id" columns={columns as any} dataSource={data} />
+      <Table bordered rowKey="id" columns={columns as any} dataSource={tableData} />
     </Card>
   )
 }

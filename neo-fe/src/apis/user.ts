@@ -26,7 +26,7 @@ export const updateMerchant = (params: any, type: AuthType) => {
   return ajax.post(`/update/merchant?type=${type}`, params)
 }
 
-/** 查询代理商详细信息 */
+/** 删除代理商详细信息 */
 export const deleteMerchant = (merchantId: string) => {
   return ajax.post(`/delete/merchant?merchantId=${merchantId}`)
 }
@@ -44,4 +44,14 @@ export const fetchAllData = () => {
 /** 查询代理商创建的公司 */
 export const fetchCompany = () => {
   return ajax.get(`/fetch/company`)
+}
+
+/** 管理员查询员工 */
+export const fetchAllEmployee = () => {
+  return ajax.get(`/fetch/employee`)
+}
+
+/** 删除代理商详细信息 */
+export const deleteEmployee = (employeeId: string) => {
+  return ajax.post(`/delete/employee?employeeId=${employeeId}`)
 }

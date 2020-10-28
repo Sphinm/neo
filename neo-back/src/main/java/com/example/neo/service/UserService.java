@@ -52,6 +52,11 @@ public interface UserService {
     List<IEmployee> fetchEmployee();
 
     /**
+     * delete user
+     */
+    void deleteEmployee(Integer employeeId);
+
+    /**
      * 数据查询
      */
     List<IDataQuery> fetchDataQuery();
