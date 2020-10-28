@@ -1,66 +1,73 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, Table, Button, Popconfirm, Badge } from 'antd'
+import { fetchReviewCompany } from '@/apis/review';
+import { handleError } from '@/libs/axios';
 
 export const MerchantAdd = () => {
+  const [tableData, setTableData] = useState([])
+
+  useEffect(() => {
+    fetchCompanyInfo()
+  }, []);
+
+  const fetchCompanyInfo = async() => {
+    try {
+      const { data } = await fetchReviewCompany();
+      setTableData(data)
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
   const columns = [
     {
       title: 'ID',
       dataIndex: 'id',
-      key: 'id',
     },
     {
       title: '公司名称',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'companyName',
     },
     {
       title: '公司税号',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'companyTax',
     },
     {
       title: '公司地址',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'companyAddress',
     },
     {
       title: '联系人',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'contactName',
     },
     {
       title: '联系电话',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'contactTel',
     },
     {
       title: '开户行',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'bankName',
     },
     {
       title: '银行账号',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'bankCode',
     },
     {
       title: '费率',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'rate',
     },
     {
       title: '审核状态',
-      key: 'status',
-      render: (text: any, record: any) => <Badge status="processing" text="等待审核"></Badge>,
+      dataIndex: 'isChecked',
+      render: (text: any, record: any) => <div>{ record.isChecked ? <Badge status="success" text="审核通过"></Badge> : <Badge status="processing" text="等待审核"></Badge> }</div>,
     },
     {
       title: '审核时间',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      dataIndex: 'checkTime',
+      render: (text: any, record: any) => <div>{record.isChecked ? record.checkTime : "-"}</div>,
     },
     {
       title: '操作',
-      key: 'task',
       fixed: 'right',
       render: (text: any, record: any) => {
         return (
@@ -83,84 +90,9 @@ export const MerchantAdd = () => {
     console.log('checkRecharge', id)
   }
 
-  const data = [
-    {
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown1',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green1',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black1',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown2',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green2',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black2',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown3',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green3',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black3',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ]
-
   return (
     <Card title="代理商新增客户审核">
-      <Table scroll={{ x: 1500 }} bordered rowKey="name" columns={columns as any} dataSource={data} />
+      <Table scroll={{ x: 1500 }} bordered rowKey="id" columns={columns as any} dataSource={tableData} />
     </Card>
   )
 }
