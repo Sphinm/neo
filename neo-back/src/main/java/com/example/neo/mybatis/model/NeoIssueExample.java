@@ -874,6 +874,66 @@ public class NeoIssueExample {
             addCriterion("update_date not between", value1, value2, "updateDate");
             return (Criteria) this;
         }
+
+        public Criteria andProvideStatusIsNull() {
+            addCriterion("provide_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvideStatusIsNotNull() {
+            addCriterion("provide_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvideStatusEqualTo(Boolean value) {
+            addCriterion("provide_status =", value, "provideStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvideStatusNotEqualTo(Boolean value) {
+            addCriterion("provide_status <>", value, "provideStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvideStatusGreaterThan(Boolean value) {
+            addCriterion("provide_status >", value, "provideStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvideStatusGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("provide_status >=", value, "provideStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvideStatusLessThan(Boolean value) {
+            addCriterion("provide_status <", value, "provideStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvideStatusLessThanOrEqualTo(Boolean value) {
+            addCriterion("provide_status <=", value, "provideStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvideStatusIn(List<Boolean> values) {
+            addCriterion("provide_status in", values, "provideStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvideStatusNotIn(List<Boolean> values) {
+            addCriterion("provide_status not in", values, "provideStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvideStatusBetween(Boolean value1, Boolean value2) {
+            addCriterion("provide_status between", value1, value2, "provideStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvideStatusNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("provide_status not between", value1, value2, "provideStatus");
+            return (Criteria) this;
+        }
     }
 
     /**

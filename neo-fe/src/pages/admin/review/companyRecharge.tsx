@@ -1,46 +1,62 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, Table, Button, Popconfirm, Badge } from 'antd'
+import { handleError } from '@/libs/axios';
+import { fetchReviewRecharge, reviewRecharge } from '@/apis/review';
 
 export const CompanyRecharge = () => {
+  const [tableData, setTableData] = useState([])
+  
+  useEffect(() => {
+    fetchRechargeInfo()
+  }, []);
+
+  const fetchRechargeInfo = async() => {
+    try {
+      const { data } = await fetchReviewRecharge();
+      setTableData(data)
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
   const columns = [
     {
-      title: '订单号',
+      title: 'ID',
       dataIndex: 'id',
-      key: 'id',
     },
     {
-      title: '申请时间',
-      dataIndex: 'name',
-      key: 'name',
+      title: '订单号',
+      dataIndex: 'orderNumber',
     },
     {
       title: '打款金额',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'paymentAmount',
     },
     {
       title: '充值金额',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'accountAmount',
     },
     {
       title: '打款凭证',
-      key: 'action',
+      dataIndex: 'paymentVoucher',
       render: (text: any, record: any) => <div>等待发放</div>,
     },
     {
       title: '审核状态',
-      key: 'status',
+      dataIndex: 'approvalStatus',
       render: (text: any, record: any) => <Badge status="processing" text="等待审核"></Badge>,
     },
     {
+      title: '申请时间',
+      dataIndex: 'createDate',
+    },
+    {
       title: '审核时间',
-      key: 'action',
+      dataIndex: 'updateDate',
       render: (text: any, record: any) => <div>等待发放</div>,
     },
     {
       title: '操作',
-      key: 'task',
       render: (text: any, record: any) => {
         return (
           <Popconfirm title="通过该充值申请" onConfirm={() => checkRecharge(record.id)} okText="确认" cancelText="取消">
@@ -53,88 +69,19 @@ export const CompanyRecharge = () => {
     },
   ]
 
-  const checkRecharge = (id: string) => {
+  const checkRecharge = async(id: string) => {
     console.log('checkRecharge', id)
+    try {
+      await reviewRecharge(id);
+      fetchRechargeInfo()
+    } catch (error) {
+      handleError(error)
+    }
   }
-
-  const data = [
-    {
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown1',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green1',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black1',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown2',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green2',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black2',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown3',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green3',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black3',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ]
 
   return (
     <Card title="公司充值记录">
-      <Table bordered rowKey="name" columns={columns as any} dataSource={data} />
+      <Table bordered rowKey="id" columns={columns as any} dataSource={tableData} />
     </Card>
   )
 }

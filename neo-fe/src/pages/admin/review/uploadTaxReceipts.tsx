@@ -1,10 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CloudUploadOutlined } from '@ant-design/icons'
 import { Card, Table, Button, Popconfirm, Badge, Divider, Modal, Form, Input, Upload, message } from 'antd'
+import { handleError } from '@/libs/axios'
+import { fetchReviewTax, reviewTax } from '@/apis/review'
 
 export const UploadTaxReceipts = () => {
   const [form] = Form.useForm()
   const [visible, setVisible] = useState(false)
+  const [tableData, setTableData] = useState([])
+  
+  useEffect(() => {
+    fetchBillInfo()
+  }, []);
+
+  const fetchBillInfo = async() => {
+    try {
+      const { data } = await fetchReviewTax();
+      setTableData(data)
+    } catch (error) {
+      handleError(error)
+    }
+  }
 
   const options = {
     name: 'file',
@@ -26,33 +42,33 @@ export const UploadTaxReceipts = () => {
 
   const columns = [
     {
-      title: '编号',
+      title: 'ID',
       dataIndex: 'id',
-      key: 'id',
+    },
+    {
+      title: '编号',
+      dataIndex: 'number',
     },
     {
       title: '创建时间',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'createDate',
     },
     {
       title: '完税凭证',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'taxReceive',
     },
     {
       title: '月份',
-      key: 'status',
+      dataIndex: 'month',
       render: (text: any, record: any) => <Badge status="processing" text="等待审核"></Badge>,
     },
     {
       title: '备注信息',
-      key: 'action',
+      dataIndex: 'remark',
       render: (text: any, record: any) => <div>等待发放</div>,
     },
     {
       title: '操作',
-      key: 'task',
       render: (text: any, record: any) => {
         return (
           <Popconfirm title="请确认是否删除" onConfirm={() => checkRecharge(record.id)} okText="确认" cancelText="取消">
@@ -63,36 +79,14 @@ export const UploadTaxReceipts = () => {
     },
   ]
 
-  const checkRecharge = (id: string) => {
-    console.log('checkRecharge', id)
+  const checkRecharge = async(id: string) => {
+    try {
+      await reviewTax(id);
+      fetchBillInfo()
+    } catch (error) {
+      handleError(error)
+    }
   }
-
-  const data = [
-    {
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown1',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-  ]
 
   const uploadTaxReceipts = () => {
     setVisible(true)
@@ -111,7 +105,7 @@ export const UploadTaxReceipts = () => {
         上传完税凭证
       </Button>
       <Divider />
-      <Table bordered rowKey="name" columns={columns as any} dataSource={data} />
+      <Table bordered rowKey="id" columns={columns as any} dataSource={tableData} />
       <Modal
         getContainer={false}
         title="上传完税凭证"

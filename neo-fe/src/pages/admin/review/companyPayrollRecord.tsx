@@ -1,37 +1,54 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, Table, Button, Popconfirm, Badge } from 'antd'
+import { handleError } from '@/libs/axios';
+import { fetchReviewProvide, reviewProvide } from '@/apis/review';
 
 export const CompanyPayrollRecord = () => {
+  const [tableData, setTableData] = useState([])
+  
+  useEffect(() => {
+    fetchBillInfo()
+  }, []);
+
+  const fetchBillInfo = async() => {
+    try {
+      const { data } = await fetchReviewProvide();
+      setTableData(data)
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
   const columns = [
     {
-      title: '订单号',
+      title: 'ID',
       dataIndex: 'id',
-      key: 'id',
     },
     {
-      title: '申请时间',
-      dataIndex: 'name',
-      key: 'name',
+      title: '订单号',
+      dataIndex: 'orderNumber',
     },
     {
       title: '发放金额',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'amount',
     },
-    {
-      title: '总笔数',
-      dataIndex: 'address',
-      key: 'address',
-    },
+    // {
+    //   title: '总笔数',
+    //   dataIndex: 'address',
+    // },
     {
       title: '审核状态',
-      key: 'status',
+      dataIndex: 'provideStatus',
       render: (text: any, record: any) => <Badge status="processing" text="等待审核"></Badge>,
     },
     {
       title: '审核时间',
-      key: 'action',
+      dataIndex: 'updateDate',
       render: (text: any, record: any) => <div>等待发放</div>,
+    },
+    {
+      title: '申请时间',
+      dataIndex: 'createDate',
     },
     {
       title: '操作',
@@ -53,88 +70,18 @@ export const CompanyPayrollRecord = () => {
     },
   ]
 
-  const checkRecharge = (id: string) => {
-    console.log('checkRecharge', id)
+  const checkRecharge = async(id: string) => {
+    try {
+      await reviewProvide(id);
+      fetchBillInfo()
+    } catch (error) {
+      handleError(error)
+    }
   }
-
-  const data = [
-    {
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown1',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green1',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black1',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown2',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green2',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black2',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown3',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green3',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black3',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ]
 
   return (
     <Card title="公司发放记录">
-      <Table bordered rowKey="name" columns={columns as any} dataSource={data} />
+      <Table bordered rowKey="id" columns={columns as any} dataSource={tableData} />
     </Card>
   )
 }

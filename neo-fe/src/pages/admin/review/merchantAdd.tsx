@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Card, Table, Button, Popconfirm, Badge } from 'antd'
-import { fetchReviewCompany } from '@/apis/review';
+import { fetchReviewCompany, reviewCompany } from '@/apis/review';
 import { handleError } from '@/libs/axios';
 
 export const MerchantAdd = () => {
@@ -86,8 +86,14 @@ export const MerchantAdd = () => {
     },
   ]
 
-  const checkRecharge = (id: string) => {
+  const checkRecharge = async(id: string) => {
     console.log('checkRecharge', id)
+    try {
+      await reviewCompany(id);
+      fetchCompanyInfo()
+    } catch (error) {
+      handleError(error)
+    }
   }
 
   return (

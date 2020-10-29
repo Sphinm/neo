@@ -1,55 +1,69 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, Table, Button, Popconfirm, Badge } from 'antd'
+import { handleError } from '@/libs/axios';
+import { fetchReviewInvoice, reviewInvoice } from '@/apis/review';
 
 export const CompanyBillRecord = () => {
+  const [tableData, setTableData] = useState([])
+  
+  useEffect(() => {
+    fetchBillInfo()
+  }, []);
+
+  const fetchBillInfo = async() => {
+    try {
+      const { data } = await fetchReviewInvoice();
+      setTableData(data)
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
   const columns = [
     {
-      title: '订单号',
+      title: 'ID',
       dataIndex: 'id',
-      key: 'id',
     },
     {
-      title: '申请时间',
-      dataIndex: 'name',
-      key: 'name',
+      title: '订单号',
+      dataIndex: 'orderNumber',
     },
     {
       title: '开票金额',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'invoiceAmount',
     },
     {
-      title: '发票类目',
-      dataIndex: 'address',
-      key: 'address',
+      title: '发票内容',
+      dataIndex: 'invoiceContent',
     },
     {
       title: '发票类型',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'invoiceType',
     },
     {
       title: '发票抬头',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'invoiceCompany',
     },
     {
       title: '审核状态',
-      key: 'status',
+      dataIndex: 'status',
       render: (text: any, record: any) => <Badge status="processing" text="等待审核"></Badge>,
     },
     {
       title: '审核时间',
-      key: 'action',
+      dataIndex: 'updateDate',
       render: (text: any, record: any) => <div>等待发放</div>,
     },
     {
+      title: '申请时间',
+      dataIndex: 'createDate',
+    },
+    {
       title: '操作',
-      key: 'task',
       fixed: 'right',
       render: (text: any, record: any) => {
         return (
-          <Popconfirm title="通过该充值申请" onConfirm={() => checkRecharge(record.id)} okText="确认" cancelText="取消">
+          <Popconfirm title="通过该开票申请" onConfirm={() => checkRecharge(record.id)} okText="确认" cancelText="取消">
             <Button disabled={record.status === 'SUCCESS'} type="primary">
               审核
             </Button>
@@ -59,88 +73,18 @@ export const CompanyBillRecord = () => {
     },
   ]
 
-  const checkRecharge = (id: string) => {
-    console.log('checkRecharge', id)
+  const checkRecharge = async(id: string) => {
+    try {
+      await reviewInvoice(id);
+      fetchBillInfo()
+    } catch (error) {
+      handleError(error)
+    }
   }
-
-  const data = [
-    {
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown1',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green1',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black1',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown2',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green2',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black2',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown3',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green3',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black3',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ]
 
   return (
     <Card title="公司开票记录">
-      <Table bordered rowKey="name" columns={columns as any} dataSource={data} />
+      <Table bordered rowKey="id" columns={columns as any} dataSource={tableData} />
     </Card>
   )
 }
