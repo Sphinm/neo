@@ -73,7 +73,7 @@ export const FlexList = () => {
 
 
   useEffect(() => {
-    // fetchCompanyInfo()
+    fetchCompanyInfo()
   }, [])
 
   const fetchCompanyInfo = async() => {
