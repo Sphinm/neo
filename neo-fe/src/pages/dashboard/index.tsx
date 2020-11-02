@@ -197,12 +197,12 @@ const Dashboard = () => {
                 </div>
                 <div className={style['money']}>￥100.24 元</div>
               </Card>
-              <Card>
+              {/* <Card>
                 <div className={style['money-title']}>
-                  {RoleStore.currentRole?.roleType === AuthType.COMPANY ? '最近一个月发放人数' : '最近一个月返佣人数'}
+                  {RoleStore.currentRole?.roleType === AuthType.COMPANY ? '最近一个月发放次数' : '最近一个月返佣次数'}
                 </div>
                 <div className={style['money']}>￥100 人</div>
-              </Card>
+              </Card> */}
             </Col>
           )}
         </Row>

@@ -28,7 +28,6 @@ export const DataQuery = () => {
       { title: '发放金额', dataIndex: 'totalIssued' },
       { title: '剩余金额', dataIndex: 'balance' },
     ]
-    
     return <Table rowKey="id" columns={columns} dataSource={data.companyInfo || []} pagination={false} />
   }
 
