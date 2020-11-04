@@ -51,3 +51,5 @@ neo:
   token:
     expired-seconds: 604800
     secret-key: 'uiewfb7busagf32yr'
+  charge:
+    filepath: ./tmp/neo/charge

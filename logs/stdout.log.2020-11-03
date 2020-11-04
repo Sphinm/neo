@@ -1,0 +1,33 @@
+2020-11-03 13:18:30.218 [main] INFO  com.example.neo.NeoApplication - Starting NeoApplication on LAPTOP-UORNG9FF with PID 13524 (C:\Users\xuhr\IdeaProjects\neo\neo-back\build\classes\java\main started by xuhr in C:\Users\xuhr\IdeaProjects\neo)
+2020-11-03 13:18:30.266 [main] INFO  com.example.neo.NeoApplication - The following profiles are active: local
+2020-11-03 13:18:31.697 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-11-03 13:18:31.700 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2020-11-03 13:18:31.849 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 125ms. Found 0 Redis repository interfaces.
+2020-11-03 13:18:32.283 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'redisConfig' of type [com.example.neo.redis.RedisConfig$$EnhancerBySpringCGLIB$$ff661d4a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-11-03 13:18:32.369 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@714f3da4' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-11-03 13:18:32.376 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-11-03 13:18:32.819 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8008 (http)
+2020-11-03 13:18:32.832 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8008"]
+2020-11-03 13:18:32.833 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2020-11-03 13:18:32.833 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.37]
+2020-11-03 13:18:33.013 [main] INFO  o.a.c.c.C.[.[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2020-11-03 13:18:33.013 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2624 ms
+2020-11-03 13:18:34.886 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@710ae6a7, org.springframework.security.web.context.SecurityContextPersistenceFilter@3a5e2525, org.springframework.security.web.header.HeaderWriterFilter@2774dcf4, org.springframework.security.web.authentication.logout.LogoutFilter@72eed547, com.example.neo.security.LindTokenAuthenticationFilter@755a7218, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2b458cd6, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7bc2ae16, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@25d911a, org.springframework.security.web.session.SessionManagementFilter@20a1b3ae, org.springframework.security.web.access.ExceptionTranslationFilter@6f8667bb, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@356b6b5d]
+2020-11-03 13:18:35.119 [main] INFO  o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+2020-11-03 13:18:35.312 [main] INFO  t.m.m.a.MapperCacheDisabler - Clear tk.mybatis.mapper.genid.GenIdUtil CACHE cache.
+2020-11-03 13:18:35.314 [main] INFO  t.m.m.a.MapperCacheDisabler - Clear EntityHelper entityTableMap cache.
+2020-11-03 13:18:35.558 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8008"]
+2020-11-03 13:18:35.592 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8008 (http) with context path '/api'
+2020-11-03 13:18:35.609 [main] INFO  com.example.neo.NeoApplication - Started NeoApplication in 6.387 seconds (JVM running for 9.02)
+2020-11-03 13:28:50.996 [http-nio-8008-exec-2] INFO  o.a.c.c.C.[.[localhost].[/api] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-11-03 13:28:50.996 [http-nio-8008-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2020-11-03 13:28:51.004 [http-nio-8008-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 8 ms
+2020-11-03 13:28:51.223 [http-nio-8008-exec-2] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2020-11-03 13:28:51.427 [http-nio-8008-exec-2] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2020-11-03 13:28:53.245 [http-nio-8008-exec-1] INFO  c.e.n.s.LindTokenAuthenticationFilter - authenticated user 11123, setting security context
+2020-11-03 13:30:42.932 [http-nio-8008-exec-3] INFO  c.e.n.s.LindTokenAuthenticationFilter - authenticated user 11123, setting security context
+2020-11-03 13:30:56.088 [http-nio-8008-exec-4] INFO  c.e.n.s.LindTokenAuthenticationFilter - authenticated user 11123, setting security context
+2020-11-03 15:16:08.032 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h36m46s454ms226µs500ns).
+2020-11-03 16:59:27.335 [SpringContextShutdownHook] INFO  o.s.s.c.ThreadPoolTaskExecutor - Shutting down ExecutorService 'applicationTaskExecutor'
+2020-11-03 16:59:27.339 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2020-11-03 16:59:27.351 [SpringContextShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

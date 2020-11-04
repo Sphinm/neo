@@ -14,7 +14,11 @@ public enum ResponseCodeEnum {
     @Deprecated
     PASSWORD_INCORRECT("password incorrect"),
     @Deprecated
-    NO_LOGIN("The user is not logged in");
+    NO_LOGIN("The user is not logged in"),
+
+    FILE_NOT_NULL("文件不可为空"),
+    FILE_ERROR("文件上传失败"),
+    AMOUNT_NOT_VALID("金额不合法");
 
     public String message;
 

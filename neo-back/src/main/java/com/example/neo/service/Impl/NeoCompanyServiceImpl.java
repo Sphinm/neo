@@ -1,20 +1,43 @@
 package com.example.neo.service.Impl;
 
+import com.example.neo.enums.ResponseCodeEnum;
+import com.example.neo.exception.NeoException;
+import com.example.neo.model.ICharge;
 import com.example.neo.model.ICompanyList;
 import com.example.neo.mybatis.mapper.NeoCompanyMapper;
-import com.example.neo.mybatis.model.NeoCompanyExample;
+import com.example.neo.mybatis.mapper.NeoFinanceMapper;
+import com.example.neo.mybatis.mapper.NeoRechargeRecordMapper;
+import com.example.neo.mybatis.mapper.NeoUserMapper;
+import com.example.neo.mybatis.model.*;
 import com.example.neo.service.NeoCompanyService;
+import com.example.neo.utils.ResponseBean;
+import com.example.neo.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
 @Service
+@PropertySource({"classpath:application.yml"})
 public class NeoCompanyServiceImpl implements NeoCompanyService {
     @Autowired
-    NeoCompanyMapper companyMapper;
+    private NeoRechargeRecordMapper rechargeRecordMapper;
+    @Autowired
+    private NeoFinanceMapper financeMapper;
+    @Autowired
+    private CommonService commonService;
+    @Value("${neo.charge.filepath}")
+    private String filePath;
 
     @Override
     public List<ICompanyList> fetchCompanyList() {
@@ -27,5 +50,120 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
 //            log.info("{}", item);
 //        }
         return null;
+    }
+
+    @Override
+    public ResponseBean charge(MultipartFile file, ICharge icharge) {
+        if (file.isEmpty()) {
+            return ResponseBean.fail(ResponseCodeEnum.FILE_NOT_NULL);
+        }
+        // 获取文件名
+        String fileName = file.getOriginalFilename();
+        log.info("上传的文件名为：" + fileName);
+        // 获取文件的后缀名
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+        log.info("上传的后缀名为：" + suffixName);
+        // 解决中文问题，liunx下中文路径，图片显示问题
+        // fileName = UUID.randomUUID() + suffixName;
+        File dest = new File(filePath + fileName);
+        // 检测是否存在目录
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();
+        }
+        try {
+            file.transferTo(dest);
+        } catch (IllegalStateException e) {
+            log.info(e.getMessage());
+            return ResponseBean.fail(ResponseCodeEnum.FILE_ERROR);
+        } catch (IOException e) {
+            log.info(e.getMessage());
+            return ResponseBean.fail(ResponseCodeEnum.FILE_ERROR);
+        }
+        //获取当前关联公司信息
+        NeoCompany company = commonService.fetchCurrentCompany();
+        //公司税率默认为0
+        float rate = getRate(company.getId());
+        if (!company.getCompanyType()){
+            throw new NeoException("代理商不可进行充值操作");
+        }
+        NeoRechargeRecord rechargeRecord = new NeoRechargeRecord();
+        rechargeRecord.setCompanyId(company.getId());
+        //订单号使用雪花id
+        rechargeRecord.setOrderNumber(String.valueOf(Snowflake.INSTANCE.nextId()));
+        rechargeRecord.setPaymentAmount(icharge.getAmount());
+        rechargeRecord.setAccountAmount((1-rate)*icharge.getAmount());
+        rechargeRecord.setPaymentVoucher(fileName);
+        rechargeRecord.setInvoicingStatus(false);
+        rechargeRecord.setApprovalStatus(false);
+        rechargeRecord.setCreatorId(commonService.fetchUserByMobile().getId());
+        rechargeRecord.setCreateDate(new Date());
+        //添加充值记录
+        rechargeRecordMapper.insert(rechargeRecord);
+        //充值，更改财务表，余额和充值总额
+        refreshFinance(company.getId(),icharge.getAmount(),true);
+        return ResponseBean.success("充值成功");
+    }
+
+
+    /**
+     * 查询公司费率
+     * @param companyId
+     * @return
+     */
+    private float getRate(Integer companyId){
+        NeoFinanceExample financeExample = new NeoFinanceExample();
+        financeExample.createCriteria().andCompanyIdEqualTo(companyId)
+            .andStatusEqualTo(true);
+        List<NeoFinance> finances = financeMapper.selectByExample(financeExample);
+        if (finances==null||finances.size()!=1){
+            throw new NeoException("未找到当前公司相关财务信息");
+        }
+        float rate = finances.get(0).getRate();
+        if (rate<0){
+            throw new NeoException("当前公司费率错误");
+        }
+        return rate;
+    }
+
+    /**
+     * 公司财务操作
+     * （operation =true  ->   充值）
+     * （operation =false  ->   发放）
+     * @param companyId
+     * @param amount
+     * @param operation
+     * @return
+     */
+    public Boolean refreshFinance(Integer companyId,Double amount,boolean operation){
+        NeoFinanceExample financeExample = new NeoFinanceExample();
+        financeExample.createCriteria().andCompanyIdEqualTo(companyId);
+        financeExample.createCriteria().andStatusEqualTo(true);
+        List<NeoFinance> finances = financeMapper.selectByExample(financeExample);
+        if (finances==null||finances.size()!=1){
+            throw new NeoException("未找到当前公司相关财务信息");
+        }
+        NeoFinance finance = finances.get(0);
+        NeoFinance oldFiance = new NeoFinance();
+        oldFiance.setStatus(false);
+        oldFiance.setUpdateId(commonService.fetchUserByMobile().getId());
+        oldFiance.setUpdateDate(new Date());
+        financeMapper.updateByExampleSelective(oldFiance,financeExample);
+        //充值
+        if (operation){
+            finance.setId(null);
+            finance.setTotalRecharge(finance.getTotalRecharge()+amount);
+            finance.setBalance(finance.getBalance()+amount);
+            finance.setCreatorId(oldFiance.getUpdateId());
+            finance.setCreateDate(new Date());
+        }else {
+        //发放
+            finance.setId(null);
+            finance.setTotalIssued(finance.getTotalIssued()+amount);
+            finance.setBalance(finance.getBalance()-amount);
+            finance.setCreatorId(oldFiance.getUpdateId());
+            finance.setCreateDate(new Date());
+        }
+        financeMapper.insertSelective(finance);
+        return true;
     }
 }

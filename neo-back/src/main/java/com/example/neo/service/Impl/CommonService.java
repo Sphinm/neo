@@ -1,6 +1,9 @@
 package com.example.neo.service.Impl;
 
+import com.example.neo.mybatis.mapper.NeoCompanyMapper;
 import com.example.neo.mybatis.mapper.NeoUserMapper;
+import com.example.neo.mybatis.model.NeoCompany;
+import com.example.neo.mybatis.model.NeoCompanyExample;
 import com.example.neo.mybatis.model.NeoUser;
 import com.example.neo.mybatis.model.NeoUserExample;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +15,9 @@ import java.util.List;
 @Service
 public class CommonService {
     @Autowired
-    NeoUserMapper neoUserMapper;
+    private NeoUserMapper neoUserMapper;
+    @Autowired
+    private NeoCompanyMapper companyMapper;
     /**
      * 根据手机号获取用户信息
      *
@@ -27,6 +32,21 @@ public class CommonService {
             return null;
         }
         return users.get(0);
+    }
+
+    /**
+     * 获取当前用户关联公司信息
+     * @return
+     */
+    public NeoCompany fetchCurrentCompany(){
+        NeoUser user = fetchUserByMobile();
+        NeoCompanyExample companyExample = new NeoCompanyExample();
+        companyExample.createCriteria().andIdEqualTo(user.getRelatedId());
+        List<NeoCompany> companies = companyMapper.selectByExample(companyExample);
+        if (companies==null||companies.size()==0){
+            return null;
+        }
+        return companies.get(0);
     }
 
 }
