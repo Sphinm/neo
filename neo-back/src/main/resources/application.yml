@@ -61,3 +61,12 @@ neo:
     secret-key: 'uiewfb7busagf32yr'
   charge:
     filepath: C:/charge/
+
+pagehelper:
+  helper-dialect: mysql
+  #  分页合理化
+  reasonable: true
+  #支持通过 Mapper 接口参数来传递分页参数
+  support-methods-arguments: true
+  #支持startPage(Object params)方法
+  params: pageNum=pageNum;pageSize=pageSize;

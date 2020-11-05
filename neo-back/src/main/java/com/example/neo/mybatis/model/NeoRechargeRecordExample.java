@@ -445,6 +445,66 @@ public class NeoRechargeRecordExample {
             return (Criteria) this;
         }
 
+        public Criteria andRateIsNull() {
+            addCriterion("rate is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRateIsNotNull() {
+            addCriterion("rate is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRateEqualTo(Float value) {
+            addCriterion("rate =", value, "rate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRateNotEqualTo(Float value) {
+            addCriterion("rate <>", value, "rate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRateGreaterThan(Float value) {
+            addCriterion("rate >", value, "rate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRateGreaterThanOrEqualTo(Float value) {
+            addCriterion("rate >=", value, "rate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRateLessThan(Float value) {
+            addCriterion("rate <", value, "rate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRateLessThanOrEqualTo(Float value) {
+            addCriterion("rate <=", value, "rate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRateIn(List<Float> values) {
+            addCriterion("rate in", values, "rate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRateNotIn(List<Float> values) {
+            addCriterion("rate not in", values, "rate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRateBetween(Float value1, Float value2) {
+            addCriterion("rate between", value1, value2, "rate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRateNotBetween(Float value1, Float value2) {
+            addCriterion("rate not between", value1, value2, "rate");
+            return (Criteria) this;
+        }
+
         public Criteria andAccountAmountIsNull() {
             addCriterion("account_amount is null");
             return (Criteria) this;

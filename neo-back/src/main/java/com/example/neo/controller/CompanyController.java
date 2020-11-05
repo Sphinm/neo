@@ -29,7 +29,14 @@ public class CompanyController {
         return ResponseBean.success(companyList);
     }
 
-    @PostMapping("charge")
+    @PreAuthorize("hasAnyAuthority('charge_page')")
+    @GetMapping("/chargepage")
+    public ResponseBean getChargeInfo(){
+        return companyService.getChargeInfo();
+    }
+
+    @PreAuthorize("hasAnyAuthority('charge_post')")
+    @PostMapping("/chargepost")
     public ResponseBean charge(@RequestPart("file") MultipartFile file,@RequestPart("charge")ICharge icharge){
         log.info("{}",icharge.getAmount());
         if (file==null){
@@ -39,5 +46,11 @@ public class CompanyController {
             return ResponseBean.fail(ResponseCodeEnum.AMOUNT_NOT_VALID);
         }
         return companyService.charge(file,icharge);
+    }
+
+    @PreAuthorize("hasAnyAuthority('charge_list')")
+    @GetMapping("/chargelist")
+    public ResponseBean getChargeList(@RequestParam(value="pageNum" ,required =false, defaultValue = "1") int pageNum,@RequestParam(value="pageSize" ,required =false, defaultValue = "10") int pageSize){
+        return companyService.getChargeList(pageNum,pageSize);
     }
 }

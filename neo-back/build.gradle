@@ -76,6 +76,7 @@ dependencies {
     compile group: 'gradle.plugin.com.arenagod.gradle', name: 'mybatis-generator-plugin', version: '1.4'
     compile group: 'org.apache.poi', name: 'poi', version: '3.17'
     compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
+    compile group: 'com.github.pagehelper', name: 'pagehelper', version: '5.2.0'
 }
 
 test {

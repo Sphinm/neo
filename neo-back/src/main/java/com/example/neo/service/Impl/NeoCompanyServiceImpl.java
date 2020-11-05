@@ -3,7 +3,9 @@ package com.example.neo.service.Impl;
 import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.exception.NeoException;
 import com.example.neo.model.ICharge;
+import com.example.neo.model.IChargeInfo;
 import com.example.neo.model.ICompanyList;
+import com.example.neo.model.IFianceInfo;
 import com.example.neo.mybatis.mapper.NeoCompanyMapper;
 import com.example.neo.mybatis.mapper.NeoFinanceMapper;
 import com.example.neo.mybatis.mapper.NeoRechargeRecordMapper;
@@ -13,7 +15,10 @@ import com.example.neo.service.NeoCompanyService;
 import com.example.neo.utils.DoubleUtil;
 import com.example.neo.utils.ResponseBean;
 import com.example.neo.utils.Snowflake;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -25,9 +30,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -37,6 +40,8 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
     private NeoRechargeRecordMapper rechargeRecordMapper;
     @Autowired
     private NeoFinanceMapper financeMapper;
+    @Autowired
+    private NeoCompanyMapper companyMapper;
     @Autowired
     private CommonService commonService;
     @Value("${neo.charge.filepath}")
@@ -53,6 +58,17 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
 //            log.info("{}", item);
 //        }
         return null;
+    }
+
+    @Override
+    public String getCompanyNameByCompanyId(int companyId) {
+        NeoCompanyExample companyExample = new NeoCompanyExample();
+        companyExample.createCriteria().andIdEqualTo(companyId);
+        List<NeoCompany> companies = companyMapper.selectByExample(companyExample);
+        if (companies==null||companies.size()!=1){
+            return null;
+        }
+        return companies.get(0).getCompanyName();
     }
 
     @Override
@@ -111,6 +127,7 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
         rechargeRecord.setAccountAmount(DoubleUtil.formatDouble((1-rate)*icharge.getAmount()));
         log.info("到账金额为{}",DoubleUtil.formatDouble((1-rate)*icharge.getAmount()));
         rechargeRecord.setPaymentVoucher(fileName);
+        rechargeRecord.setRate(rate);
         rechargeRecord.setInvoicingStatus(false);
         rechargeRecord.setApprovalStatus(false);
         rechargeRecord.setCreatorId(commonService.fetchUserByMobile().getId());
@@ -122,6 +139,46 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
         return ResponseBean.success("充值成功");
     }
 
+    @Override
+    public ResponseBean getChargeInfo() {
+        NeoCompany company = commonService.fetchCurrentCompany();
+        NeoFinanceExample financeExample = new NeoFinanceExample();
+        financeExample.createCriteria().andCompanyIdEqualTo(company.getId())
+            .andStatusEqualTo(true);
+        List<NeoFinance> finances = financeMapper.selectByExample(financeExample);
+        if (finances==null||finances.size()!=1){
+            throw new NeoException("未找到当前公司相关财务信息");
+        }
+        NeoFinance finance = finances.get(0);
+        IFianceInfo fianceInfo = new IFianceInfo();
+        BeanUtils.copyProperties(finance,fianceInfo);
+        return ResponseBean.success(fianceInfo);
+    }
+
+    @Override
+    public ResponseBean getChargeList(int pageNum,int pageSize) {
+        NeoCompany company = commonService.fetchCurrentCompany();
+        NeoRechargeRecordExample rechargeRecordExample = new NeoRechargeRecordExample();
+        rechargeRecordExample.createCriteria().andCompanyIdEqualTo(company.getId());
+        PageHelper.startPage(pageNum,pageSize);
+        List<NeoRechargeRecord> records = rechargeRecordMapper.selectByExample(rechargeRecordExample);
+        PageInfo<NeoRechargeRecord> pageInfo = new PageInfo<>(records);
+        PageInfo<IChargeInfo> newPageInfo = new PageInfo<>();
+        BeanUtils.copyProperties(pageInfo,newPageInfo);
+        List<NeoRechargeRecord> mid = pageInfo.getList();
+        List<IChargeInfo> results = new ArrayList<>();
+        if (mid==null||mid.size()==0) {
+            return ResponseBean.success(newPageInfo);
+        }
+        for (NeoRechargeRecord record:mid){
+            IChargeInfo chargeInfo = new IChargeInfo();
+            BeanUtils.copyProperties(record,chargeInfo);
+            chargeInfo.setCompanyName(getCompanyNameByCompanyId(record.getCompanyId()));
+            results.add(chargeInfo);
+        }
+        newPageInfo.setList(results);
+        return ResponseBean.success(newPageInfo);
+    }
 
     /**
      * 查询公司费率
