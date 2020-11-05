@@ -4,6 +4,11 @@ spring:
     url: jdbc:mysql://localhost:3306/neo?useUnicode=true&useSSL=false&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true&connectTimeout=2000&serverTimezone=Asia/Shanghai
     username: root
     password: root
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
   profiles:
     active: local
   logging:
@@ -43,13 +48,16 @@ mybatis:
 #    map-underscore-to-camel-case: true
 
 server:
+  tomcat:
+    basedir: /usr/tmp/neo
   port: 8008
   servlet:
     context-path: /api
+
 
 neo:
   token:
     expired-seconds: 604800
     secret-key: 'uiewfb7busagf32yr'
   charge:
-    filepath: ./tmp/neo/charge
+    filepath: C:/charge/

@@ -10,6 +10,7 @@ import com.example.neo.mybatis.mapper.NeoRechargeRecordMapper;
 import com.example.neo.mybatis.mapper.NeoUserMapper;
 import com.example.neo.mybatis.model.*;
 import com.example.neo.service.NeoCompanyService;
+import com.example.neo.utils.DoubleUtil;
 import com.example.neo.utils.ResponseBean;
 import com.example.neo.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +22,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -54,6 +57,7 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
 
     @Override
     public ResponseBean charge(MultipartFile file, ICharge icharge) {
+        Double amount = DoubleUtil.formatDouble(icharge.getAmount());
         if (file.isEmpty()) {
             return ResponseBean.fail(ResponseCodeEnum.FILE_NOT_NULL);
         }
@@ -64,10 +68,21 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
         log.info("上传的后缀名为：" + suffixName);
         // 解决中文问题，liunx下中文路径，图片显示问题
-        // fileName = UUID.randomUUID() + suffixName;
+        fileName = UUID.randomUUID() + suffixName;
+        File file1 = new File(filePath);
+        if  (!file1 .exists()  && !file1 .isDirectory())
+        {
+            log.info("{}不存在，创建目录",filePath);
+            file1 .mkdir();
+        } else {
+            log.info("//目录存在");
+        }
         File dest = new File(filePath + fileName);
         // 检测是否存在目录
+        log.info(dest.getAbsolutePath());
+        log.info(dest.getParentFile().getAbsolutePath());
         if (!dest.getParentFile().exists()) {
+            log.info("目录不存在，创建目录");
             dest.getParentFile().mkdirs();
         }
         try {
@@ -83,6 +98,7 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
         NeoCompany company = commonService.fetchCurrentCompany();
         //公司税率默认为0
         float rate = getRate(company.getId());
+        log.info("公司费率为{}",rate);
         if (!company.getCompanyType()){
             throw new NeoException("代理商不可进行充值操作");
         }
@@ -90,8 +106,10 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
         rechargeRecord.setCompanyId(company.getId());
         //订单号使用雪花id
         rechargeRecord.setOrderNumber(String.valueOf(Snowflake.INSTANCE.nextId()));
-        rechargeRecord.setPaymentAmount(icharge.getAmount());
-        rechargeRecord.setAccountAmount((1-rate)*icharge.getAmount());
+        rechargeRecord.setPaymentAmount(amount);
+        log.info("充值金额为{}",amount);
+        rechargeRecord.setAccountAmount(DoubleUtil.formatDouble((1-rate)*icharge.getAmount()));
+        log.info("到账金额为{}",DoubleUtil.formatDouble((1-rate)*icharge.getAmount()));
         rechargeRecord.setPaymentVoucher(fileName);
         rechargeRecord.setInvoicingStatus(false);
         rechargeRecord.setApprovalStatus(false);
@@ -136,8 +154,8 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
      */
     public Boolean refreshFinance(Integer companyId,Double amount,boolean operation){
         NeoFinanceExample financeExample = new NeoFinanceExample();
-        financeExample.createCriteria().andCompanyIdEqualTo(companyId);
-        financeExample.createCriteria().andStatusEqualTo(true);
+        financeExample.createCriteria().andCompanyIdEqualTo(companyId)
+            .andStatusEqualTo(true);
         List<NeoFinance> finances = financeMapper.selectByExample(financeExample);
         if (finances==null||finances.size()!=1){
             throw new NeoException("未找到当前公司相关财务信息");
@@ -152,7 +170,7 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
         if (operation){
             finance.setId(null);
             finance.setTotalRecharge(finance.getTotalRecharge()+amount);
-            finance.setBalance(finance.getBalance()+amount);
+            finance.setBalance(finance.getBalance()+ DoubleUtil.formatDouble(amount*(1-finance.getRate())));
             finance.setCreatorId(oldFiance.getUpdateId());
             finance.setCreateDate(new Date());
         }else {

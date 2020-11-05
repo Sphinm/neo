@@ -30,7 +30,8 @@ public class CompanyController {
     }
 
     @PostMapping("charge")
-    public ResponseBean charge(@RequestParam("file") MultipartFile file, ICharge icharge){
+    public ResponseBean charge(@RequestPart("file") MultipartFile file,@RequestPart("charge")ICharge icharge){
+        log.info("{}",icharge.getAmount());
         if (file==null){
             return ResponseBean.fail(ResponseCodeEnum.FILE_NOT_NULL);
         }
