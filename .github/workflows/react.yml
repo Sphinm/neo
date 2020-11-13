@@ -29,7 +29,7 @@ jobs:
       uses: horochx/deploy-via-scp@master
       with: 
         local: /neo-fe/dist
-        remote: ${{ secrets.REMOTE }}
+        remote: ${{ secrets.REMOTE_FE }}
         host: ${{ secrets.HOST }}
         port: ${{ secrets.PORT }}
         user: ${{ secrets.USER }}

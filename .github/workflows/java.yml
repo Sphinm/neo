@@ -29,7 +29,7 @@ jobs:
       uses: horochx/deploy-via-scp@master
       with: 
         local: /neo-back/out/production
-        remote: ${{ secrets.REMOTE }}
+        remote: ${{ secrets.REMOTE_BACK }}
         host: ${{ secrets.HOST }}
         port: ${{ secrets.PORT }}
         user: ${{ secrets.USER }}
