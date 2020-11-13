@@ -24,7 +24,7 @@ jobs:
 
     - name: build
       run: |
-        cd neo/neo-fe
+        cd neo-fe
         npm install
         npm run build
     
@@ -50,7 +50,7 @@ jobs:
         java-version: 1.8
     - name: build java
       run: |
-        cd neo/neo-back
+        cd neo-back
         chmod +x gradlew
         ./gradlew build
     
