@@ -31,7 +31,7 @@ jobs:
         local: /neo-back
         remote: ${{ secrets.REMOTE_BACK }}
         host: ${{ secrets.HOST }}
-        port: ${{ secrets.PORT }}
+        # port: ${{ secrets.PORT }}
         user: ${{ secrets.USER }}
         key: ${{ secrets.ACCESS_TOKEN }}
     

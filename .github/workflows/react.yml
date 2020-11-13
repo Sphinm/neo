@@ -31,7 +31,7 @@ jobs:
         local: /neo-fe
         remote: ${{ secrets.REMOTE_FE }}
         host: ${{ secrets.HOST }}
-        port: ${{ secrets.PORT }}
+        # port: ${{ secrets.PORT }}
         user: ${{ secrets.USER }}
         key: ${{ secrets.ACCESS_TOKEN }}
     
