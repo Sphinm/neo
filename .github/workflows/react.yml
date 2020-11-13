@@ -21,7 +21,7 @@ jobs:
 
     - name: build
       run: |
-        cd /neo-fe
+        cd neo/neo-fe
         npm install
         npm run build
     
