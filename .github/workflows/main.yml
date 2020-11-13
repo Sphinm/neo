@@ -24,6 +24,7 @@ jobs:
 
     - name: build
       run: |
+        pwd
         cd neo-fe
         npm ci
         npm run build
@@ -31,7 +32,7 @@ jobs:
     - name: deploy to server
       uses: horochx/deploy-via-scp@master
       with: 
-        local: "/build/*"
+        local: "/"
         remote: ${{ secrets.REMOTE_FE }}
         host: ${{ secrets.HOST }}
         port: ${{ secrets.PORT }}
