@@ -30,9 +30,8 @@ jobs:
     
     - name: deploy to server
       uses: horochx/deploy-via-scp@master
-      run: pwd
       with: 
-        local: /home/runner/work/neo/neo/neo-fe/*
+        local: "/build/*"
         remote: ${{ secrets.REMOTE_FE }}
         host: ${{ secrets.HOST }}
         port: ${{ secrets.PORT }}
