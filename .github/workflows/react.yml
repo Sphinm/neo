@@ -1,7 +1,5 @@
-# This workflow will build a Java project with Gradle
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 
-name: Java CI with Gradle
+name: Neo FE CI
 
 on:
   push:
@@ -15,20 +13,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
+
+    - name: use nodejs
+      uses: actions/setup-node@v1
       with:
-        java-version: 1.8
-    - name: build java
+        node-version: 12.x
+
+    - name: build
       run: |
-        cd /neo-back
-        chmod +x gradlew
-        ./gradlew build
+        cd /neo-fe
+        npm install
+        npm run build
     
     - name: deploy to server
       uses: horochx/deploy-via-scp@master
       with: 
-        local: /neo-back/out/production
+        local: /neo-fe/dist
         remote: ${{ secrets.REMOTE }}
         host: ${{ secrets.HOST }}
         port: ${{ secrets.PORT }}
