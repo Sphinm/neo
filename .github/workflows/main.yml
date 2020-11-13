@@ -29,6 +29,10 @@ jobs:
         npm run build
     
     - name: deploy to server
+      run:  | 
+        echo 1111111
+        pwd
+        echo 222222
       uses: horochx/deploy-via-scp@master
       with: 
         local: ./build/*
