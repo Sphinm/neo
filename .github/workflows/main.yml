@@ -28,6 +28,7 @@ jobs:
         cd neo-fe
         echo 1111111
         pwd
+        echo 222
     
     - name: deploy to server
       uses: horochx/deploy-via-scp@master
