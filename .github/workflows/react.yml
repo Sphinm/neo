@@ -21,8 +21,9 @@ jobs:
 
     - name: build
       run: |
-        cd ../../neo-fe
-        npm ci
+        echo pwd
+        cd /neo-fe
+        npm install
         npm run build
     
     - name: deploy to server
