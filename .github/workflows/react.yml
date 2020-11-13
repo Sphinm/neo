@@ -19,11 +19,11 @@ jobs:
       with:
         node-version: 12.x
 
-    # - name: build
-      # run: |
-      #   cd neo/neo-fe
-      #   npm install
-      #   npm run build
+    - name: build
+      run: |
+        cd ../../neo-fe
+        npm ci
+        npm run build
     
     - name: deploy to server
       uses: horochx/deploy-via-scp@master
