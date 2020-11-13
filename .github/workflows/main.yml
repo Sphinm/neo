@@ -33,6 +33,10 @@ jobs:
       with: 
         SOURCE: "neo-fe/build/*"
         ARGS: "-rltgoDzvO"
+        # TARGET: var/neo/neo-fe
+        # REMOTE_HOST: 47.110.82.92
+        # REMOTE_PORT: 22
+        # REMOTE_USER: root
         TARGET: ${{ secrets.REMOTE_FE }}
         REMOTE_HOST: ${{ secrets.HOST }}
         REMOTE_PORT: ${{ secrets.PORT }}
@@ -60,8 +64,12 @@ jobs:
       with: 
         SOURCE: "neo-back/out/*"
         ARGS: "-rltgoDzvO"
-        TARGET: ${{ secrets.REMOTE_BACK }}
-        REMOTE_HOST: ${{ secrets.HOST }}
-        REMOTE_PORT: ${{ secrets.PORT }}
-        REMOTE_USER: ${{ secrets.USER }}
+        # TARGET: ${{ secrets.REMOTE_FE }}
+        # REMOTE_HOST: ${{ secrets.HOST }}
+        # REMOTE_PORT: ${{ secrets.PORT }}
+        # REMOTE_USER: ${{ secrets.USER }}
+        TARGET: var/neo/neo-back
+        REMOTE_HOST: 47.110.82.92
+        REMOTE_PORT: 22
+        REMOTE_USER: root
         SSH_PRIVATE_KEY: ${{ secrets.ACCESS_TOKEN }}
