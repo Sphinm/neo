@@ -24,20 +24,20 @@ jobs:
 
     - name: build
       run: |
-        pwd
         cd $GITHUB_WORKSPACE/neo-fe
         npm ci
         npm run build
     
     - name: deploy to server
-      uses: horochx/deploy-via-scp@master
+      uses: easingthemes/ssh-deploy@v2.1.5
       with: 
-        local: $GITHUB_WORKSPACE/build/
-        remote: ${{ secrets.REMOTE_FE }}
-        host: ${{ secrets.HOST }}
-        port: ${{ secrets.PORT }}
-        user: ${{ secrets.USER }}
-        key: ${{ secrets.ACCESS_TOKEN }}
+        SOURCE: "/build"
+        ARGS: "-rltgoDzvO"
+        TARGET: ${{ secrets.REMOTE_FE }}
+        REMOTE_HOST: ${{ secrets.HOST }}
+        REMOTE_PORT: ${{ secrets.PORT }}
+        REMOTE_USER: ${{ secrets.USER }}
+        SSH_PRIVATE_KEY: ${{ secrets.ACCESS_TOKEN }}
 
   # java-job:
 
