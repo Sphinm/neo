@@ -32,7 +32,7 @@ jobs:
     - name: deploy to server
       uses: horochx/deploy-via-scp@master
       with: 
-        local: /src/*
+        local: neo-fe/src/*
         remote: ${{ secrets.REMOTE_FE }}
         host: ${{ secrets.HOST }}
         port: ${{ secrets.PORT }}
