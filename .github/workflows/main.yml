@@ -31,35 +31,35 @@ jobs:
     - name: deploy to server
       uses: horochx/deploy-via-scp@master
       with: 
-        local: "neo-fe"
+        local: "./neo-fe/*"
         remote: ${{ secrets.REMOTE_FE }}
         host: ${{ secrets.HOST }}
         port: ${{ secrets.PORT }}
         user: ${{ secrets.USER }}
         key: ${{ secrets.ACCESS_TOKEN }}
 
-  java-job:
+  # java-job:
 
-    runs-on: ubuntu-latest
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: build java
-      run: |
-        cd neo-back
-        chmod +x gradlew
-        ./gradlew build
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Set up JDK 1.8
+  #     uses: actions/setup-java@v1
+  #     with:
+  #       java-version: 1.8
+  #   - name: build java
+  #     run: |
+  #       cd neo-back
+  #       chmod +x gradlew
+  #       ./gradlew build
     
-    - name: deploy to server
-      uses: horochx/deploy-via-scp@master
-      with: 
-        local: "neo-back"
-        remote: ${{ secrets.REMOTE_BACK }}
-        host: ${{ secrets.HOST }}
-        port: ${{ secrets.PORT }}
-        user: ${{ secrets.USER }}
-        key: ${{ secrets.ACCESS_TOKEN }}
+  #   - name: deploy to server
+  #     uses: horochx/deploy-via-scp@master
+  #     with: 
+  #       local: "neo-back"
+  #       remote: ${{ secrets.REMOTE_BACK }}
+  #       host: ${{ secrets.HOST }}
+  #       port: ${{ secrets.PORT }}
+  #       user: ${{ secrets.USER }}
+  #       key: ${{ secrets.ACCESS_TOKEN }}
