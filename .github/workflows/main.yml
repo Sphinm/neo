@@ -31,7 +31,7 @@ jobs:
     - name: deploy to server
       uses: easingthemes/ssh-deploy@v2.1.5
       with: 
-        SOURCE: "/build"
+        SOURCE: "neo-fe/build"
         ARGS: "-rltgoDzvO"
         TARGET: ${{ secrets.REMOTE_FE }}
         REMOTE_HOST: ${{ secrets.HOST }}
