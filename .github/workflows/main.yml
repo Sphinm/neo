@@ -25,14 +25,14 @@ jobs:
     - name: build
       run: |
         pwd
-        cd neo-fe
+        cd $GITHUB_WORKSPACE/neo-fe
         npm ci
         npm run build
     
     - name: deploy to server
       uses: horochx/deploy-via-scp@master
       with: 
-        local: build/*
+        local: $GITHUB_WORKSPACE/build/
         remote: ${{ secrets.REMOTE_FE }}
         host: ${{ secrets.HOST }}
         port: ${{ secrets.PORT }}
