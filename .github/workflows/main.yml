@@ -25,14 +25,11 @@ jobs:
     - name: build
       run: |
         cd neo-fe
-        npm ci
-        npm run build
-    
-    - name: deploy to server
-      run:  | 
         echo 1111111
         pwd
         echo 222222
+    
+    - name: deploy to server
       uses: horochx/deploy-via-scp@master
       with: 
         local: ./build/*
