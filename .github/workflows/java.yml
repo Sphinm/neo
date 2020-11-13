@@ -28,7 +28,7 @@ jobs:
     - name: deploy to server
       uses: horochx/deploy-via-scp@master
       with: 
-        local: "./neo-back"
+        local: "./*"
         remote: ${{ secrets.REMOTE_BACK }}
         host: ${{ secrets.HOST }}
         # port: ${{ secrets.PORT }}
