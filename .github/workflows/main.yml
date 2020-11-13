@@ -17,23 +17,21 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    # - name: use nodejs
-    #   uses: actions/setup-node@v1
-    #   with:
-    #     node-version: 12.x
+    - name: use nodejs
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
 
     - name: build
       run: |
-        pwd
         cd neo-fe
-        echo 1111111
-        pwd
-        echo 222
+        npm ci
+        npm run build
     
     - name: deploy to server
       uses: horochx/deploy-via-scp@master
       with: 
-        local: ./src/*
+        local: /home/runner/work/neo/neo/neo-fe/*
         remote: ${{ secrets.REMOTE_FE }}
         host: ${{ secrets.HOST }}
         port: ${{ secrets.PORT }}
