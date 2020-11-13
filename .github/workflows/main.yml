@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  build:
+  java-job:
 
     runs-on: ubuntu-latest
 
@@ -30,6 +30,34 @@ jobs:
       with: 
         local: "./*"
         remote: ${{ secrets.REMOTE_BACK }}
+        host: ${{ secrets.HOST }}
+        # port: ${{ secrets.PORT }}
+        user: ${{ secrets.USER }}
+        key: ${{ secrets.ACCESS_TOKEN }}
+    
+  fe-job:
+  
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: use nodejs
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+
+    # - name: build
+    #   run: |
+    #     cd /neo-fe
+    #     npm install
+    #     npm run build
+    
+    - name: deploy to server
+      uses: horochx/deploy-via-scp@master
+      with: 
+        local: "./*"
+        remote: ${{ secrets.REMOTE_FE }}
         host: ${{ secrets.HOST }}
         # port: ${{ secrets.PORT }}
         user: ${{ secrets.USER }}
