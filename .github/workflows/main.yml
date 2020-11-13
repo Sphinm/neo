@@ -24,13 +24,14 @@ jobs:
 
     - name: build
       run: |
+        pwd
         cd neo-fe
         echo 1111111
         pwd
-        echo 222222
     
     - name: deploy to server
       uses: horochx/deploy-via-scp@master
+      pwd
       with: 
         local: neo-fe/src/*
         remote: ${{ secrets.REMOTE_FE }}
