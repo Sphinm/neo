@@ -25,13 +25,13 @@ jobs:
     - name: build
       run: |
         cd neo-fe
-        npm install
+        npm ci
         npm run build
     
     - name: deploy to server
       uses: horochx/deploy-via-scp@master
       with: 
-        local: "./"
+        local: "neo-fe"
         remote: ${{ secrets.REMOTE_FE }}
         host: ${{ secrets.HOST }}
         port: ${{ secrets.PORT }}
@@ -57,7 +57,7 @@ jobs:
     - name: deploy to server
       uses: horochx/deploy-via-scp@master
       with: 
-        local: "./"
+        local: "neo-back"
         remote: ${{ secrets.REMOTE_BACK }}
         host: ${{ secrets.HOST }}
         port: ${{ secrets.PORT }}
