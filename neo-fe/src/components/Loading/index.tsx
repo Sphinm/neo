@@ -6,7 +6,7 @@ const Loading = () => {
   return (
     <div className={style['loading_container']}>
       <Spin size="large" />
-      <span>Page Loading...</span>
+      <span>Loading...</span>
     </div>
   )
 }
