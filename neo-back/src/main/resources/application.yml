@@ -48,8 +48,8 @@ mybatis:
 #    map-underscore-to-camel-case: true
 
 server:
-  tomcat:
-    basedir: /usr/tmp/neo
+#  tomcat:
+#    basedir: /usr/tmp/neo
   port: 8008
   servlet:
     context-path: /api

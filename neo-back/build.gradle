@@ -11,11 +11,6 @@ buildscript {
         maven { url 'https://maven.aliyun.com/nexus/content/repositories/google'}
         maven { url 'https://maven.aliyun.com/nexus/content/repositories/central'}
         mavenCentral()
-
-        /*
-		 google()
-        jcenter()
-		*/
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -42,11 +37,6 @@ allprojects {
         maven { url 'https://maven.aliyun.com/nexus/content/repositories/google'}
         maven { url 'https://maven.aliyun.com/nexus/content/repositories/central'}
         mavenCentral()
-
-        /*
-		 google()
-        jcenter()
-		*/
     }
 }
 dependencies {
@@ -87,8 +77,8 @@ configurations {
     mybatisGenerator
 }
 // mybatis-generator.xml 配置路径
-//这里会遇到个问题：MyBats Generator 通过xml生成，有日志但是没有生成文件成功的问题，
-////原因：mac下是找不到 ./src 路径的，需要全路径，如下配置。windiows则为src/main/resources/generator.xml
+// 这里会遇到个问题：MyBats Generator 通过xml生成，有日志但是没有生成文件成功的问题，
+// 原因：mac下是找不到 ./src 路径的，需要全路径，如下配置。windows 则为 src/main/resources/generator.xml
 mybatisGenerator {
     verbose = true
     configFile = 'src/main/resources/mybatisGenerator.xml'
@@ -105,5 +95,8 @@ apply plugin: 'java'
 jar {
     from('src/main/java'){
         include '**/*Mapper.xml'
+    }
+    manifest {
+        attributes 'Main-Class': 'com.example.neo.NeoApplication'
     }
 }
