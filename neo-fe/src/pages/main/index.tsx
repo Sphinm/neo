@@ -1,7 +1,6 @@
 import Loading from '@/components/Loading'
-// import MainBreadCrumb from '@/components/breadcrumb'
 import HeaderRightMenu from '@/components/HeadeiRightMenu/headerRightMenu'
-import React from 'react'
+import React, { useEffect } from 'react'
 import RoutesAuth from '../routes.auth'
 import SideMenu from '@/components/Menu/menu'
 import { Layout } from 'antd'
@@ -13,7 +12,7 @@ const { Header, Footer, Content } = Layout
 const Main = () => {
   const [authenticating, setAuthenticating] = React.useState(true)
 
-  React.useEffect(() => {
+  useEffect(() => {
     setAuthenticating(false)
   }, [])
 
@@ -22,7 +21,6 @@ const Main = () => {
       <SideMenu />
       <Layout>
         <Header className={styles.header}>
-          {/* <MainBreadCrumb /> */}
           <HeaderRightMenu />
         </Header>
         <Content className={styles.content}>

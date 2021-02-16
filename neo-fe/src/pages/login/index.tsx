@@ -6,7 +6,6 @@ import { login } from '@/apis/auth'
 import { handleError } from '@/libs/axios'
 import styles from './index.styl'
 import { RoleStore } from '@/store/roleStore'
-// import { useObserver } from 'mobx-react'
 import { AuthType } from '@/enums/role'
 
 const Login = () => {
@@ -26,7 +25,7 @@ const Login = () => {
         password,
       })
       if (data?.token) {
-        localStorage.setItem('token', data.token)
+        await localStorage.setItem('token', data.token)
         await RoleStore.fetchCurrentRole()
         RoleStore.currentRole?.roleType === AuthType.EMPLOYEE ? history.push('/main/report') : history.push('/main')
       }
