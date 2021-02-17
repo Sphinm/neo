@@ -131,9 +131,10 @@ public class UserServiceImpl implements UserService {
             NeoCompanyExample example = new NeoCompanyExample();
             example.createCriteria().andContactTelEqualTo(companyInfo.getContactTel());
             List<NeoCompany> companyList = companyMapper.selectByExample(example);
-            if (companyList != null && companyList.size() == 1) {
-                companyId = companyList.get(0).getId();
+            if (companyList.size() != 1) {
+                throw new RuntimeException("用户手机号已存在");
             }
+            companyId = companyList.get(0).getId();
         }
 
         // 创建用户表
@@ -141,14 +142,14 @@ public class UserServiceImpl implements UserService {
         userDto.setEmail(userInfo.getEmail());
         userDto.setUsername(userInfo.getUsername());
         userDto.setMobile(userInfo.getMobile());
-        userDto.setPassword(passwordEncoder.encode(userInfo.getPassword() != null ? userInfo.getPassword() : "123456"));
+        userDto.setRelatedId(companyId);
         userDto.setIsLocked(userType != null);
         userDto.setRoleId(userType.getId());
-        userDto.setRelatedId(companyId);
         userDto.setCreatorId(userId);
         userDto.setUpdateId(userId);
         userDto.setCreateDate(date);
         userDto.setUpdateDate(date);
+        userDto.setPassword(passwordEncoder.encode(userInfo.getPassword() != null ? userInfo.getPassword() : "123456"));
 
         try {
             neoUserMapper.insert(userDto);

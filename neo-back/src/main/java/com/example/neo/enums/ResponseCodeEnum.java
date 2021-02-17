@@ -11,14 +11,14 @@ public enum ResponseCodeEnum {
     PARAMETER_ERROR("system.validate.error"),
     NOT_FOUND("system.error.not_found"),
     LOGIN_FAILED("用户名或密码错误"),
-    @Deprecated
     PASSWORD_INCORRECT("password incorrect"),
-    @Deprecated
     NO_LOGIN("The user is not logged in"),
-
     FILE_NOT_NULL("文件不可为空"),
     FILE_ERROR("文件上传失败"),
-    AMOUNT_NOT_VALID("金额不合法");
+    AMOUNT_NOT_VALID("金额不合法"),
+    // go on
+    CREATE_USER_FAILED("创建用户失败"),
+    MOBILE_EQUALS("手机号重复");
 
     public String message;
 

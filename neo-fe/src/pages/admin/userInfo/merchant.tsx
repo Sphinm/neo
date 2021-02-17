@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Table, Popconfirm, Button, Divider, Modal, Input, Form, Row, Col, Spin } from 'antd'
+import { Card, Table, Popconfirm, Button, Divider, Modal, Input, Form, Row, Col, Spin, notification } from 'antd'
 import { createNewUser, fetchMerchant, updateMerchant, deleteMerchant } from "@/apis/user"
 import { AuthType } from '@/enums/role'
 import { handleError } from '@/libs/axios'
@@ -144,7 +144,9 @@ export const Merchant = () => {
       }
       fetchMerchantInfo()
     } catch (error) {
-      handleError(error)
+      notification.error({
+        message: "用户手机号已存在",
+      })
     }
     setVisible(false)
   }

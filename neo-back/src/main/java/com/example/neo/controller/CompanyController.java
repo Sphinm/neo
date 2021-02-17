@@ -11,10 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -42,7 +39,7 @@ public class CompanyController {
         if (file==null){
             return ResponseBean.fail(ResponseCodeEnum.FILE_NOT_NULL);
         }
-        if (icharge==null||icharge.getAmount()<=0){
+        if (icharge == null||icharge.getAmount()<=0){
             return ResponseBean.fail(ResponseCodeEnum.AMOUNT_NOT_VALID);
         }
         return companyService.charge(file,icharge);
