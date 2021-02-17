@@ -5,18 +5,22 @@ import { handleError } from '@/libs/axios';
 
 export const DataQuery = () => {
   const [tableData, setTableData] = useState<any>([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     fetchAgentData()
-  }, []);
+  }, [])
 
  
   const fetchAgentData = async() => {
     try {
+      setLoading(true)
       const { data } = await fetchAllData();
       setTableData(data)
     } catch (error) {
       handleError(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -38,5 +42,5 @@ export const DataQuery = () => {
     { title: '已提现金额', dataIndex: 'totalAmount' },
   ]
 
-  return <Table rowKey="id" columns={columns} expandable={{ expandedRowRender }} dataSource={tableData} />
+  return <Table loading={loading} rowKey="id" columns={columns} expandable={{ expandedRowRender }} dataSource={tableData} />
 }

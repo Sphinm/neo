@@ -31,7 +31,7 @@ export const Recharge = () => {
     return isJpgOrPng && isLt2M
   }
 
-  const getBase64 = (img: Blob, callback: Function) => {
+  const getBase64 = (img: Blob, callback: any) => {
     const reader = new FileReader()
     reader.addEventListener('load', () => callback(reader.result))
     reader.readAsDataURL(img)
