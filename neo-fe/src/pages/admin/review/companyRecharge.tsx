@@ -70,7 +70,6 @@ export const CompanyRecharge = () => {
   ]
 
   const checkRecharge = async(id: string) => {
-    console.log('checkRecharge', id)
     try {
       await reviewRecharge(id);
       fetchRechargeInfo()
