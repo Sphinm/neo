@@ -5,6 +5,7 @@ import com.example.neo.model.*;
 import com.example.neo.mybatis.mapper.*;
 import com.example.neo.mybatis.model.*;
 import com.example.neo.service.UserService;
+import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -72,7 +73,7 @@ public class UserServiceImpl implements UserService {
      * neo_company_relation 记录非员工角色的关联关系（管理员 - 代理商，代理商 - 公司， 管理员 - 公司）
      * neo_employee 记录员工角色与公司的关联关系
      */
-    public void createUser(ICreateUser user, UserTypeEnum userType) {
+    public ResponseBean createUser(ICreateUser user, UserTypeEnum userType) {
         NeoUser neoUser = commonService.fetchUserByMobile();
         // 获取当前用户 id
         int userId = neoUser.getId();
@@ -84,7 +85,7 @@ public class UserServiceImpl implements UserService {
         // 当前用户是 merchant, 创建 company 用户，涉及 neo_user、neo_company 和 neo_company_relation 表
         if (neoUser.getRoleId() == 2 && userType == UserTypeEnum.COMPANY) {
            int companyId = createInfo(user, userType, userId);
-            createCompanyRelated(companyId, neoUser);
+           createCompanyRelated(companyId, neoUser);
         }
 
         // 当前用户是 company 且需要创建 employee 的情况，涉及 neo_user 和 neo_employee 表
@@ -92,6 +93,7 @@ public class UserServiceImpl implements UserService {
             createInfo(user, userType, userId);
             createEmployee(neoUser);
         }
+        return ResponseBean.success();
     }
 
     /**
@@ -129,16 +131,19 @@ public class UserServiceImpl implements UserService {
         if (user.getCompanyInfo().getCompanyName() != null && userType != UserTypeEnum.EMPLOYEE) {
             insertUserInfo(companyInfo, userType);
             NeoCompanyExample example = new NeoCompanyExample();
+            // 通过手机号做唯一区分，比如同一个手机号只能有一个代理商或者公司，但是允许一个手机号即是代理商又是公司
             example.createCriteria().andContactTelEqualTo(companyInfo.getContactTel());
             List<NeoCompany> companyList = companyMapper.selectByExample(example);
-            if (companyList.size() != 1) {
-                throw new RuntimeException("用户手机号已存在");
-            }
+            // TODO: 代理商关联表添加记录以及公司用户可以手机号共用
+            
+//            if (companyList.size() != 1) {
+//                throw new RuntimeException("用户手机号已存在");
+//            }
             companyId = companyList.get(0).getId();
         }
 
         // 创建用户表
-        userDto.setAccount(userInfo.getMobile()); // account 暂时不用
+        userDto.setAccount(userInfo.getMobile());
         userDto.setEmail(userInfo.getEmail());
         userDto.setUsername(userInfo.getUsername());
         userDto.setMobile(userInfo.getMobile());

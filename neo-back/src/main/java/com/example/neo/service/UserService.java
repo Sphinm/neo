@@ -6,6 +6,7 @@ import com.example.neo.model.IDataQuery;
 import com.example.neo.model.IEmployee;
 import com.example.neo.model.IGetUser;
 import com.example.neo.mybatis.model.NeoCompany;
+import com.example.neo.utils.ResponseBean;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public interface UserService {
     /**
      * 创建新用户
      */
-    void createUser(ICreateUser user, UserTypeEnum userType);
+    ResponseBean createUser(ICreateUser user, UserTypeEnum userType);
 
     /**
      * 添加用户公司信息

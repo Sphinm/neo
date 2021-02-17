@@ -142,9 +142,9 @@ const Dashboard = () => {
                     <Descriptions.Item label="公司固话">
                       <span className={style['item-title']}>{userInfo?.companyFixedTel}</span>
                     </Descriptions.Item>
-                    <Descriptions.Item label="费率">
+                    {RoleStore.currentRole?.roleType !== 'ADMIN' && (<Descriptions.Item label="费率">
                       <span className={style['item-title']}>{userInfo?.companyRate ?? 0}%</span>
-                    </Descriptions.Item>
+                    </Descriptions.Item>)}
                     <Descriptions.Item label="所属行业">
                       <span className={style['item-title']}>{userInfo?.companyIndustry}</span>
                     </Descriptions.Item>
@@ -253,11 +253,12 @@ const Dashboard = () => {
                 <Input placeholder="请输入公司固定电话"></Input>
               </Form.Item>
             </Col>
-
+            
             <Col span={8}>
-              <Form.Item label="费率" name="companyRate" rules={[{ required: true, message: '请输入费率' }]}>
+            {RoleStore.currentRole?.roleType !== 'ADMIN' && (<Form.Item label="费率" name="companyRate" rules={[{ required: true, message: '请输入费率' }]}>
                 <Input placeholder="请输入费率"></Input>
-              </Form.Item>
+              </Form.Item>)}
+              
             </Col>
             <Col span={8}>
               <Form.Item label="所属行业" name="companyIndustry" rules={[{ required: true, message: '请输入所属行业' }]}>
