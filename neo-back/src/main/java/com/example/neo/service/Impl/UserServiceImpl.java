@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService {
             example.createCriteria().andContactTelEqualTo(companyInfo.getContactTel());
             List<NeoCompany> companyList = companyMapper.selectByExample(example);
             // TODO: 代理商关联表添加记录以及公司用户可以手机号共用
-            
+
 //            if (companyList.size() != 1) {
 //                throw new RuntimeException("用户手机号已存在");
 //            }
