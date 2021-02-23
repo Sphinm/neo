@@ -105,6 +105,11 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    /**
+     * 插入代理商公司关系表
+     * @param companyId
+     * @param neoUser
+     */
     private void createCompanyRelated(int companyId, NeoUser neoUser) {
         Date date = new Date();
         NeoCompanyRelation relation = new NeoCompanyRelation();
@@ -134,11 +139,10 @@ public class UserServiceImpl implements UserService {
             // 通过手机号做唯一区分，比如同一个手机号只能有一个代理商或者公司，但是允许一个手机号即是代理商又是公司
             example.createCriteria().andContactTelEqualTo(companyInfo.getContactTel());
             List<NeoCompany> companyList = companyMapper.selectByExample(example);
-            // TODO: 代理商关联表添加记录以及公司用户可以手机号共用
 
-//            if (companyList.size() != 1) {
-//                throw new RuntimeException("用户手机号已存在");
-//            }
+            if (companyList.size() != 1) {
+                throw new RuntimeException("用户手机号已存在");
+            }
             companyId = companyList.get(0).getId();
         }
 

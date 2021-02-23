@@ -13,26 +13,27 @@ export const Withdraw = () => {
 
   const onFinish = (values: any) => {
     console.log('onFinish:', values)
+    if (!totalMoney) return
   }
 
   const handleChangeMoney = (value: any) => {
-    setTotalMoney(200 - value)
+    setTotalMoney(200 - value > 0 ? 200 - value : 0)
   }
 
   return (
     <Card title="提现">
       <div className={styles['recharge']}>
         <Form className={styles['recharge-form']} form={form} {...layout} onFinish={onFinish}>
-          <Form.Item label="当前可用余额" name="username2">
+          <Form.Item label="当前可用余额" name="leftMoeny">
             <div style={{ textAlign: 'left' }}>￥200</div>
           </Form.Item>
-          <Form.Item label="提现金额" name="username" rules={[{ required: true, message: '请输入提现金额' }]}>
+          <Form.Item label="提现金额" name="withdrawMoney" rules={[{ required: true, message: '请输入提现金额' }]}>
             <Input allowClear placeholder="请输入提现金额（元）" onChange={e => handleChangeMoney(e.target.value)} />
           </Form.Item>
-          <Form.Item label="快递公司" name="leftmoney" rules={[{ required: true, message: '请输入快递公司' }]}>
+          <Form.Item label="快递公司" name="deliveryCompany" rules={[{ required: true, message: '请输入快递公司' }]}>
             <Input placeholder="请输入快递公司" />
           </Form.Item>
-          <Form.Item label="快递单号" name="leftmoney" rules={[{ required: true, message: '请输入快递单号' }]}>
+          <Form.Item label="快递单号" name="deliveryNumber" rules={[{ required: true, message: '请输入快递单号' }]}>
             <Input placeholder="请输入快递单号" />
           </Form.Item>
           <Form.Item label="提现后可用余额" name="totalmoney">
