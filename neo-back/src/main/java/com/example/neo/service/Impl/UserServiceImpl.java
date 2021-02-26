@@ -1,5 +1,6 @@
 package com.example.neo.service.Impl;
 
+import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.enums.UserTypeEnum;
 import com.example.neo.model.*;
 import com.example.neo.mybatis.mapper.*;
@@ -189,17 +190,25 @@ public class UserServiceImpl implements UserService {
      * 更新公司用户信息
      */
     @Override
-    public void updateUserInfo(NeoCompany companyInfo) {
+    public ResponseBean updateUserInfo(NeoCompany companyInfo) {
         NeoUser user = commonService.fetchUserByMobile();
-        updateCommonUser(companyInfo, user, "user");
+        return updateCommonUser(companyInfo, user, "user");
     }
 
-    private void updateCommonUser(NeoCompany companyInfo, NeoUser user, String from) {
-        NeoCompany userDo = commonUserInfo(companyInfo, user);
-        userDo.setId(from.equals("user") ? user.getId() : companyInfo.getId());
-        userDo.setCreatorId(companyInfo.getCreatorId());
-        userDo.setCreateDate(companyInfo.getCreateDate());
-        companyMapper.updateByPrimaryKeySelective(userDo);
+    private ResponseBean updateCommonUser(NeoCompany companyInfo, NeoUser user, String from) {
+        try {
+            NeoCompany userDo = commonUserInfo(companyInfo, user);
+            userDo.setId(from.equals("user") ? user.getId() : companyInfo.getId());
+            userDo.setCreatorId(companyInfo.getCreatorId());
+            userDo.setCreateDate(companyInfo.getCreateDate());
+            companyMapper.updateByPrimaryKeySelective(userDo);
+            NeoCompanyExample neoCompanyExample = new NeoCompanyExample();
+            neoCompanyExample.createCriteria().andIdEqualTo(user.getId());
+            List<NeoCompany> results = companyMapper.selectByExample(neoCompanyExample);
+            return ResponseBean.success(results.get(0));
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.CREATE_USER_FAILED);
+        }
     }
 
     /**

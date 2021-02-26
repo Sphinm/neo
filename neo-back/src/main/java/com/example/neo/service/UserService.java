@@ -45,7 +45,7 @@ public interface UserService {
     /**
      * 更新用户公司信息
      */
-    void updateUserInfo(NeoCompany companyInfo);
+    ResponseBean updateUserInfo(NeoCompany companyInfo);
 
     /**
      * 查询员工

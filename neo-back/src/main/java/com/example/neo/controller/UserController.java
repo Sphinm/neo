@@ -45,8 +45,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('user_view')")
     @PostMapping("/update/userInfo")
     public ResponseBean updateUserInfo(@RequestBody NeoCompany companyInfo) {
-        userService.updateUserInfo(companyInfo);
-        return ResponseBean.success();
+        return userService.updateUserInfo(companyInfo);
     }
 
     @PreAuthorize("hasAnyAuthority('user_merchant')")

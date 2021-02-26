@@ -78,19 +78,8 @@
     </springProfile>
 
     <springProfile name="production">
-        <!-- https://github.com/logstash/logstash-logback-encoder#custom-fields -->
-        <!-- https://balamaci.ro/java-app-monitoring-with-elk-logstash/ -->
         <appender name="STASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-            <destination>172.21.194.178:51401</destination>
-            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-                <customFields>
-                    {
-                    "project": "xx-id",
-                    "module": "${APPLICATION_NAME:-unknown}",
-                    "appVersion": "${APPLICATION_VERSION:-unknown}"
-                    }
-                </customFields>
-            </encoder>
+            <!--<destination>172.21.194.178:51401</destination>-->
             <filter class="ch.qos.logback.classic.filter.LevelFilter">
                 <level>DEBUG</level>
                 <onMatch>DENY</onMatch>
