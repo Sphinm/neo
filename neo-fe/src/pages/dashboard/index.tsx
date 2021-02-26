@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { RoleStore } from '@/store/roleStore'
 import { useObserver } from 'mobx-react'
-import { Card, Button, Row, Col, Descriptions, Modal, Input, Form, Spin } from 'antd'
+import { Card, Button, Row, Col, Descriptions, Modal, Input, Form, Spin, Divider, message } from 'antd'
 import history from '@/libs/history'
 import echarts from 'echarts/lib/echarts'
 import 'echarts/lib/chart/line'
@@ -73,10 +73,12 @@ const Dashboard = () => {
         // update
         const { data } = await updateUserInfo({ ...userInfo, ...values })
         setUserInfo(data)
+        message.success('信息修改成功')
       } else {
         // insert
         const { data } = await insertUserInfo(values, AuthType.ADMIN)
         setUserInfo(data)
+        message.success('创建信息成功')
       }
     } catch (error) {
       handleError(error)
@@ -151,26 +153,26 @@ const Dashboard = () => {
                     <Descriptions.Item label="公司地址">
                       <span className={style['item-title']}>{userInfo?.companyLocation}</span>
                     </Descriptions.Item>
-                    <Descriptions.Item>
-                      <span></span>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="收件人">
-                      <span className={style['item-title']}>{userInfo?.recipientName}</span>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="收件人手机号">
-                      <span className={style['item-title']}>{userInfo?.recipientTel}</span>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="收件地址">
-                      <span className={style['item-title']}>{userInfo?.recipientAddress}</span>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="开户行">
-                      <span className={style['item-title']}>{userInfo.companyBankName}</span>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="银行账号">
-                      <span className={style['item-title']}>{userInfo?.companyBankNumber}</span>
-                    </Descriptions.Item>
                   </>
                 )}
+              </Descriptions>
+              <Divider />
+              <Descriptions>
+                <Descriptions.Item label="收件人">
+                  <span className={style['item-title']}>{userInfo?.recipientName}</span>
+                </Descriptions.Item>
+                <Descriptions.Item label="收件人手机号">
+                  <span className={style['item-title']}>{userInfo?.recipientTel}</span>
+                </Descriptions.Item>
+                <Descriptions.Item label="收件地址">
+                  <span className={style['item-title']}>{userInfo?.recipientAddress}</span>
+                </Descriptions.Item>
+                <Descriptions.Item label="开户行">
+                  <span className={style['item-title']}>{userInfo.companyBankName}</span>
+                </Descriptions.Item>
+                <Descriptions.Item label="银行账号">
+                  <span className={style['item-title']}>{userInfo?.companyBankNumber}</span>
+                </Descriptions.Item>
               </Descriptions>
               {/* Echart */}
               {RoleStore.currentRole?.roleType !== 'ADMIN' && (

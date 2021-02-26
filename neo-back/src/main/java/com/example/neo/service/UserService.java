@@ -2,7 +2,6 @@ package com.example.neo.service;
 
 import com.example.neo.enums.UserTypeEnum;
 import com.example.neo.model.ICreateUser;
-import com.example.neo.model.IDataQuery;
 import com.example.neo.model.IEmployee;
 import com.example.neo.model.IGetUser;
 import com.example.neo.mybatis.model.NeoCompany;
@@ -60,6 +59,6 @@ public interface UserService {
     /**
      * 数据查询
      */
-    List<IDataQuery> fetchDataQuery();
+    ResponseBean fetchDataQuery();
 
 }

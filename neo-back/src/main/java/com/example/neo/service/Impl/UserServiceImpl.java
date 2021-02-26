@@ -337,56 +337,60 @@ public class UserServiceImpl implements UserService {
 
     /**
      *
-     * @return List<IDataQuery>
+     * @return ResponseBean
      */
     @Override
-    public List<IDataQuery> fetchDataQuery() {
-        NeoCompanyExample companyExample = new NeoCompanyExample();
-        companyExample.createCriteria().andCompanyTypeEqualTo(false);
-        List<NeoCompany> agentList = companyMapper.selectByExample(companyExample);
-        List<IDataQuery> list = new ArrayList<>();
-        for (NeoCompany agent : agentList) {
-            IDataQuery data = new IDataQuery();
-            // 查询代理商的余额信息
-
-            NeoFinanceExample financeOne = new NeoFinanceExample();
-            financeOne.createCriteria().andCompanyIdEqualTo(agent.getId());
-            List<NeoFinance> financeListOne = financeMapper.selectByExample(financeOne);
-            NeoWithdrawExample withdrawExample = new NeoWithdrawExample();
-            withdrawExample.createCriteria().andUserIdEqualTo(agent.getId());
-            List<NeoWithdraw> withdrawList = withdrawMapper.selectByExample(withdrawExample);
-            int totalWithdraw = 0;
-            for (NeoWithdraw withdraw : withdrawList) {
-                totalWithdraw += withdraw.getAmount();
-            }
-            data.setId(agent.getId());
-            data.setMerchantName(agent.getCompanyName());
-            data.setTotalAmount(totalWithdraw);
-            data.setBalance(financeListOne.size() == 1 ? financeListOne.get(0).getBalance(): 0);
-
-            // 查询公司的金额信息
-            NeoCompanyRelationExample relationExample = new NeoCompanyRelationExample();
-            relationExample.createCriteria().andAgentIdEqualTo(agent.getId());
-            List<NeoCompanyRelation> relationList = relationMapper.selectByExample(relationExample);
-            for (NeoCompanyRelation relation : relationList) {
-                NeoFinanceExample financeExample = new NeoFinanceExample();
-                financeExample.createCriteria().andCompanyIdEqualTo(relation.getCompanyId());
-                List<NeoFinance> financeList = financeMapper.selectByExample(financeExample);
-                List<IDataQueryCompany> queryList = new ArrayList<>();
-                for (NeoFinance item : financeList) {
-                    IDataQueryCompany dataOne = new IDataQueryCompany();
-                    dataOne.setId(item.getId());
-                    dataOne.setBalance(item.getBalance());
-                    dataOne.setTotalIssued(item.getTotalIssued());
-                    dataOne.setTotalRecharge(item.getTotalRecharge());
-                    NeoCompany queryCompany = companyMapper.selectByPrimaryKey(item.getCompanyId());
-                    dataOne.setCompanyName(queryCompany.getCompanyName());
-                    queryList.add(dataOne);
+    public ResponseBean fetchDataQuery() {
+        try {
+            NeoCompanyExample companyExample = new NeoCompanyExample();
+            companyExample.createCriteria().andCompanyTypeEqualTo(false);
+            List<NeoCompany> agentList = companyMapper.selectByExample(companyExample);
+            List<IDataQuery> list = new ArrayList<>();
+            for (NeoCompany agent : agentList) {
+                IDataQuery data = new IDataQuery();
+                // 查询代理商的余额信息
+                NeoFinanceExample financeOne = new NeoFinanceExample();
+                financeOne.createCriteria().andCompanyIdEqualTo(agent.getId());
+                List<NeoFinance> financeListOne = financeMapper.selectByExample(financeOne);
+                NeoWithdrawExample withdrawExample = new NeoWithdrawExample();
+                withdrawExample.createCriteria().andUserIdEqualTo(agent.getId());
+                List<NeoWithdraw> withdrawList = withdrawMapper.selectByExample(withdrawExample);
+                int totalWithdraw = 0;
+                for (NeoWithdraw withdraw : withdrawList) {
+                    totalWithdraw += withdraw.getAmount();
                 }
-                data.setCompanyInfo(queryList);
+                data.setId(agent.getId());
+                data.setMerchantName(agent.getCompanyName());
+                data.setTotalAmount(totalWithdraw);
+                data.setBalance(financeListOne.size() == 1 ? financeListOne.get(0).getBalance(): 0);
+
+                // 查询公司的金额信息
+                NeoCompanyRelationExample relationExample = new NeoCompanyRelationExample();
+                relationExample.createCriteria().andAgentIdEqualTo(agent.getId());
+                List<NeoCompanyRelation> relationList = relationMapper.selectByExample(relationExample);
+                for (NeoCompanyRelation relation : relationList) {
+                    NeoFinanceExample financeExample = new NeoFinanceExample();
+                    financeExample.createCriteria().andCompanyIdEqualTo(relation.getCompanyId());
+                    List<NeoFinance> financeList = financeMapper.selectByExample(financeExample);
+                    List<IDataQueryCompany> queryList = new ArrayList<>();
+                    for (NeoFinance item : financeList) {
+                        IDataQueryCompany dataOne = new IDataQueryCompany();
+                        dataOne.setId(item.getId());
+                        dataOne.setBalance(item.getBalance());
+                        dataOne.setTotalIssued(item.getTotalIssued());
+                        dataOne.setTotalRecharge(item.getTotalRecharge());
+                        NeoCompany queryCompany = companyMapper.selectByPrimaryKey(item.getCompanyId());
+                        dataOne.setCompanyName(queryCompany.getCompanyName());
+                        queryList.add(dataOne);
+                    }
+                    data.setCompanyInfo(queryList);
+                }
+                list.add(data);
             }
-            list.add(data);
+            return ResponseBean.success(list);
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
         }
-        return list;
+
     }
 }
