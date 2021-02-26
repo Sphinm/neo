@@ -27,8 +27,10 @@ const responseInterceptor = (response: AxiosResponse) => {
   // 拦截 200 的错误
   const { data } = response
 
-  if (data.code !== 'SUCCESS') {
-    throw new Error(data.message)
+  if (data?.code !== 'SUCCESS') {
+    notification.error({
+      message: '系统错误，请联系管理员',
+    })
   } else {
     return response.data
   }

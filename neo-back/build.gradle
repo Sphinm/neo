@@ -25,7 +25,7 @@ apply plugin: 'org.springframework.boot'
 //引入 mybatis-generator 插件
 apply plugin: "com.arenagod.gradle.MybatisGenerator"
 group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 sourceCompatibility = '1.8'
 
 allprojects {

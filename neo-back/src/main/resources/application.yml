@@ -17,7 +17,7 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
-    password:
+    password: neo
   # 最大空闲连接数
     jedis:
       pool:
