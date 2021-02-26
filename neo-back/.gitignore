@@ -3,6 +3,7 @@ HELP.md
 build/
 logs/
 .idea
+dump.rdb
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
