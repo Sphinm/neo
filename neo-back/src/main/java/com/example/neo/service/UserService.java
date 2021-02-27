@@ -54,11 +54,16 @@ public interface UserService {
     /**
      * delete user
      */
-    void deleteEmployee(Integer employeeId);
+    void deleteEmployee(int employeeId);
 
     /**
      * 数据查询
      */
     ResponseBean fetchDataQuery();
+
+    /**
+     * 通过 merchantId 查询底下公司列表
+     */
+    ResponseBean fetchCompanyListByMerchantId(int merchantId);
 
 }

@@ -87,4 +87,10 @@ public class UserController {
     public ResponseBean fetchDataQuery() {
         return userService.fetchDataQuery();
     }
+
+    @PreAuthorize("hasAnyAuthority('user_dataquery')")
+    @GetMapping("/fetch/company-list")
+    public ResponseBean fetchDataQuery(@RequestParam("merchantId") int merchantId) {
+        return userService.fetchCompanyListByMerchantId(merchantId);
+    }
 }

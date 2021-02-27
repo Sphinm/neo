@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Table } from 'antd'
-import { fetchAllData } from '@/apis/user';
+import { fetchAllData, fetchCompanyByMerchantId } from '@/apis/user';
 import { handleError } from '@/libs/axios';
 
 export const DataQuery = () => {
   const [tableData, setTableData] = useState<any>([])
+  const [companyData, setCompanyData] = useState<any>([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -24,7 +25,19 @@ export const DataQuery = () => {
     }
   }
 
-  const expandedRowRender = (data: any) => {
+  const fetchCompanyByMerchant = async(id: string) => {
+    try {
+      setLoading(true)
+      const { data } = await fetchCompanyByMerchantId(id);
+      setCompanyData(data)
+    } catch (error) {
+      handleError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const expandedRowRender = () => {
     const columns = [
       { title: '公司ID', dataIndex: 'id' },
       { title: '公司名称', dataIndex: 'companyName' },
@@ -32,7 +45,7 @@ export const DataQuery = () => {
       { title: '发放金额', dataIndex: 'totalIssued' },
       { title: '剩余金额', dataIndex: 'balance' },
     ]
-    return <Table rowKey="id" columns={columns} dataSource={data.companyInfo || []} pagination={false} />
+    return <Table rowKey="id" columns={columns} dataSource={companyData} pagination={false} />
   }
 
   const columns = [
@@ -42,5 +55,14 @@ export const DataQuery = () => {
     { title: '已提现金额', dataIndex: 'totalAmount' },
   ]
 
-  return <Table loading={loading} rowKey="id" columns={columns} expandable={{ expandedRowRender }} dataSource={tableData} />
+  const onExpand = (expanded: boolean, record: any) => {
+    console.log(11, expanded, record)
+    if (expanded) {
+      fetchCompanyByMerchant(record.id)
+    } else {
+      setCompanyData([])
+    }
+  }
+
+  return <Table loading={loading} rowKey="id" columns={columns} expandable={{ expandedRowRender, onExpand}} dataSource={tableData} />
 }
