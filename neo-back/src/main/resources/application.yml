@@ -48,19 +48,21 @@ mybatis:
 #    map-underscore-to-camel-case: true
 
 server:
-#  tomcat:
-#    basedir: /usr/tmp/neo
   port: 8008
   servlet:
     context-path: /api
 
-
 neo:
+  # 可以运行时注入，存 github cli 中
   token:
     expired-seconds: 604800
     secret-key: 'uiewfb7busagf32yr'
   charge:
-    filepath: C:/charge/
+    filepath: /usr/neo/upload/charge
+  # 上传完税图片路径
+  upload:
+    tax: /usr/neo/upload/tax/
+#     tax: /Users/sumin/Desktop/Java/
 
 pagehelper:
   helper-dialect: mysql
@@ -70,3 +72,5 @@ pagehelper:
   support-methods-arguments: true
   #支持startPage(Object params)方法
   params: pageNum=pageNum;pageSize=pageSize;
+
+

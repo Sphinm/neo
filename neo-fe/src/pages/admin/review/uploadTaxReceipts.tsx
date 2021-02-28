@@ -3,11 +3,13 @@ import { CloudUploadOutlined } from '@ant-design/icons'
 import { Card, Table, Button, Popconfirm, Badge, Divider, Modal, Form, Input, Upload, message } from 'antd'
 import { handleError } from '@/libs/axios'
 import { fetchReviewTax, reviewTax } from '@/apis/review'
+import { RcFile } from 'antd/lib/upload/interface'
 
 export const UploadTaxReceipts = () => {
   const [form] = Form.useForm()
   const [visible, setVisible] = useState(false)
   const [tableData, setTableData] = useState([])
+  const [uploadPath, setUploadPath] = useState('')
   
   useEffect(() => {
     fetchBillInfo()
@@ -22,18 +24,37 @@ export const UploadTaxReceipts = () => {
     }
   }
 
+  const beforeUpload = (file: RcFile, FileList: RcFile[]) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+    if (!isJpgOrPng) {
+      message.error('只能上传 JPG/PNG 图片!')
+    }
+    const isLt5M = file.size / 1024 / 1024 < 5
+    if (!isLt5M) {
+      message.error('文件大小不能超过 5M')
+    }
+    return isJpgOrPng && isLt5M
+  }
+
   const options = {
     name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    action: '/api/upload/tax',
+    accept: "image/png, image/jpeg",
     headers: {
-      authorization: 'authorization-text',
+      'Authorization': `Bearer ` + localStorage.getItem('token'),
     },
+    beforeUpload: beforeUpload,
     onChange(info: any) {
       if (info.file.status !== 'uploading') {
         console.log(info.file, info.fileList)
       }
       if (info.file.status === 'done') {
-        message.success(`${info.file.name} 上传成功`)
+        if (info.file.response.code === 'SUCCESS') {
+          message.success(`${info.file.name} 上传成功`)
+          setUploadPath(info.file.response.data)
+        } else {
+          message.error(`${info.file.name} 上传失败`)
+        }
       } else if (info.file.status === 'error') {
         message.error(`${info.file.name} 上传失败`)
       }

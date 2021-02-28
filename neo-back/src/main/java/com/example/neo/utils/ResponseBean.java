@@ -14,7 +14,7 @@ public class ResponseBean<T> {
         return responseBean;
     }
 
-    public static <T> ResponseBean<T> success(T data) {
+    public static <T> ResponseBean success(T data) {
         ResponseBean responseBean = new ResponseBean<T>();
         responseBean.setCode(ResponseCodeEnum.SUCCESS.getCode());
         responseBean.setData(data);

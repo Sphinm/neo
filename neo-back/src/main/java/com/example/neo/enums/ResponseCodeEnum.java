@@ -18,6 +18,7 @@ public enum ResponseCodeEnum {
     CREATE_USER_FAILED("创建用户失败"),
     MOBILE_EQUALS("手机号重复");
 
+
     public String message;
 
     ResponseCodeEnum(String message) {

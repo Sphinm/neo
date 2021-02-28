@@ -1,6 +1,7 @@
 package com.example.neo.service;
 
 import com.example.neo.utils.ResponseBean;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface ReviewService {
     ResponseBean fetchReviewCompanyList();
@@ -27,5 +28,5 @@ public interface ReviewService {
 
     ResponseBean reviewTax(int id);
 
-    ResponseBean uploadTax();
+    ResponseBean uploadTax(MultipartFile file);
 }

@@ -8,8 +8,11 @@ import com.example.neo.service.ReviewService;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +35,9 @@ public class ReviewServiceImpl implements ReviewService {
     NeoWithdrawMapper withdrawMapper;
     @Autowired
     NeoCompanyTaxMapper taxMapper;
+
+    @Value("${neo.upload.tax}")
+    private String filePath;
 
     @Override
     public ResponseBean fetchReviewCompanyList() {
@@ -200,11 +206,19 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ResponseBean uploadTax() {
+    public ResponseBean uploadTax(MultipartFile file) {
+        if (file.isEmpty() || file.getSize() <= 0){
+            return ResponseBean.fail(ResponseCodeEnum.FILE_NOT_NULL);
+        }
+        String fileName = file.getOriginalFilename();
+        String dest = this.filePath + fileName;
+        String virtualPath = "http://axinlinggong.com/images/tax/" + fileName;
+        File newFile = new File(dest);
         try {
-            return ResponseBean.success();
+            file.transferTo(newFile);
+            return ResponseBean.success(virtualPath);
         } catch (Exception e) {
-            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+            return ResponseBean.fail(ResponseCodeEnum.FILE_ERROR);
         }
     }
 }
