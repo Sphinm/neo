@@ -116,7 +116,7 @@ export const UploadTaxReceipts = () => {
 
   const handleOk = async () => {
     const values = await form.validateFields()
-    console.log(11, values)
+    console.log(11, values, uploadPath)
     setVisible(false)
   }
 
