@@ -348,6 +348,7 @@ public class UserServiceImpl implements UserService {
             relationExample.createCriteria().andAgentIdEqualTo(merchantId);
             List<NeoCompanyRelation> relationList = relationMapper.selectByExample(relationExample);
             List<IDataQueryCompany> queryList = new ArrayList<>();
+
             for (NeoCompanyRelation relation : relationList) {
                 NeoFinanceExample financeExample = new NeoFinanceExample();
                 financeExample.createCriteria().andCompanyIdEqualTo(relation.getCompanyId());
