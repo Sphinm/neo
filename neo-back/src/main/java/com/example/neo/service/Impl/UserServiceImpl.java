@@ -41,29 +41,33 @@ public class UserServiceImpl implements UserService {
     /**
      * 获取用户信息
      */
-    public IGetUser fetchUserInfo() {
-        IGetUser u = new IGetUser();
-        NeoUser user = commonService.fetchUserByMobile();
-        NeoCompanyExample companyExample = new NeoCompanyExample();
-        // company 主键 id 等于 user 表的 related_id
-        companyExample.createCriteria().andIdEqualTo(user.getRelatedId());
-        List<NeoCompany> companyInfo = companyMapper.selectByExample(companyExample);
-        if (companyInfo != null && companyInfo.size() == 1) {
-            u.setUserInfo(companyInfo.get(0));
-        }
+    public ResponseBean fetchUserInfo() {
+       try {
+           IGetUser u = new IGetUser();
+           NeoUser user = commonService.fetchUserByMobile();
+           NeoCompanyExample companyExample = new NeoCompanyExample();
+           // company 主键 id 等于 user 表的 related_id
+           companyExample.createCriteria().andIdEqualTo(user.getRelatedId());
+           List<NeoCompany> companyInfo = companyMapper.selectByExample(companyExample);
+           if (companyInfo != null && companyInfo.size() == 1) {
+               u.setUserInfo(companyInfo.get(0));
+           }
 
-        NeoRoleExample roleExample = new NeoRoleExample();
-        roleExample.createCriteria().andIdEqualTo(user.getRoleId());
-        List<NeoRole> roles = neoRoleMapper.selectByExample(roleExample);
-        if (roles != null && roles.size() == 1) {
-            u.setRoleName(roles.get(0).getRoleName());
-            u.setRoleType(roles.get(0).getRoleType());
-        }
-        u.setUserName(user.getUsername());
-        u.setEmail(user.getEmail());
-        u.setMobile(user.getMobile());
-        u.setIsLocked(user.getIsLocked() ? 1 : 0);
-        return u;
+           NeoRoleExample roleExample = new NeoRoleExample();
+           roleExample.createCriteria().andIdEqualTo(user.getRoleId());
+           List<NeoRole> roles = neoRoleMapper.selectByExample(roleExample);
+           if (roles != null && roles.size() == 1) {
+               u.setRoleName(roles.get(0).getRoleName());
+               u.setRoleType(roles.get(0).getRoleType());
+           }
+           u.setUserName(user.getUsername());
+           u.setEmail(user.getEmail());
+           u.setMobile(user.getMobile());
+           u.setIsLocked(user.getIsLocked() ? 1 : 0);
+           return ResponseBean.success(u);
+       } catch (Exception e) {
+           return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+       }
     }
 
     /**
@@ -173,17 +177,22 @@ public class UserServiceImpl implements UserService {
      * 创建公司用户信息
      */
     @Override
-    public void insertUserInfo(NeoCompany companyInfo, UserTypeEnum userType) {
-        Date date = new Date();
-        NeoUser neoUser = commonService.fetchUserByMobile();
-        NeoCompany company = commonUserInfo(companyInfo, neoUser);
-        company.setCreatorId(neoUser.getId());
-        company.setCreateDate(date);
-        // 如果是 roleId 为 1 则是管理员创建， status 为 1，表示正常，其他则需要审核
-        company.setCompanyStatus(neoUser.getRoleId() == 1);
-        // companyType 为2 是代理商、3是公司
-        company.setCompanyType(userType.getId() == 3);
-        companyMapper.insert(company);
+    public ResponseBean insertUserInfo(NeoCompany companyInfo, UserTypeEnum userType) {
+        try {
+            Date date = new Date();
+            NeoUser neoUser = commonService.fetchUserByMobile();
+            NeoCompany company = commonUserInfo(companyInfo, neoUser);
+            company.setCreatorId(neoUser.getId());
+            company.setCreateDate(date);
+            // 如果是 roleId 为 1 则是管理员创建， status 为 1，表示正常，其他则需要审核
+            company.setCompanyStatus(neoUser.getRoleId() == 1);
+            // companyType 为2 是代理商、3是公司
+            company.setCompanyType(userType.getId() == 3);
+            companyMapper.insert(company);
+            return ResponseBean.success();
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.CREATE_USER_FAILED);
+        }
     }
 
     /**
@@ -242,97 +251,120 @@ public class UserServiceImpl implements UserService {
      * @param userType 代理商
      */
     @Override
-    public List<ICreateUser> fetchMerchantInfo(UserTypeEnum userType) {
-        NeoUserExample userExample = new NeoUserExample();
-        NeoCompanyExample example = new NeoCompanyExample();
-        userExample.createCriteria().andRoleIdEqualTo(userType.getId());
-        // userType 为 merchant，需要为 false，为 company 则为 true
-        example.createCriteria().andCompanyTypeEqualTo(userType == UserTypeEnum.COMPANY);
-        List<NeoUser> userList = neoUserMapper.selectByExample(userExample);
-        List<NeoCompany> companyList = companyMapper.selectByExample(example);
+    public ResponseBean fetchMerchantInfo(UserTypeEnum userType) {
+        try {
+            NeoUserExample userExample = new NeoUserExample();
+            NeoCompanyExample example = new NeoCompanyExample();
+            userExample.createCriteria().andRoleIdEqualTo(userType.getId());
+            // userType 为 merchant，需要为 false，为 company 则为 true
+            example.createCriteria().andCompanyTypeEqualTo(userType == UserTypeEnum.COMPANY);
+            List<NeoUser> userList = neoUserMapper.selectByExample(userExample);
+            List<NeoCompany> companyList = companyMapper.selectByExample(example);
 
-        List<ICreateUser> list = new ArrayList<>();
-        for (NeoCompany company : companyList) {
-            for (NeoUser user : userList) {
-                if (user.getRelatedId().equals(company.getId()) && user.getIsLocked()) {
-                    ICreateUser createUser = new ICreateUser();
-                    createUser.setUserInfo(user);
-                    createUser.setCompanyInfo(company);
-                    list.add(createUser);
+            List<ICreateUser> list = new ArrayList<>();
+            for (NeoCompany company : companyList) {
+                for (NeoUser user : userList) {
+                    if (user.getRelatedId().equals(company.getId()) && user.getIsLocked()) {
+                        ICreateUser createUser = new ICreateUser();
+                        createUser.setUserInfo(user);
+                        createUser.setCompanyInfo(company);
+                        list.add(createUser);
+                    }
                 }
             }
+            return ResponseBean.success(list);
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
         }
-        return list;
     }
 
     @Override
-    public void updateMerchantInfo(ICreateUser user, UserTypeEnum userType) {
+    public ResponseBean updateMerchantInfo(ICreateUser user, UserTypeEnum userType) {
         NeoUser userInfo = user.getUserInfo();
         NeoCompany companyInfo = user.getCompanyInfo();
         updateCommonUser(companyInfo, userInfo, "company");
-        updateUser(userInfo);
+        return updateUser(userInfo);
     }
 
-    private void updateUser(NeoUser user) {
-        Date date = new Date();
-        NeoUser userDto = new NeoUser();
-        userDto.setId(user.getId());
-        userDto.setEmail(user.getEmail());
-        userDto.setUsername(user.getUsername());
-        userDto.setMobile(user.getMobile());
-        userDto.setIsLocked(user.getIsLocked());
-        userDto.setRoleId(user.getRoleId());
-        userDto.setRelatedId(user.getRelatedId());
-        userDto.setCreatorId(user.getCreatorId());
-        userDto.setUpdateId(user.getUpdateId());
-        userDto.setCreateDate(user.getCreateDate());
-        userDto.setUpdateDate(date);
-        if (user.getPassword() != null && user.getPassword().length() > 0) {
-            userDto.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-        neoUserMapper.updateByPrimaryKeySelective(userDto);
-    }
-
-    @Override
-    public void deleteMerchantInfo(int id) {
-        NeoUserExample userExample = new NeoUserExample();
-        userExample.createCriteria().andRelatedIdEqualTo(id);
-        List<NeoUser> userList = neoUserMapper.selectByExample(userExample);
-        if (userList != null && userList.size() == 1) {
-            userList.get(0).setIsLocked(false);
-            neoUserMapper.updateByExample(userList.get(0), userExample);
+    private ResponseBean updateUser(NeoUser user) {
+        try {
+            Date date = new Date();
+            NeoUser userDto = new NeoUser();
+            userDto.setId(user.getId());
+            userDto.setEmail(user.getEmail());
+            userDto.setUsername(user.getUsername());
+            userDto.setMobile(user.getMobile());
+            userDto.setIsLocked(user.getIsLocked());
+            userDto.setRoleId(user.getRoleId());
+            userDto.setRelatedId(user.getRelatedId());
+            userDto.setCreatorId(user.getCreatorId());
+            userDto.setUpdateId(user.getUpdateId());
+            userDto.setCreateDate(user.getCreateDate());
+            userDto.setUpdateDate(date);
+            if (user.getPassword() != null && user.getPassword().length() > 0) {
+                userDto.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+            neoUserMapper.updateByPrimaryKeySelective(userDto);
+            return ResponseBean.success();
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
         }
     }
 
     @Override
-    public List<IEmployee> fetchEmployee() {
-        NeoEmployeeExample example = new NeoEmployeeExample();
-        example.createCriteria().andIsLockedEqualTo(false);
-        List<NeoEmployee> employeeList = employeeMapper.selectByExample(example);
-        List<IEmployee> list = new ArrayList<>();
-        for (NeoEmployee item : employeeList) {
-            IEmployee employee = new IEmployee();
-            employee.setId(item.getId());
-            NeoCompany companyInfo = companyMapper.selectByPrimaryKey(item.getCompanyId());
-            employee.setCompanyName(companyInfo.getCompanyName());
-            employee.setIdVerify(item.getIdVerify());
-            employee.setIsSignUp(item.getIsSignup());
-            employee.setUserName(item.getName());
-            employee.setUserMobile(item.getTel());
-            list.add(employee);
+    public ResponseBean deleteMerchantInfo(int id) {
+        try {
+            NeoUserExample userExample = new NeoUserExample();
+            userExample.createCriteria().andRelatedIdEqualTo(id);
+            List<NeoUser> userList = neoUserMapper.selectByExample(userExample);
+            if (userList != null && userList.size() == 1) {
+                userList.get(0).setIsLocked(false);
+                neoUserMapper.updateByExample(userList.get(0), userExample);
+            }
+            return ResponseBean.success();
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
         }
+    }
 
-        return list;
+    @Override
+    public ResponseBean fetchEmployee() {
+        try {
+            NeoEmployeeExample example = new NeoEmployeeExample();
+            example.createCriteria().andIsLockedEqualTo(false);
+            List<NeoEmployee> employeeList = employeeMapper.selectByExample(example);
+            List<IEmployee> list = new ArrayList<>();
+            for (NeoEmployee item : employeeList) {
+                IEmployee employee = new IEmployee();
+                employee.setId(item.getId());
+                NeoCompany companyInfo = companyMapper.selectByPrimaryKey(item.getCompanyId());
+                employee.setCompanyName(companyInfo.getCompanyName());
+                employee.setIdVerify(item.getIdVerify());
+                employee.setIsSignUp(item.getIsSignup());
+                employee.setUserName(item.getName());
+                employee.setUserMobile(item.getTel());
+                list.add(employee);
+            }
+
+            return ResponseBean.success(list);
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+        }
     }
 
     /**
      * delete user
      */
     @Override
-    public void deleteEmployee(int employeeId) {
-        NeoEmployee employee = employeeMapper.selectByPrimaryKey(employeeId);
-        employee.setIsLocked(true);
-        employeeMapper.updateByPrimaryKeySelective(employee);
+    public ResponseBean deleteEmployee(int employeeId) {
+        try {
+            NeoEmployee employee = employeeMapper.selectByPrimaryKey(employeeId);
+            employee.setIsLocked(true);
+            employeeMapper.updateByPrimaryKeySelective(employee);
+            return ResponseBean.success();
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+        }
     }
 
     /**

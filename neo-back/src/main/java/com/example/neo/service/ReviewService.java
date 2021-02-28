@@ -1,34 +1,31 @@
 package com.example.neo.service;
 
-import com.example.neo.model.IReviewCompany;
-import com.example.neo.mybatis.model.*;
-
-import java.util.List;
+import com.example.neo.utils.ResponseBean;
 
 public interface ReviewService {
-    List<IReviewCompany> fetchReviewCompanyList();
+    ResponseBean fetchReviewCompanyList();
 
-    void reviewCompany(int id);
+    ResponseBean reviewCompany(int id);
 
-    List<NeoRechargeRecord> fetchReviewRechargeList();
+    ResponseBean fetchReviewRechargeList();
 
-    void reviewRecharge(int id);
+    ResponseBean reviewRecharge(int id);
 
-    List<NeoInvoice> fetchReviewInvoiceList();
+    ResponseBean fetchReviewInvoiceList();
 
-    void reviewInvoice(int id);
+    ResponseBean reviewInvoice(int id);
 
-    List<NeoIssue> fetchReviewProvideList();
+    ResponseBean fetchReviewProvideList();
 
-    void reviewProvide(int id);
+    ResponseBean reviewProvide(int id);
 
-    List<NeoWithdraw> fetchReviewWithdrawList();
+    ResponseBean fetchReviewWithdrawList();
 
-    void reviewWithdraw(int id);
+    ResponseBean reviewWithdraw(int id);
 
-    List<NeoCompanyTax> fetchReviewTaxList();
+    ResponseBean fetchReviewTaxList();
 
-    void reviewTax(int id);
+    ResponseBean reviewTax(int id);
 
-    void uploadTax();
+    ResponseBean uploadTax();
 }

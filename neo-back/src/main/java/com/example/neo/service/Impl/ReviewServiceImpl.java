@@ -1,9 +1,11 @@
 package com.example.neo.service.Impl;
 
+import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.IReviewCompany;
 import com.example.neo.mybatis.mapper.*;
 import com.example.neo.mybatis.model.*;
 import com.example.neo.service.ReviewService;
+import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,118 +34,177 @@ public class ReviewServiceImpl implements ReviewService {
     NeoCompanyTaxMapper taxMapper;
 
     @Override
-    public List<IReviewCompany> fetchReviewCompanyList() {
-        NeoCompanyRelationExample example = new NeoCompanyRelationExample();
-        example.createCriteria().andIsCheckedEqualTo(false);
-        List<NeoCompanyRelation> relationList = relationMapper.selectByExample(example);
-        List<IReviewCompany> list = new ArrayList<>();
-        for (NeoCompanyRelation item : relationList) {
-            IReviewCompany dto = new IReviewCompany();
-            dto.setId(item.getId());
-            NeoCompany company = companyMapper.selectByPrimaryKey(item.getCompanyId());
-            dto.setCompanyName(company.getCompanyName());
-            dto.setBankName(company.getCompanyBankName());
-            dto.setBankCode(company.getCompanyBankNumber());
-            dto.setCompanyAddress(company.getCompanyLocation());
-            dto.setCompanyTax(company.getCompanyTax());
-            dto.setContactName(company.getContactName());
-            dto.setContactTel(company.getContactTel());
-            dto.setRate(company.getCompanyRate());
-            dto.setIsChecked(item.getIsChecked());
-            dto.setCheckTime(item.getUpdateDate());
-            list.add(dto);
+    public ResponseBean fetchReviewCompanyList() {
+
+        try {
+            NeoCompanyRelationExample example = new NeoCompanyRelationExample();
+            example.createCriteria().andIsCheckedEqualTo(false);
+            List<NeoCompanyRelation> relationList = relationMapper.selectByExample(example);
+            List<IReviewCompany> list = new ArrayList<>();
+            for (NeoCompanyRelation item : relationList) {
+                IReviewCompany dto = new IReviewCompany();
+                dto.setId(item.getId());
+                NeoCompany company = companyMapper.selectByPrimaryKey(item.getCompanyId());
+                dto.setCompanyName(company.getCompanyName());
+                dto.setBankName(company.getCompanyBankName());
+                dto.setBankCode(company.getCompanyBankNumber());
+                dto.setCompanyAddress(company.getCompanyLocation());
+                dto.setCompanyTax(company.getCompanyTax());
+                dto.setContactName(company.getContactName());
+                dto.setContactTel(company.getContactTel());
+                dto.setRate(company.getCompanyRate());
+                dto.setIsChecked(item.getIsChecked());
+                dto.setCheckTime(item.getUpdateDate());
+                list.add(dto);
+            }
+            return ResponseBean.success(list);
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
         }
-        return list;
     }
 
     /**
      * 审核客户公司需要将 neo_user 表中的 lock 和 neo_company_relation 表中的 lock 打开
      */
     @Override
-    public void reviewCompany(int id) {
-        NeoCompanyRelation relation = relationMapper.selectByPrimaryKey(id);
-        relation.setIsChecked(true);
-        relationMapper.updateByPrimaryKeySelective(relation);
-        NeoUserExample example = new NeoUserExample();
-        example.createCriteria().andRelatedIdEqualTo(relation.getCompanyId());
-        List<NeoUser> userList = userMapper.selectByExample(example);
-        NeoUser user = userList.get(0);
-        user.setIsLocked(true);
-        userMapper.updateByPrimaryKeySelective(user);
+    public ResponseBean reviewCompany(int id) {
+        try {
+            NeoCompanyRelation relation = relationMapper.selectByPrimaryKey(id);
+            relation.setIsChecked(true);
+            relationMapper.updateByPrimaryKeySelective(relation);
+            NeoUserExample example = new NeoUserExample();
+            example.createCriteria().andRelatedIdEqualTo(relation.getCompanyId());
+            List<NeoUser> userList = userMapper.selectByExample(example);
+            NeoUser user = userList.get(0);
+            user.setIsLocked(true);
+            userMapper.updateByPrimaryKeySelective(user);
+            return ResponseBean.success();
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+        }
     }
 
     @Override
-    public List<NeoRechargeRecord> fetchReviewRechargeList() {
-        NeoRechargeRecordExample example = new NeoRechargeRecordExample();
-        example.createCriteria().andApprovalStatusEqualTo(false);
-        return rechargeRecordMapper.selectByExample(example);
+    public ResponseBean fetchReviewRechargeList() {
+        try {
+            NeoRechargeRecordExample example = new NeoRechargeRecordExample();
+            example.createCriteria().andApprovalStatusEqualTo(false);
+            return ResponseBean.success(rechargeRecordMapper.selectByExample(example));
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+        }
     }
 
     @Override
-    public void reviewRecharge(int id) {
-        NeoRechargeRecord record = rechargeRecordMapper.selectByPrimaryKey(id);
-        record.setApprovalStatus(true);
-        rechargeRecordMapper.updateByPrimaryKeySelective(record);
+    public ResponseBean reviewRecharge(int id) {
+        try {
+            NeoRechargeRecord record = rechargeRecordMapper.selectByPrimaryKey(id);
+            record.setApprovalStatus(true);
+            rechargeRecordMapper.updateByPrimaryKeySelective(record);
+            return ResponseBean.success();
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+        }
     }
 
     @Override
-    public List<NeoInvoice> fetchReviewInvoiceList() {
-        NeoInvoiceExample example = new NeoInvoiceExample();
-        example.createCriteria().andStatusEqualTo(false);
-        return invoiceMapper.selectByExample(example);
+    public ResponseBean fetchReviewInvoiceList() {
+        try {
+            NeoInvoiceExample example = new NeoInvoiceExample();
+            example.createCriteria().andStatusEqualTo(false);
+            return ResponseBean.success(invoiceMapper.selectByExample(example));
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+        }
     }
 
     @Override
-    public void reviewInvoice(int id) {
-        NeoInvoice invoice = invoiceMapper.selectByPrimaryKey(id);
-        invoice.setStatus(true);
-        invoiceMapper.updateByPrimaryKeySelective(invoice);
+    public ResponseBean reviewInvoice(int id) {
+        try {
+            NeoInvoice invoice = invoiceMapper.selectByPrimaryKey(id);
+            invoice.setStatus(true);
+            invoiceMapper.updateByPrimaryKeySelective(invoice);
+            return ResponseBean.success();
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+        }
     }
 
     @Override
-    public List<NeoIssue> fetchReviewProvideList() {
-        NeoIssueExample example = new NeoIssueExample();
-        example.createCriteria().andProvideStatusEqualTo(false);
-        return issueMapper.selectByExample(example);
+    public ResponseBean fetchReviewProvideList() {
+        try {
+            NeoIssueExample example = new NeoIssueExample();
+            example.createCriteria().andProvideStatusEqualTo(false);
+            return ResponseBean.success(issueMapper.selectByExample(example));
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+        }
     }
 
     @Override
-    public void reviewProvide(int id) {
-        NeoIssue record = issueMapper.selectByPrimaryKey(id);
-        record.setProvideStatus(true);
-        issueMapper.updateByPrimaryKeySelective(record);
+    public ResponseBean reviewProvide(int id) {
+        try {
+            NeoIssue record = issueMapper.selectByPrimaryKey(id);
+            record.setProvideStatus(true);
+            issueMapper.updateByPrimaryKeySelective(record);
+            return ResponseBean.success();
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+        }
     }
 
     @Override
-    public List<NeoWithdraw> fetchReviewWithdrawList() {
+    public ResponseBean fetchReviewWithdrawList() {
         NeoWithdrawExample example = new NeoWithdrawExample();
         example.createCriteria().andStatusEqualTo(false);
-        return withdrawMapper.selectByExample(example);
+        try {
+            return ResponseBean.success(withdrawMapper.selectByExample(example));
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+        }
     }
 
     @Override
-    public void reviewWithdraw(int id) {
+    public ResponseBean reviewWithdraw(int id) {
         NeoWithdraw record = withdrawMapper.selectByPrimaryKey(id);
         record.setStatus(true);
         withdrawMapper.updateByPrimaryKeySelective(record);
+        try {
+            return ResponseBean.success();
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+        }
     }
 
     @Override
-    public List<NeoCompanyTax> fetchReviewTaxList() {
+    public ResponseBean fetchReviewTaxList() {
         NeoCompanyTaxExample example = new NeoCompanyTaxExample();
         example.createCriteria().andIsDeleteEqualTo(false);
-        return taxMapper.selectByExample(example);
+        try {
+            return ResponseBean.success(taxMapper.selectByExample(example));
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+        }
     }
 
     @Override
-    public void reviewTax(int id) {
+    public ResponseBean reviewTax(int id) {
         NeoCompanyTax record = taxMapper.selectByPrimaryKey(id);
         record.setIsDelete(true);
         taxMapper.updateByPrimaryKeySelective(record);
+        try {
+            return ResponseBean.success();
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+        }
     }
 
     @Override
-    public void uploadTax() {
-
+    public ResponseBean uploadTax() {
+        try {
+            return ResponseBean.success();
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
+        }
     }
 }
