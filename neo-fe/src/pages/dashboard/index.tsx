@@ -48,7 +48,8 @@ const Dashboard = () => {
     const userInfo = RoleStore.currentRole?.userInfo
     setUserInfo(userInfo ? userInfo : {})
     setLoaded(false)
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [RoleStore.currentRole?.roleType])
 
   const goFinance = () => {
     if (RoleStore.currentRole?.roleType === AuthType.MERCHANT) {
@@ -127,6 +128,7 @@ const Dashboard = () => {
                 </Button>
               )}
               <Descriptions title="基本信息">
+                {console.log(111, userInfo, Object.keys(userInfo).length, userInfo.contactName)}
                 {Object.keys(userInfo).length > 0 && userInfo.contactName && (
                   <>
                     <Descriptions.Item label="对接人">

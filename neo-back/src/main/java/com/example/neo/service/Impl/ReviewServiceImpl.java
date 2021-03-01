@@ -212,7 +212,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
         String fileName = file.getOriginalFilename();
         String dest = this.filePath + fileName;
-        String virtualPath = "http://axinlinggong.com/images/tax/" + fileName;
+        String virtualPath = "http://www.axinlinggong.com/images/tax/" + fileName;
         File newFile = new File(dest);
         try {
             file.transferTo(newFile);
