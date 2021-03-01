@@ -128,7 +128,6 @@ const Dashboard = () => {
                 </Button>
               )}
               <Descriptions title="基本信息">
-                {console.log(111, userInfo, Object.keys(userInfo).length, userInfo.contactName)}
                 {Object.keys(userInfo).length > 0 && userInfo.contactName && (
                   <>
                     <Descriptions.Item label="对接人">
