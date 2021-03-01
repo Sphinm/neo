@@ -139,7 +139,7 @@ export const UploadTaxReceipts = () => {
       return
     }
     const params = {
-      company: values.company,
+      companyId: values.company,
       month: values.month,
       remarks: values.remarks,
       receipts: uploadPath,
