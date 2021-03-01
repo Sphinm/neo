@@ -2,7 +2,6 @@ package com.example.neo.controller;
 
 import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.ICharge;
-import com.example.neo.model.ICompanyList;
 import com.example.neo.service.NeoCompanyService;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
@@ -10,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -22,8 +19,7 @@ public class CompanyController {
     @PreAuthorize("hasAnyAuthority('company_list')")
     @GetMapping("/fetch/company")
     public ResponseBean fetchCompanyList() {
-        List<ICompanyList> companyList = companyService.fetchCompanyList();
-        return ResponseBean.success(companyList);
+        return companyService.fetchCompanyList();
     }
 
     @PreAuthorize("hasAnyAuthority('charge_page')")

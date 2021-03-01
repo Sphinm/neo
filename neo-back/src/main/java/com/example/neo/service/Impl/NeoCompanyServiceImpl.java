@@ -4,12 +4,10 @@ import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.exception.NeoException;
 import com.example.neo.model.ICharge;
 import com.example.neo.model.IChargeInfo;
-import com.example.neo.model.ICompanyList;
 import com.example.neo.model.IFianceInfo;
 import com.example.neo.mybatis.mapper.NeoCompanyMapper;
 import com.example.neo.mybatis.mapper.NeoFinanceMapper;
 import com.example.neo.mybatis.mapper.NeoRechargeRecordMapper;
-import com.example.neo.mybatis.mapper.NeoUserMapper;
 import com.example.neo.mybatis.model.*;
 import com.example.neo.service.NeoCompanyService;
 import com.example.neo.utils.DoubleUtil;
@@ -27,10 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -48,16 +46,14 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
     private String filePath;
 
     @Override
-    public List<ICompanyList> fetchCompanyList() {
-        ICompanyList company = new ICompanyList();
+    /**
+     * 仅管理可查看所有公司
+     */
+    public ResponseBean fetchCompanyList() {
         NeoCompanyExample companyExample = new NeoCompanyExample();
-//        NeoFinanceExample financeExample = new NeoFinanceExample();
-//        companyExample.createCriteria().andCompanyTypeEqualTo(false);
-//        List<NeoCompany> companyList = companyMapper.selectByExample(companyExample);
-//        for (NeoCompany item : companyList) {
-//            log.info("{}", item);
-//        }
-        return null;
+        companyExample.createCriteria().andCompanyTypeEqualTo(false);
+        List<NeoCompany> companyList = companyMapper.selectByExample(companyExample);
+        return ResponseBean.success(companyList);
     }
 
     @Override
@@ -83,13 +79,13 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
         // 获取文件的后缀名
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
         log.info("上传的后缀名为：" + suffixName);
-        // 解决中文问题，liunx下中文路径，图片显示问题
+        // 解决中文问题，linux 下中文路径，图片显示问题
         fileName = UUID.randomUUID() + suffixName;
         File file1 = new File(filePath);
-        if  (!file1 .exists()  && !file1 .isDirectory())
+        if  (!file1.exists()  && !file1.isDirectory())
         {
             log.info("{}不存在，创建目录",filePath);
-            file1 .mkdir();
+            file1.mkdir();
         } else {
             log.info("//目录存在");
         }

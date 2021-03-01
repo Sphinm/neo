@@ -248,7 +248,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 查询 merchant 信息
-     * @param userType 代理商
+     * @param userType 代理商/公司
      */
     @Override
     public ResponseBean fetchMerchantInfo(UserTypeEnum userType) {
@@ -264,6 +264,7 @@ public class UserServiceImpl implements UserService {
             List<ICreateUser> list = new ArrayList<>();
             for (NeoCompany company : companyList) {
                 for (NeoUser user : userList) {
+                    // 用户关联 id 和公司 id 相等且未锁定
                     if (user.getRelatedId().equals(company.getId()) && user.getIsLocked()) {
                         ICreateUser createUser = new ICreateUser();
                         createUser.setUserInfo(user);

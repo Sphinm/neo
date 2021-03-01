@@ -64,3 +64,8 @@ export const reviewTax= (id: string) => {
 export const uploadTax= () => {
   return ajax.post(`/upload/tax`)
 }
+
+/** 上传完税凭证信息 */
+export const uploadTaxInfo = (params: any) => {
+  return ajax.post('/upload/taxInfo', params)
+} 

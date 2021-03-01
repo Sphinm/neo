@@ -1,5 +1,6 @@
 package com.example.neo.service;
 
+import com.example.neo.model.IUploadTaxInfo;
 import com.example.neo.utils.ResponseBean;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,4 +30,6 @@ public interface ReviewService {
     ResponseBean reviewTax(int id);
 
     ResponseBean uploadTax(MultipartFile file);
+
+    ResponseBean uploadTaxInfo(IUploadTaxInfo info);
 }

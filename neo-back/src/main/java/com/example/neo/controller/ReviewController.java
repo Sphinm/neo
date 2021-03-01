@@ -1,14 +1,12 @@
 package com.example.neo.controller;
 
+import com.example.neo.model.IUploadTaxInfo;
 import com.example.neo.service.ReviewService;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -93,5 +91,11 @@ public class ReviewController {
     @PostMapping("/upload/tax")
     public ResponseBean uploadTax(@RequestParam("file") MultipartFile file) {
         return reviewService.uploadTax(file);
+    }
+
+    @PreAuthorize("hasAnyAuthority('review_tax')")
+    @PostMapping("/upload/taxInfo")
+    public ResponseBean uploadTaxInfo(@RequestBody() IUploadTaxInfo info) {
+        return reviewService.uploadTaxInfo(info);
     }
 }

@@ -1,19 +1,38 @@
 import React, { useEffect, useState } from 'react'
 import { CloudUploadOutlined } from '@ant-design/icons'
-import { Card, Table, Button, Popconfirm, Badge, Divider, Modal, Form, Input, Upload, message } from 'antd'
+import { Card, Table, Button, Popconfirm, Badge, Divider, Modal, Form, Input, Upload, message, Select, DatePicker } from 'antd'
 import { handleError } from '@/libs/axios'
-import { fetchReviewTax, reviewTax } from '@/apis/review'
+import { fetchReviewTax, reviewTax, uploadTaxInfo } from '@/apis/review'
 import { RcFile } from 'antd/lib/upload/interface'
+import { fetchCompany } from '@/apis/user'
+
+const { Option } = Select
 
 export const UploadTaxReceipts = () => {
   const [form] = Form.useForm()
   const [visible, setVisible] = useState(false)
   const [tableData, setTableData] = useState([])
+  const [companyList, setCompanyList] = useState<any[]>([])
   const [uploadPath, setUploadPath] = useState('')
   
   useEffect(() => {
     fetchBillInfo()
+    if (!localStorage.getItem('companyList')) {
+      fetchAllCompanyList()
+    } else {
+      setCompanyList(JSON.parse(localStorage.getItem('companyList') as any))
+    }
   }, []);
+
+  const fetchAllCompanyList = async () => {
+    try {
+      const { data } = await fetchCompany()
+      setCompanyList(data)
+      localStorage.setItem('companyList', JSON.stringify(data))
+    } catch (error) {
+      handleError(error)
+    }
+  }
 
   const fetchBillInfo = async() => {
     try {
@@ -63,16 +82,12 @@ export const UploadTaxReceipts = () => {
 
   const columns = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-    },
-    {
       title: '编号',
       dataIndex: 'number',
     },
     {
-      title: '创建时间',
-      dataIndex: 'createDate',
+      title: '公司名称',
+      dataIndex: 'companyName',
     },
     {
       title: '完税凭证',
@@ -86,7 +101,10 @@ export const UploadTaxReceipts = () => {
     {
       title: '备注信息',
       dataIndex: 'remark',
-      render: (text: any, record: any) => <div>等待发放</div>,
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createDate',
     },
     {
       title: '操作',
@@ -116,8 +134,25 @@ export const UploadTaxReceipts = () => {
 
   const handleOk = async () => {
     const values = await form.validateFields()
-    console.log(11, values, uploadPath)
-    setVisible(false)
+    if (!uploadPath) {
+      message.error('请先上传完税凭证')
+      return
+    }
+    const params = {
+      company: values.company,
+      month: values.month,
+      remarks: values.remarks,
+      receipts: uploadPath,
+    }
+    try {
+      const { code } = await uploadTaxInfo(params)
+      if (code === 'SUCCESS') {
+        message.success('上传完税凭证信息成功')
+        setVisible(false)
+      }
+    } catch (error) {
+      handleError(error)
+    }
   }
 
   return (
@@ -150,13 +185,20 @@ export const UploadTaxReceipts = () => {
               </Button>
             </Upload>
           </Form.Item>
-          <Form.Item label="公司名称" name="username" rules={[{ required: true, message: '请填写公司名称' }]}>
-            <Input placeholder="请输入公司名称"></Input>
+          <Form.Item label="公司名称" name="company" rules={[{ required: true, message: '请填写公司名称' }]}>
+            <Select allowClear placeholder="公司名称">
+            {companyList.map((item: any) => (
+                <Option key={item.id} value={item.id}>
+                  {item.companyName}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
-          <Form.Item label="月份" name="username1" rules={[{ required: true, message: '请填写月份' }]}>
-            <Input placeholder="请输入月份"></Input>
+          <Form.Item label="月份" name="month" rules={[{ required: true, message: '请填写月份' }]}>
+            {/* <Input placeholder="请输入月份"></Input> */}
+            <DatePicker placeholder="请输入月份" picker="month" />
           </Form.Item>
-          <Form.Item label="备注" name="username2">
+          <Form.Item label="备注" name="remarks">
             <Input placeholder="请输入备注信息"></Input>
           </Form.Item>
         </Form>

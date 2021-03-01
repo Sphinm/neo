@@ -2,10 +2,12 @@ package com.example.neo.service.Impl;
 
 import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.IReviewCompany;
+import com.example.neo.model.IUploadTaxInfo;
 import com.example.neo.mybatis.mapper.*;
 import com.example.neo.mybatis.model.*;
 import com.example.neo.service.ReviewService;
 import com.example.neo.utils.ResponseBean;
+import com.example.neo.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +16,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
 @Service
 public class ReviewServiceImpl implements ReviewService {
+    private Snowflake snowflake = new Snowflake(2,3);
     @Autowired
     NeoCompanyRelationMapper relationMapper;
     @Autowired
@@ -35,6 +39,9 @@ public class ReviewServiceImpl implements ReviewService {
     NeoWithdrawMapper withdrawMapper;
     @Autowired
     NeoCompanyTaxMapper taxMapper;
+
+    @Autowired
+    private CommonService commonService;
 
     @Value("${neo.upload.tax}")
     private String filePath;
@@ -174,8 +181,8 @@ public class ReviewServiceImpl implements ReviewService {
     public ResponseBean reviewWithdraw(int id) {
         NeoWithdraw record = withdrawMapper.selectByPrimaryKey(id);
         record.setStatus(true);
-        withdrawMapper.updateByPrimaryKeySelective(record);
         try {
+            withdrawMapper.updateByPrimaryKeySelective(record);
             return ResponseBean.success();
         } catch (Exception e) {
             return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
@@ -193,12 +200,17 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
+    /**
+     * 删除完税凭证
+     * @param id
+     * @return
+     */
     @Override
     public ResponseBean reviewTax(int id) {
         NeoCompanyTax record = taxMapper.selectByPrimaryKey(id);
         record.setIsDelete(true);
-        taxMapper.updateByPrimaryKeySelective(record);
         try {
+            taxMapper.updateByPrimaryKeySelective(record);
             return ResponseBean.success();
         } catch (Exception e) {
             return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
@@ -217,6 +229,30 @@ public class ReviewServiceImpl implements ReviewService {
         try {
             file.transferTo(newFile);
             return ResponseBean.success(virtualPath);
+        } catch (Exception e) {
+            log.error(e.toString());
+            return ResponseBean.fail(ResponseCodeEnum.FILE_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseBean uploadTaxInfo(IUploadTaxInfo info) {
+        NeoUser user = commonService.fetchUserByMobile();
+        Date date = new Date();
+        NeoCompanyTax tax = new NeoCompanyTax();
+        tax.setCompanyId(info.getCompanyId());
+        tax.setIsDelete(false);
+        tax.setMonth(info.getMonth());
+        tax.setNumber(String.valueOf(snowflake.nextId()));
+        tax.setTaxReceive(info.getReceipts());
+        tax.setRemark(info.getRemarks());
+        tax.setCreatorId(user.getId());
+        tax.setCreateDate(date);
+        tax.setUpdateId(user.getId());
+        tax.setUpdateDate(date);
+        try {
+            taxMapper.insert(tax);
+            return ResponseBean.success();
         } catch (Exception e) {
             log.error(e.toString());
             return ResponseBean.fail(ResponseCodeEnum.FILE_ERROR);

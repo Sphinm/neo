@@ -13,6 +13,7 @@ class Role {
         runInAction(() => {
           this.currentRole = data
         })
+        localStorage.setItem('userInfo', JSON.stringify(data))
       } else {
         window.location.href = '/login'
       }
