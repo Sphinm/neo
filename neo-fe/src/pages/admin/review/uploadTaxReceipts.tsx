@@ -163,6 +163,7 @@ export const UploadTaxReceipts = () => {
       <Divider />
       <Table bordered rowKey="id" columns={columns as any} dataSource={tableData} />
       <Modal
+        width={850}
         getContainer={false}
         title="上传完税凭证"
         visible={visible}
@@ -195,8 +196,7 @@ export const UploadTaxReceipts = () => {
             </Select>
           </Form.Item>
           <Form.Item label="月份" name="month" rules={[{ required: true, message: '请填写月份' }]}>
-            {/* <Input placeholder="请输入月份"></Input> */}
-            <DatePicker placeholder="请输入月份" picker="month" />
+            <DatePicker placeholder="请输入月份" format={'YYYY/MM'} picker="month" />
           </Form.Item>
           <Form.Item label="备注" name="remarks">
             <Input placeholder="请输入备注信息"></Input>

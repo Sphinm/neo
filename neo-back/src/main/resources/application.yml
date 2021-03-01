@@ -61,8 +61,7 @@ neo:
     filepath: /usr/neo/upload/charge
   # 上传完税图片路径
   upload:
-    tax: /usr/neo/upload/tax/
-#     tax: /Users/sumin/Desktop/Java/
+    tax: /usr/neo/images/tax/
 
 pagehelper:
   helper-dialect: mysql
