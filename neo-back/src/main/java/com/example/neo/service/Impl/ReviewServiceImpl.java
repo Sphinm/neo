@@ -218,6 +218,7 @@ public class ReviewServiceImpl implements ReviewService {
             file.transferTo(newFile);
             return ResponseBean.success(virtualPath);
         } catch (Exception e) {
+            log.error(e.toString());
             return ResponseBean.fail(ResponseCodeEnum.FILE_ERROR);
         }
     }
