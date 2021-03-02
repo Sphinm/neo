@@ -4,4 +4,6 @@ import com.example.neo.utils.ResponseBean;
 
 public interface MerchantService {
     ResponseBean fetchRebate();
+
+    ResponseBean fetchMerchantBalance();
 }

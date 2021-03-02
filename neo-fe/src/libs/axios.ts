@@ -7,10 +7,10 @@ const instance: AxiosInstance = axios.create({
 })
 
 export const handleError = (e: AxiosError) => {
-  notification.error({
-    message: e.message,
-    description: '',
-  })
+  // notification.error({
+  //   message: e.message,
+  //   description: '',
+  // })
   console.error(e)
 }
 
@@ -42,7 +42,7 @@ const responseErrorInterceptor = (error: AxiosError) => {
     const { status, data } = error.response
     const statusError = () => {
       return notification.error({
-        message: `CODE: ${data.code ?? 500}`,
+        message: `CODE: ${data.code ?? data.status}`,
         description: data?.message ? data.message : 'Server Error',
       })
     }
@@ -52,7 +52,7 @@ const responseErrorInterceptor = (error: AxiosError) => {
         statusError()
         break
       case 403:
-        window.location.href = '/layout'
+        // window.location.href = '/layout'
         statusError()
         break
       default:

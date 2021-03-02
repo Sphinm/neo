@@ -10,6 +10,7 @@ import style from './index.styl'
 import { AuthType } from '@/enums/role'
 import { insertUserInfo, updateUserInfo } from '@/apis/user'
 import { handleError } from '@/libs/axios'
+import { fetchMerchantBalance, fetchMerchantRebate } from '@/apis/merchant'
 
 const textMessage = [
   '1. 我司只接受 6% 服务费专票',
@@ -26,6 +27,11 @@ const Dashboard = () => {
   const [visible, setVisible] = useState(false)
   const [userInfo, setUserInfo] = useState<any>({})
   const [isLoaded, setLoaded] = useState<boolean>(false)
+  // 返佣列表
+  const [rebateList, setRebateList] = useState<any>([])
+  const [rebateMoney, setRebateMoney] = useState(0)
+  const [merchantBalance, setMerchantBalance] = useState(0)
+  const [companyBalance, setCompanyBalance] = useState(0)
   let chartInstance: echarts.ECharts | null = null
 
   const renderChart = () => {
@@ -39,8 +45,15 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    RoleStore.currentRole?.roleType !== 'ADMIN' && renderChart()
+    RoleStore.currentRole?.roleType !== AuthType.ADMIN && renderChart()
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (RoleStore.currentRole?.roleType === AuthType.MERCHANT) {
+      fetchMerchantRebateByMonth()
+      fetchMerchantBalanceMoney()
+    }
   }, [])
 
   useEffect(() => {
@@ -56,6 +69,27 @@ const Dashboard = () => {
       history.push('/main/finance/withdraw')
     } else {
       history.push('/main/finance/recharge')
+    }
+  }
+
+  const fetchMerchantRebateByMonth = async () => {
+    try {
+      const { data } = await fetchMerchantRebate()
+      setRebateList(data)
+      if (data.length) {
+        setRebateMoney(data.reduce((a: any, b: any) => a + b.rebate))
+      }
+    } catch (error) {
+      handleError(error)
+    }
+  } 
+
+  const fetchMerchantBalanceMoney = async () => {
+    try {
+      const { data } = await fetchMerchantBalance()
+      setMerchantBalance(data)
+    } catch (error) {
+      handleError(error)
     }
   }
 
@@ -97,7 +131,7 @@ const Dashboard = () => {
       {RoleStore.currentRole?.roleType !== 'ADMIN' && (
         <Card className={style['dash-header']}>
           <div className={style['money-title']}>账户可用余额</div>
-          <div className={style['money']}>￥100.24</div>
+          <div className={style['money']}>￥{RoleStore.currentRole?.roleType === AuthType.MERCHANT ? merchantBalance : companyBalance}</div>
           <div className={style['button-group']}>
             <Button type="primary" onClick={goFinance}>
               {RoleStore.currentRole?.roleType === AuthType.MERCHANT ? '申请提现' : '立即充值'}
@@ -176,7 +210,7 @@ const Dashboard = () => {
                 </Descriptions.Item>
               </Descriptions>
               {/* Echart */}
-              {RoleStore.currentRole?.roleType !== 'ADMIN' && (
+              {RoleStore.currentRole?.roleType !== AuthType.ADMIN && RoleStore.currentRole?.roleType !== AuthType.EMPLOYEE && (
                 <>
                   <div className={style['canvas-title']}>
                     {RoleStore.currentRole?.roleType === AuthType.COMPANY ? '最近一个月发放情况' : '最近一个月返佣情况'}
@@ -198,7 +232,7 @@ const Dashboard = () => {
                 <div className={style['money-title']}>
                   {RoleStore.currentRole?.roleType === AuthType.COMPANY ? '最近一个月发放金额' : '最近一个月返佣金额'}
                 </div>
-                <div className={style['money']}>￥100.24 元</div>
+                <div className={style['money']}>￥{rebateMoney} 元</div>
               </Card>
               {/* <Card>
                 <div className={style['money-title']}>

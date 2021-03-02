@@ -19,4 +19,10 @@ public class MerchantController {
     public ResponseBean fetchRebate() {
         return merchantService.fetchRebate();
     }
+
+    @PreAuthorize("hasAnyAuthority('merchant_rebate')")
+    @GetMapping("/merchant/balance")
+    public ResponseBean fetchMerchantBalance() {
+        return merchantService.fetchMerchantBalance();
+    }
 }

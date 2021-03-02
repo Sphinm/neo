@@ -1,9 +1,9 @@
 package com.example.neo.service.Impl;
 
 import com.example.neo.mybatis.mapper.NeoCompanyMapper;
-import com.example.neo.mybatis.model.NeoCompany;
-import com.example.neo.mybatis.model.NeoCompanyExample;
-import com.example.neo.mybatis.model.NeoUser;
+import com.example.neo.mybatis.mapper.NeoFinanceMapper;
+import com.example.neo.mybatis.mapper.NeoIssueMapper;
+import com.example.neo.mybatis.model.*;
 import com.example.neo.service.MerchantService;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
@@ -21,15 +21,28 @@ public class MerchantServiceImpl implements MerchantService {
     MerchantService merchantService;
     @Autowired
     NeoCompanyMapper companyMapper;
+    @Autowired
+    NeoIssueMapper issueMapper;
+    @Autowired
+    NeoFinanceMapper financeMapper;
 
     @Override
     public ResponseBean fetchRebate() {
-        NeoUser user = commonService.fetchUserByMobile();
-        log.info("{}",user);
-        NeoCompanyExample example = new NeoCompanyExample();
-        example.createCriteria().andIdEqualTo(user.getRelatedId());
-        List<NeoCompany> company = companyMapper.selectByExample(example);
-        Integer conpanyId = company.get(0).getId();
-        return null;
+        NeoCompany company = commonService.fetchCurrentCompany();
+        NeoIssueExample example = new NeoIssueExample();
+        example.createCriteria().andCompanyIdEqualTo(company.getId());
+        return ResponseBean.success(issueMapper.selectByExample(example));
+    }
+
+    @Override
+    public ResponseBean fetchMerchantBalance() {
+        NeoCompany company = commonService.fetchCurrentCompany();
+        NeoFinanceExample example = new NeoFinanceExample();
+        example.createCriteria().andCompanyIdEqualTo(company.getId()).andStatusEqualTo(true);
+        List<NeoFinance> financeList = financeMapper.selectByExample(example);
+        if (financeList == null || financeList.size() == 0) {
+            return ResponseBean.success(0);
+        }
+        return ResponseBean.success(financeList.get(0).getBalance());
     }
 }
