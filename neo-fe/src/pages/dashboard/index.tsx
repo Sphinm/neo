@@ -94,7 +94,7 @@ const Dashboard = () => {
 
   return useObserver(() => (
     <Spin spinning={isLoaded && RoleStore.currentRole?.roleType}>
-      {RoleStore.currentRole?.roleType !== 'ADMIN' && isLoaded && (
+      {RoleStore.currentRole?.roleType !== 'ADMIN' && (
         <Card className={style['dash-header']}>
           <div className={style['money-title']}>账户可用余额</div>
           <div className={style['money']}>￥100.24</div>
