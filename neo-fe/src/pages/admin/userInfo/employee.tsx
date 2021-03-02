@@ -10,11 +10,11 @@ export const Employee = () => {
     fetchAllUser()
   }, []);
 
-  const fetchAllUser = async(pageNum = 1, pageSize = 10) => {
+  const fetchAllUser = async(pageNum = 1) => {
     try {
       const body = {
         pageNum: pageNum,
-        pageSize: pageSize
+        pageSize: 20
       }
       const { data } = await fetchAllEmployee(body)
       console.log(data)
@@ -76,17 +76,16 @@ export const Employee = () => {
     }
   }
 
-  const changePage = (page: number, pageSize: number) => {
-    console.log(page, pageSize)
+  const changePage = (page: number) => {
+    fetchAllUser(page)
   }
 
   return (
     <Card title="员工档案">
       <Table bordered rowKey="id" columns={columns as any} dataSource={tableData} pagination={{
-            showSizeChanger: true,
             showQuickJumper: true,
             pageSize: 20,
-            onChange: (page) => changePage(page, 20),
+            onChange: (page) => changePage(page),
           }} />
     </Card>
   )
