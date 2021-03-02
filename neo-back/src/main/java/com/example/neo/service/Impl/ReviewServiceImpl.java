@@ -101,6 +101,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ResponseBean fetchReviewRechargeList() {
         try {
             NeoRechargeRecordExample example = new NeoRechargeRecordExample();
+            // 0：待审核，1：审核通过，2：审核不通过
             example.createCriteria().andApprovalStatusEqualTo(false);
             return ResponseBean.success(rechargeRecordMapper.selectByExample(example));
         } catch (Exception e) {
@@ -109,6 +110,9 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    /**
+     * 更新审核状态
+     */
     public ResponseBean reviewRecharge(int id) {
         try {
             NeoRechargeRecord record = rechargeRecordMapper.selectByPrimaryKey(id);

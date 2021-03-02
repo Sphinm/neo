@@ -1,6 +1,5 @@
 package com.example.neo.controller;
 
-import com.example.neo.model.IMerchantRebate;
 import com.example.neo.service.MerchantService;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,6 @@ public class MerchantController {
     @PreAuthorize("hasAnyAuthority('merchant_rebate')")
     @GetMapping("/rebate")
     public ResponseBean fetchRebate() {
-        IMerchantRebate rebate = merchantService.fetchRebate();
-        return ResponseBean.success(rebate);
+        return merchantService.fetchRebate();
     }
 }

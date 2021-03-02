@@ -14,11 +14,14 @@ public enum ResponseCodeEnum {
     FILE_NOT_NULL("文件不可为空"),
     FILE_ERROR("文件上传失败"),
     AMOUNT_NOT_VALID("金额不合法"),
-    // go on
     CREATE_USER_FAILED("创建用户失败"),
+    NOT_FOUND_FINANCE("未找到当前公司相关财务信息"),
+
+
+
+
+
     MOBILE_EQUALS("手机号重复");
-
-
     public String message;
 
     ResponseCodeEnum(String message) {

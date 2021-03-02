@@ -88,10 +88,7 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
         }
         try {
             file.transferTo(dest);
-        } catch (IllegalStateException e) {
-            log.info(e.getMessage());
-            return ResponseBean.fail(ResponseCodeEnum.FILE_ERROR);
-        } catch (IOException e) {
+        } catch (IllegalStateException | IOException e) {
             log.info(e.getMessage());
             return ResponseBean.fail(ResponseCodeEnum.FILE_ERROR);
         }
@@ -132,11 +129,11 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
             .andStatusEqualTo(true);
         List<NeoFinance> finances = financeMapper.selectByExample(financeExample);
         if (finances==null||finances.size()!=1){
-            throw new NeoException("未找到当前公司相关财务信息");
+            return ResponseBean.fail(ResponseCodeEnum.NOT_FOUND_FINANCE);
         }
         NeoFinance finance = finances.get(0);
         IFianceInfo fianceInfo = new IFianceInfo();
-        BeanUtils.copyProperties(finance,fianceInfo);
+        BeanUtils.copyProperties(finance, fianceInfo);
         return ResponseBean.success(fianceInfo);
     }
 
@@ -202,6 +199,7 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
         if (finances==null||finances.size()!=1){
             throw new NeoException("未找到当前公司相关财务信息");
         }
+        // 更新 finance 表，逻辑变更老的状态，
         NeoFinance finance = finances.get(0);
         NeoFinance oldFiance = new NeoFinance();
         oldFiance.setStatus(false);
