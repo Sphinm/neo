@@ -11,7 +11,6 @@ public interface NeoCompanyService {
      */
     ResponseBean fetchCompanyList();
 
-    String getCompanyNameByCompanyId(int companyId);
     /**
      * 充值操作
      * @param file

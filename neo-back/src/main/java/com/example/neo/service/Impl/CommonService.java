@@ -49,4 +49,15 @@ public class CommonService {
         return companies.get(0);
     }
 
+    /**
+     * 根据 companyId 查询 companyName
+     */
+    public String fetchCompanyNameById(int id) {
+        NeoCompany company = companyMapper.selectByPrimaryKey(id);
+        if (company == null){
+            return "";
+        }
+        return company.getCompanyName();
+    }
+
 }

@@ -5,6 +5,7 @@ import '@/assets/stylus/index.styl'
 import Loading from '@/components/Loading'
 import * as serviceWorker from './serviceWorker'
 import { RoleStore } from '@/store/roleStore'
+import 'moment/locale/zh-cn'
 
 if (window.location.pathname !== '/login') RoleStore.fetchCurrentRole()
 

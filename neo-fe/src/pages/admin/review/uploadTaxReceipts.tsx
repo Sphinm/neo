@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { CloudUploadOutlined } from '@ant-design/icons'
-import { Card, Table, Button, Popconfirm, Badge, Divider, Modal, Form, Input, Upload, message, Select, DatePicker } from 'antd'
+import { Card, Table, Button, Popconfirm, Divider, Modal, Form, Input, Upload, message, Select, DatePicker, Image } from 'antd'
 import { handleError } from '@/libs/axios'
 import { fetchReviewTax, reviewTax, uploadTaxInfo } from '@/apis/review'
 import { RcFile } from 'antd/lib/upload/interface'
 import { fetchCompany } from '@/apis/user'
+import locale from 'antd/lib/date-picker/locale/zh_CN'
+import moment from 'moment'
 
 const { Option } = Select
 
 export const UploadTaxReceipts = () => {
   const [form] = Form.useForm()
   const [visible, setVisible] = useState(false)
-  const [tableData, setTableData] = useState([])
+  const [tableData, setTableData] = useState<any>([])
   const [companyList, setCompanyList] = useState<any[]>([])
   const [uploadPath, setUploadPath] = useState('')
   
@@ -36,7 +38,7 @@ export const UploadTaxReceipts = () => {
 
   const fetchBillInfo = async() => {
     try {
-      const { data } = await fetchReviewTax();
+      const { data } = await fetchReviewTax()
       setTableData(data)
     } catch (error) {
       handleError(error)
@@ -92,11 +94,12 @@ export const UploadTaxReceipts = () => {
     {
       title: '完税凭证',
       dataIndex: 'taxReceive',
+      render: (text: any, record: any) => <Image width={80} src={text}></Image>,
     },
     {
       title: '月份',
       dataIndex: 'month',
-      render: (text: any, record: any) => <Badge status="processing" text="等待审核"></Badge>,
+      render: (text: any, record: any) => <>{moment(text).format('YYYY-MM')}</>,
     },
     {
       title: '备注信息',
@@ -105,6 +108,7 @@ export const UploadTaxReceipts = () => {
     {
       title: '创建时间',
       dataIndex: 'createDate',
+      render: (text: any, record: any) => <>{moment(text).format('YYYY/MM/DD HH:mm:ss')}</>,
     },
     {
       title: '操作',
@@ -149,6 +153,7 @@ export const UploadTaxReceipts = () => {
       if (code === 'SUCCESS') {
         message.success('上传完税凭证信息成功')
         setVisible(false)
+        fetchBillInfo()
       }
     } catch (error) {
       handleError(error)
@@ -161,9 +166,8 @@ export const UploadTaxReceipts = () => {
         上传完税凭证
       </Button>
       <Divider />
-      <Table bordered rowKey="id" columns={columns as any} dataSource={tableData} />
+      <Table bordered rowKey="companyId" columns={columns as any} dataSource={tableData} />
       <Modal
-        width={850}
         getContainer={false}
         title="上传完税凭证"
         visible={visible}
@@ -196,7 +200,7 @@ export const UploadTaxReceipts = () => {
             </Select>
           </Form.Item>
           <Form.Item label="月份" name="month" rules={[{ required: true, message: '请填写月份' }]}>
-            <DatePicker placeholder="请输入月份" format={'YYYY/MM'} picker="month" />
+            <DatePicker placeholder="请输入月份" locale={locale} format={'YYYY/MM'} picker="month" />
           </Form.Item>
           <Form.Item label="备注" name="remarks">
             <Input placeholder="请输入备注信息"></Input>

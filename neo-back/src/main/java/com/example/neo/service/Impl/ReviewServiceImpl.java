@@ -1,6 +1,7 @@
 package com.example.neo.service.Impl;
 
 import com.example.neo.enums.ResponseCodeEnum;
+import com.example.neo.model.ICompanyTaxList;
 import com.example.neo.model.IReviewCompany;
 import com.example.neo.model.IUploadTaxInfo;
 import com.example.neo.mybatis.mapper.*;
@@ -193,9 +194,25 @@ public class ReviewServiceImpl implements ReviewService {
     public ResponseBean fetchReviewTaxList() {
         NeoCompanyTaxExample example = new NeoCompanyTaxExample();
         example.createCriteria().andIsDeleteEqualTo(false);
-        // TODO: 添加 company Name
+        List<NeoCompanyTax> taxList = taxMapper.selectByExample(example);
+        List<ICompanyTaxList> list = new ArrayList<>();
+        log.info("===>{}", taxList);
+        for (NeoCompanyTax tax: taxList) {
+            ICompanyTaxList item = new ICompanyTaxList();
+            String companyName = commonService.fetchCompanyNameById(tax.getCompanyId());
+            item.setId(tax.getId());
+            item.setCompanyName(companyName);
+            item.setCompanyId(tax.getCompanyId());
+            item.setCreateDate(tax.getCreateDate());
+            item.setDelete(tax.getIsDelete());
+            item.setMonth(tax.getMonth());
+            item.setNumber(tax.getNumber());
+            item.setRemark(tax.getRemark());
+            item.setTaxReceive(tax.getTaxReceive());
+            list.add(item);
+        }
         try {
-            return ResponseBean.success(taxMapper.selectByExample(example));
+            return ResponseBean.success(list);
         } catch (Exception e) {
             return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
         }

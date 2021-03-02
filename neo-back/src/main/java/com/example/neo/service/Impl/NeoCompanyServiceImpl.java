@@ -57,17 +57,6 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
     }
 
     @Override
-    public String getCompanyNameByCompanyId(int companyId) {
-        NeoCompanyExample companyExample = new NeoCompanyExample();
-        companyExample.createCriteria().andIdEqualTo(companyId);
-        List<NeoCompany> companies = companyMapper.selectByExample(companyExample);
-        if (companies==null||companies.size()!=1){
-            return null;
-        }
-        return companies.get(0).getCompanyName();
-    }
-
-    @Override
     public ResponseBean charge(MultipartFile file, ICharge icharge) {
         Double amount = DoubleUtil.formatDouble(icharge.getAmount());
         if (file.isEmpty()) {
@@ -169,7 +158,7 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
         for (NeoRechargeRecord record:mid){
             IChargeInfo chargeInfo = new IChargeInfo();
             BeanUtils.copyProperties(record,chargeInfo);
-            chargeInfo.setCompanyName(getCompanyNameByCompanyId(record.getCompanyId()));
+            chargeInfo.setCompanyName(commonService.fetchCompanyNameById(record.getCompanyId()));
             results.add(chargeInfo);
         }
         newPageInfo.setList(results);
