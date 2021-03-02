@@ -7,7 +7,10 @@ import com.example.neo.mybatis.mapper.*;
 import com.example.neo.mybatis.model.*;
 import com.example.neo.service.UserService;
 import com.example.neo.utils.ResponseBean;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -329,25 +332,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseBean fetchEmployee() {
+    public ResponseBean fetchEmployee(int pageNum, int pageSize) {
         try {
             NeoEmployeeExample example = new NeoEmployeeExample();
             example.createCriteria().andIsLockedEqualTo(false);
+            PageHelper.startPage(pageNum, pageSize);
             List<NeoEmployee> employeeList = employeeMapper.selectByExample(example);
+            PageInfo<NeoEmployee> pageInfo = new PageInfo<>(employeeList);
+            PageInfo<IEmployee> newPageInfo = new PageInfo<>();
+            BeanUtils.copyProperties(pageInfo,newPageInfo);
+            List<NeoEmployee> pageInfoList = pageInfo.getList();
             List<IEmployee> list = new ArrayList<>();
-            for (NeoEmployee item : employeeList) {
+            if (pageInfoList==null||pageInfoList.size()==0) {
+                return ResponseBean.success(newPageInfo);
+            }
+            for (NeoEmployee item : pageInfoList) {
                 IEmployee employee = new IEmployee();
+                BeanUtils.copyProperties(item, employee);
                 employee.setId(item.getId());
                 NeoCompany companyInfo = companyMapper.selectByPrimaryKey(item.getCompanyId());
-                employee.setCompanyName(companyInfo.getCompanyName());
+                employee.setCompanyName(companyInfo == null ? "" : companyInfo.getCompanyName());
                 employee.setIdVerify(item.getIdVerify());
                 employee.setIsSignUp(item.getIsSignup());
                 employee.setUserName(item.getName());
                 employee.setUserMobile(item.getTel());
                 list.add(employee);
             }
-
-            return ResponseBean.success(list);
+            newPageInfo.setList(list);
+            return ResponseBean.success(newPageInfo);
         } catch (Exception e) {
             return ResponseBean.fail(ResponseCodeEnum.SERVER_ERROR);
         }

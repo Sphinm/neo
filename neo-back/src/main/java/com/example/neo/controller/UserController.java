@@ -61,8 +61,8 @@ public class UserController {
 
     @PreAuthorize("hasAnyAuthority('user_employee')")
     @GetMapping("/fetch/employee")
-    public ResponseBean fetchEmployee() {
-        return userService.fetchEmployee();
+    public ResponseBean fetchEmployee(@RequestParam(value="pageNum" ,required =false, defaultValue = "1") int pageNum,@RequestParam(value="pageSize" ,required =false, defaultValue = "10") int pageSize) {
+        return userService.fetchEmployee(pageNum, pageSize);
     }
 
     @PreAuthorize("hasAnyAuthority('user_employee')")

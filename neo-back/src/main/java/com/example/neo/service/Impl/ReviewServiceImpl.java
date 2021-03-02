@@ -23,7 +23,6 @@ import java.util.List;
 @Slf4j
 @Service
 public class ReviewServiceImpl implements ReviewService {
-    private Snowflake snowflake = new Snowflake(2,3);
     @Autowired
     NeoCompanyRelationMapper relationMapper;
     @Autowired
@@ -196,7 +195,6 @@ public class ReviewServiceImpl implements ReviewService {
         example.createCriteria().andIsDeleteEqualTo(false);
         List<NeoCompanyTax> taxList = taxMapper.selectByExample(example);
         List<ICompanyTaxList> list = new ArrayList<>();
-        log.info("===>{}", taxList);
         for (NeoCompanyTax tax: taxList) {
             ICompanyTaxList item = new ICompanyTaxList();
             String companyName = commonService.fetchCompanyNameById(tax.getCompanyId());
@@ -261,7 +259,7 @@ public class ReviewServiceImpl implements ReviewService {
         tax.setCompanyId(info.getCompanyId());
         tax.setIsDelete(false);
         tax.setMonth(info.getMonth());
-        tax.setNumber(String.valueOf(snowflake.nextId()));
+        tax.setNumber(String.valueOf(Snowflake.INSTANCE.nextId()));
         tax.setTaxReceive(info.getReceipts());
         tax.setRemark(info.getRemarks());
         tax.setCreatorId(user.getId());

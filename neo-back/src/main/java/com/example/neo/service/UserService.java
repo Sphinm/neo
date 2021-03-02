@@ -45,7 +45,7 @@ public interface UserService {
     /**
      * 查询员工
      */
-    ResponseBean fetchEmployee();
+    ResponseBean fetchEmployee(int pageNum,int pageSize);
 
     /**
      * delete user

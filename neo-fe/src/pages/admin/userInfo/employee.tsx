@@ -10,10 +10,15 @@ export const Employee = () => {
     fetchAllUser()
   }, []);
 
-  const fetchAllUser = async() => {
+  const fetchAllUser = async(pageNum = 1, pageSize = 10) => {
     try {
-      const { data } = await fetchAllEmployee()
-      setTableData(data)
+      const body = {
+        pageNum: pageNum,
+        pageSize: pageSize
+      }
+      const { data } = await fetchAllEmployee(body)
+      console.log(data)
+      setTableData(data.list)
     } catch (error) {
       handleError(error)
     }
@@ -71,9 +76,18 @@ export const Employee = () => {
     }
   }
 
+  const changePage = (page: number, pageSize: number) => {
+    console.log(page, pageSize)
+  }
+
   return (
     <Card title="员工档案">
-      <Table bordered rowKey="id" columns={columns as any} dataSource={tableData} />
+      <Table bordered rowKey="id" columns={columns as any} dataSource={tableData} pagination={{
+            showSizeChanger: true,
+            showQuickJumper: true,
+            pageSize: 20,
+            onChange: (page) => changePage(page, 20),
+          }} />
     </Card>
   )
 }

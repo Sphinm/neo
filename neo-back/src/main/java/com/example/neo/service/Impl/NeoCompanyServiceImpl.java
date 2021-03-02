@@ -71,7 +71,7 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
         // 解决中文问题，linux 下中文路径，图片显示问题
         fileName = UUID.randomUUID() + suffixName;
         File file1 = new File(filePath);
-        if  (!file1.exists()  && !file1.isDirectory())
+        if  (!file1.exists() && !file1.isDirectory())
         {
             log.info("{}不存在，创建目录",filePath);
             file1.mkdir();

@@ -52,8 +52,8 @@ export const fetchCompany = () => {
 }
 
 /** 管理员查询员工 */
-export const fetchAllEmployee = () => {
-  return ajax.get(`/fetch/employee`)
+export const fetchAllEmployee = (params: {pageNum: number, pageSize: number}) => {
+  return ajax.get(`/fetch/employee?pageNum=${params.pageNum}&pageSize=${params.pageSize}`,)
 }
 
 /** 删除代理商详细信息 */
