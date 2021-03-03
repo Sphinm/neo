@@ -256,24 +256,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseBean fetchMerchantInfo(UserTypeEnum userType) {
         try {
-            NeoUserExample userExample = new NeoUserExample();
             NeoCompanyExample example = new NeoCompanyExample();
-            userExample.createCriteria().andRoleIdEqualTo(userType.getId());
             // userType 为 merchant，需要为 false，为 company 则为 true
             example.createCriteria().andCompanyTypeEqualTo(userType == UserTypeEnum.COMPANY);
-            List<NeoUser> userList = neoUserMapper.selectByExample(userExample);
             List<NeoCompany> companyList = companyMapper.selectByExample(example);
 
             List<ICreateUser> list = new ArrayList<>();
             for (NeoCompany company : companyList) {
-                for (NeoUser user : userList) {
-                    // 用户关联 id 和公司 id 相等且未锁定
-                    if (user.getRelatedId().equals(company.getId()) && user.getIsLocked()) {
-                        ICreateUser createUser = new ICreateUser();
-                        createUser.setUserInfo(user);
-                        createUser.setCompanyInfo(company);
-                        list.add(createUser);
-                    }
+                NeoUserExample userExample = new NeoUserExample();
+                userExample.createCriteria().andRelatedIdEqualTo(company.getId());
+                List<NeoUser> userList = neoUserMapper.selectByExample(userExample);
+                if (userList == null || userList.size() == 0) continue;
+                NeoUser user = userList.get(0);
+                // 用户关联 id 和公司 id 相等且未锁定
+                if (user.getIsLocked()) {
+                    ICreateUser createUser = new ICreateUser();
+                    createUser.setUserInfo(user);
+                    createUser.setCompanyInfo(company);
+                    list.add(createUser);
                 }
             }
             return ResponseBean.success(list);

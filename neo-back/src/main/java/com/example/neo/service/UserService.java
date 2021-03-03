@@ -12,7 +12,7 @@ public interface UserService {
     ResponseBean fetchUserInfo();
 
     /**
-     * 查询商户信息
+     * 查询代理商户信息
      */
     ResponseBean fetchMerchantInfo(UserTypeEnum userType);
 
