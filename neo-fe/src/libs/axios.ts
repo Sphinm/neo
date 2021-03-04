@@ -29,7 +29,7 @@ const responseInterceptor = (response: AxiosResponse) => {
 
   if (data?.code !== 'SUCCESS') {
     notification.error({
-      message: '系统错误，请联系管理员',
+      message: data.message ? data.message : '系统错误，请联系管理员',
     })
   } else {
     return response.data
