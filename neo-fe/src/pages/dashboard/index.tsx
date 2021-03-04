@@ -34,8 +34,6 @@ const Dashboard = () => {
   const [companyBalance, setCompanyBalance] = useState(0)
   let chartInstance: echarts.ECharts | null = null
 
-  console.log(11, rebateList, setCompanyBalance(0))
-
   const renderChart = () => {
     const renderedInstance = echarts.getInstanceByDom(chartRef?.current as CanvasType)
     if (renderedInstance) {
@@ -47,6 +45,7 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
+    console.log(11, rebateList, setCompanyBalance(0))
     RoleStore.currentRole?.roleType !== AuthType.ADMIN && renderChart()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
