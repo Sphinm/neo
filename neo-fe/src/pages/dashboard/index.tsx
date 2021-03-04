@@ -34,6 +34,8 @@ const Dashboard = () => {
   const [companyBalance, setCompanyBalance] = useState(0)
   let chartInstance: echarts.ECharts | null = null
 
+  console.log(11, rebateList, setCompanyBalance(0))
+
   const renderChart = () => {
     const renderedInstance = echarts.getInstanceByDom(chartRef?.current as CanvasType)
     if (renderedInstance) {
