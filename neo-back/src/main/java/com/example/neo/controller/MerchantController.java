@@ -25,4 +25,10 @@ public class MerchantController {
     public ResponseBean fetchMerchantBalance() {
         return merchantService.fetchMerchantBalance();
     }
+
+    @PreAuthorize("hasAnyAuthority('merchant_rebate')")
+    @GetMapping("/create/company-list")
+    public ResponseBean fetchMerchantCreateCompany() {
+        return merchantService.fetchMerchantCreateCompany();
+    }
 }

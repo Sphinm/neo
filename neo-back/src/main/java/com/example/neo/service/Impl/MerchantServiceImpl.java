@@ -45,4 +45,14 @@ public class MerchantServiceImpl implements MerchantService {
         }
         return ResponseBean.success(financeList.get(0).getBalance());
     }
+
+    @Override
+    public ResponseBean fetchMerchantCreateCompany() {
+        NeoUser user = commonService.fetchUserByMobile();
+        NeoCompanyExample companyExample = new NeoCompanyExample();
+        companyExample.setOrderByClause("create_date desc");
+        companyExample.createCriteria().andCreatorIdEqualTo(user.getId());
+        List<NeoCompany> companyList = companyMapper.selectByExample(companyExample);
+        return ResponseBean.success(companyList);
+    }
 }

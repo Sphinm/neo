@@ -46,7 +46,7 @@ export const fetchCompanyByMerchantId = (merchantId: string) => {
   return ajax.get(`/fetch/company-list?merchantId=${merchantId}`)
 }
 
-/** 查询代理商创建的公司 */
+/** 查询所有的公司 */
 export const fetchCompany = () => {
   return ajax.get(`/fetch/company`)
 }

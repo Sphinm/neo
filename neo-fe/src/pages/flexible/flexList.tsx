@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Card, Table, Badge, Input, Divider, Button, Form, Spin, Modal, Row, Col } from 'antd'
 import { AuthType } from '@/enums/role'
-import { createNewUser, fetchMerchant } from '@/apis/user'
+import { createNewUser } from '@/apis/user'
 import { handleError } from '@/libs/axios'
+import { fetchMerchantCreateCompany } from '@/apis/merchant'
+import moment from 'moment'
 
 const { Search } = Input
 
@@ -21,57 +23,57 @@ export const FlexList = () => {
     },
     {
       title: '公司名称',
-      dataIndex: 'age',
+      dataIndex: 'companyName',
     },
     {
       title: '公司税号',
-      dataIndex: 'address',
+      dataIndex: 'companyTax',
     },
     {
       title: '公司地址',
-      dataIndex: 'address',
+      dataIndex: 'companyLocation',
     },
     {
       title: '联系人',
-      dataIndex: 'task',
+      dataIndex: 'contactName',
     },
     {
       title: '联系电话',
-      dataIndex: 'action',
+      dataIndex: 'contactTel',
     },
     {
       title: '开户行',
-      dataIndex: 'action',
+      dataIndex: 'companyBankName',
     },
     {
       title: '银行账号',
-      dataIndex: 'task',
+      dataIndex: 'companyBankNumber',
     },
     {
       title: '费率',
-      dataIndex: 'action',
+      dataIndex: 'companyRate',
     },
     {
       title: '收件人',
-      dataIndex: 'action',
+      dataIndex: 'recipientName',
     },
     {
-      title: '收件账号',
-      dataIndex: 'task',
+      title: '收件电话',
+      dataIndex: 'recipientTel',
     },
     {
       title: '收件地址',
-      dataIndex: 'action',
+      dataIndex: 'recipientAddress',
     },
     {
       title: '创建时间',
-      dataIndex: 'action',
-      render: (text: any, record: any) => <div>123</div>,
+      dataIndex: 'createDate',
+      render: (text: any, record: any) => <>{moment(text).format('YYYY/MM/DD HH:mm:ss')}</>,
     },
     {
       title: '状态',
-      dataIndex: 'action',
-      render: (text: any, record: any) => <Badge status="processing" text="等待审核"></Badge>,
+      dataIndex: 'companyStatus',
+      render: (text: any, record: any) => <Badge status={text ? 'success' : 'processing'} text={text ? '审核通过' : '等待审核'}></Badge>,
     },
     // {
     //   title: '操作',
@@ -97,14 +99,8 @@ export const FlexList = () => {
   const fetchCompanyInfo = async() => {
     try {
       setLoaded(true)
-      const { data } = await fetchMerchant(AuthType.COMPANY);
-      const newData = data.map((item: { companyInfo: any; userInfo: any }) => {
-        return {
-          ...item.companyInfo,
-         userInfo: item.userInfo,
-        }
-      })
-      setTableData(newData)
+      const { data } = await fetchMerchantCreateCompany();
+      setTableData(data)
     } catch (error) {
       handleError(error)
     } finally {

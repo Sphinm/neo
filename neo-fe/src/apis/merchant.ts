@@ -9,3 +9,8 @@ export const fetchMerchantRebate = () => {
 export const fetchMerchantBalance = () => {
   return ajax.get(`/merchant/balance`)
 }
+
+/** 获取代理商创建的公司 */
+export const fetchMerchantCreateCompany = () => {
+  return ajax.get(`/create/company-list`)
+}

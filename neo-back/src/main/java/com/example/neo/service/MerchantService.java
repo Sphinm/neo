@@ -6,4 +6,6 @@ public interface MerchantService {
     ResponseBean fetchRebate();
 
     ResponseBean fetchMerchantBalance();
+
+    ResponseBean fetchMerchantCreateCompany();
 }
