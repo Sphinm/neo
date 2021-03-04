@@ -17,42 +17,60 @@ export const FlexList = () => {
   const columns = [
     {
       title: 'ID',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'id',
     },
     {
       title: '公司名称',
       dataIndex: 'age',
-      key: 'age',
     },
     {
-      title: '充值金额',
+      title: '公司税号',
       dataIndex: 'address',
-      key: 'address',
     },
     {
-      title: '发放金额',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      title: '公司地址',
+      dataIndex: 'address',
     },
     {
-      title: '余额',
-      key: 'task',
-      render: (text: any, record: any) => <div>绑定任务</div>,
+      title: '联系人',
+      dataIndex: 'task',
+    },
+    {
+      title: '联系电话',
+      dataIndex: 'action',
+    },
+    {
+      title: '开户行',
+      dataIndex: 'action',
+    },
+    {
+      title: '银行账号',
+      dataIndex: 'task',
     },
     {
       title: '费率',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      dataIndex: 'action',
+    },
+    {
+      title: '收件人',
+      dataIndex: 'action',
+    },
+    {
+      title: '收件账号',
+      dataIndex: 'task',
+    },
+    {
+      title: '收件地址',
+      dataIndex: 'action',
     },
     {
       title: '创建时间',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      dataIndex: 'action',
+      render: (text: any, record: any) => <div>123</div>,
     },
     {
       title: '状态',
-      key: 'action',
+      dataIndex: 'action',
       render: (text: any, record: any) => <Badge status="processing" text="等待审核"></Badge>,
     },
     // {
