@@ -3,7 +3,7 @@ import { Card, Table, Badge, Input, Divider, Button, Form, Spin, Modal, Row, Col
 import { AuthType } from '@/enums/role'
 import { createNewUser } from '@/apis/user'
 import { handleError } from '@/libs/axios'
-import { fetchMerchantCreateCompany } from '@/apis/merchant'
+import { fetchMerchantCreateCompany, searchByCompanyName } from '@/apis/merchant'
 import moment from 'moment'
 
 const { Search } = Input
@@ -124,12 +124,27 @@ export const FlexList = () => {
         companyInfo,
       }
       await createNewUser(params, AuthType.COMPANY)
-      // fetchCompanyInfo()
+      fetchCompanyInfo()
     } catch (error) {
       handleError(error)
     }
     setVisible(false)
   }
+
+
+  const searchByName = async (name: string) => {
+    console.log(name)
+    try {
+      setLoaded(true)
+      const { data } = await searchByCompanyName(name)
+      setTableData(data)
+     } catch (error) {
+      handleError(error)
+    } finally {
+      setLoaded(false)
+    }
+  }
+
 
   return (
     <Spin spinning={isLoaded}>
@@ -138,7 +153,7 @@ export const FlexList = () => {
         style={{ width: 300 }}
         placeholder="请输入公司名称"
         enterButton="搜索"
-        onSearch={value => console.log(value)}
+        onSearch={value => searchByName(value)}
       />
       <Button style={{ marginLeft: 30 }} type="primary" onClick={createCompany}>
           新增客户

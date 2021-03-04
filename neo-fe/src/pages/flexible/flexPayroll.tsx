@@ -1,55 +1,65 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, Table, Input, Divider } from 'antd'
+import {fetchMerchantAssignRecords, searchByCompanyAssign} from '@/apis/merchant'
+import { handleError } from '@/libs/axios'
 
 const { Search } = Input
 
+
 export const FlexPayroll = () => {
+  const [loading, setLoading] = useState<boolean>(false)
+  const [tableData, setTableData] = useState([])
   const columns = [
     {
       title: '订单号',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'orderNumber',
     },
     {
-      title: '申请时间',
+      title: '创建时间',
       dataIndex: 'age',
-      key: 'age',
     },
     {
       title: '公司名称',
       dataIndex: 'address',
-      key: 'address',
     },
     {
       title: '发放金额（成功）',
-      key: 'action',
+      dataIndex: 'action',
     },
     {
       title: '佣金',
-      key: 'task',
+      dataIndex: 'task',
     },
   ]
 
-  const data = [
-    {
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ]
+  useEffect(() => {
+    fetchAssignRecords()
+  }, [])
+
+  const fetchAssignRecords = async () => {
+    try {
+      setLoading(true)
+      const { data } = await fetchMerchantAssignRecords()
+      setTableData(data)
+     } catch (error) {
+      handleError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const searchByName = async (name: string) => {
+    console.log(name)
+    try {
+      setLoading(true)
+      const { data } = await searchByCompanyAssign(name)
+      setTableData(data)
+     } catch (error) {
+      handleError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <Card title="发放记录">
@@ -57,10 +67,10 @@ export const FlexPayroll = () => {
         style={{ width: 300 }}
         placeholder="请输入公司名称"
         enterButton="搜索"
-        onSearch={value => console.log(value)}
+        onSearch={value => searchByName(value)}
       />
       <Divider />
-      <Table bordered rowKey="name" columns={columns as any} dataSource={data} />
+      <Table bordered loading={loading} rowKey="order_number" columns={columns as any} dataSource={tableData} />
     </Card>
   )
 }

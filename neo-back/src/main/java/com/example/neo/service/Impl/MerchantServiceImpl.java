@@ -55,4 +55,24 @@ public class MerchantServiceImpl implements MerchantService {
         List<NeoCompany> companyList = companyMapper.selectByExample(companyExample);
         return ResponseBean.success(companyList);
     }
+
+    @Override
+    public ResponseBean searchByCompanyNameForList(String name) {
+        return ResponseBean.success();
+    }
+
+    @Override
+    public ResponseBean searchByCompanyNameForAssign(String name) {
+        return ResponseBean.success();
+    }
+
+    @Override
+    public ResponseBean fetchAssignRecords() {
+        return ResponseBean.success();
+    }
+
+    @Override
+    public ResponseBean fetchRebateRecords() {
+        return ResponseBean.success();
+    }
 }

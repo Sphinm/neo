@@ -8,4 +8,12 @@ public interface MerchantService {
     ResponseBean fetchMerchantBalance();
 
     ResponseBean fetchMerchantCreateCompany();
+
+    ResponseBean searchByCompanyNameForList(String name);
+
+    ResponseBean searchByCompanyNameForAssign(String name);
+
+    ResponseBean fetchAssignRecords();
+
+    ResponseBean fetchRebateRecords();
 }
