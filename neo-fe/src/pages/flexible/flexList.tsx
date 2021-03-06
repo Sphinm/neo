@@ -133,7 +133,6 @@ export const FlexList = () => {
 
 
   const searchByName = async (name: string) => {
-    console.log(name)
     try {
       setLoaded(true)
       const { data } = await searchByCompanyName(name)

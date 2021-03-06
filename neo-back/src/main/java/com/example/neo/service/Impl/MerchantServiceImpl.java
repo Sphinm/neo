@@ -1,5 +1,6 @@
 package com.example.neo.service.Impl;
 
+import com.example.neo.model.IIssue;
 import com.example.neo.mybatis.mapper.NeoCompanyMapper;
 import com.example.neo.mybatis.mapper.NeoFinanceMapper;
 import com.example.neo.mybatis.mapper.NeoIssueMapper;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -58,17 +60,66 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public ResponseBean searchByCompanyNameForList(String name) {
-        return ResponseBean.success();
+        NeoUser user = commonService.fetchUserByMobile();
+        NeoCompanyExample example = new NeoCompanyExample();
+        // 查找是该代理商名下用户的公司
+        if (name.equals("")) {
+            example.setOrderByClause("create_date desc");
+            example.createCriteria().andCreatorIdEqualTo(user.getId());
+        } else {
+            example.createCriteria().andCreatorIdEqualTo(user.getId()).andCompanyNameLike("%" + name + "%");
+        }
+        List<NeoCompany> companyList = companyMapper.selectByExample(example);
+        return ResponseBean.success(companyList);
     }
 
     @Override
-    public ResponseBean searchByCompanyNameForAssign(String name) {
-        return ResponseBean.success();
+    public ResponseBean searchByCompanyNameForAssign(String id) {
+        if (id.equals("")) {
+            return ResponseBean.success(fetchMerchantAssignCommon());
+        }
+        List<IIssue> data = fetchMerchantAssignCommon();
+        List<IIssue> issues = new ArrayList<>();
+        for (IIssue issue: data) {
+            if (issue.getOrderNumber().equals(id)) {
+                issues.add(issue);
+            }
+        }
+        return ResponseBean.success(issues);
     }
 
     @Override
     public ResponseBean fetchAssignRecords() {
-        return ResponseBean.success();
+        return ResponseBean.success(fetchMerchantAssignCommon());
+    }
+
+    private List<IIssue> fetchMerchantAssignCommon() {
+        NeoUser user = commonService.fetchUserByMobile();
+        NeoCompanyExample companyExample = new NeoCompanyExample();
+        companyExample.createCriteria().andCreatorIdEqualTo(user.getId());
+        List<NeoCompany> companyList = companyMapper.selectByExample(companyExample);
+
+        List<IIssue> issues = new ArrayList<>();
+
+        for (NeoCompany company: companyList) {
+
+            String companyName = commonService.fetchCompanyNameById(company.getId());
+            NeoIssueExample example = new NeoIssueExample();
+            // 首先判断是该代理商旗下的公司，其次判断发放状态是成功的，最后判断审核状态为已通过的
+            example.createCriteria().andCompanyIdEqualTo(company.getId()).andStatusEqualTo(true).andProvideStatusEqualTo(true);
+            List<NeoIssue> issueList = issueMapper.selectByExample(example);
+            for (NeoIssue item: issueList) {
+                IIssue issue = new IIssue();
+                issue.setCompanyName(companyName);
+                issue.setCreateDate(item.getCreateDate());
+                issue.setRebate(item.getRebate());
+                issue.setAmount(item.getAmount());
+                issue.setTaskName(item.getTaskName());
+                issue.setOrderNumber(item.getOrderNumber());
+                issues.add(issue);
+            }
+        }
+        return issues;
     }
 
     @Override

@@ -11,7 +11,7 @@ public interface MerchantService {
 
     ResponseBean searchByCompanyNameForList(String name);
 
-    ResponseBean searchByCompanyNameForAssign(String name);
+    ResponseBean searchByCompanyNameForAssign(String id);
 
     ResponseBean fetchAssignRecords();
 

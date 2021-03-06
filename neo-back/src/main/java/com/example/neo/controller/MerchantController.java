@@ -41,8 +41,8 @@ public class MerchantController {
 
     @PreAuthorize("hasAnyAuthority('merchant_rebate')")
     @GetMapping("/search/company/assign")
-    public ResponseBean searchByCompanyNameForAssign(@RequestParam("name") String name) {
-        return merchantService.searchByCompanyNameForAssign(name);
+    public ResponseBean searchByCompanyNameForAssign(@RequestParam("id") String id) {
+        return merchantService.searchByCompanyNameForAssign(id);
     }
 
     @PreAuthorize("hasAnyAuthority('merchant_rebate')")

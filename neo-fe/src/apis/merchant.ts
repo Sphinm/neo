@@ -22,8 +22,8 @@ export const searchByCompanyName = (name: string) => {
 }
 
 /** 根据公司名称搜索发放公司 */
-export const searchByCompanyAssign = (name: string) => {
-  return ajax.get(`/search/company/assign?name=${name}`)
+export const searchByCompanyAssign = (id: string) => {
+  return ajax.get(`/search/company/assign?id=${id}`)
 }
 
 /** 获取代理商发放记录 */

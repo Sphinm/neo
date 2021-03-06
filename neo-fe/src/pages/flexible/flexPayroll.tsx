@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Card, Table, Input, Divider } from 'antd'
 import {fetchMerchantAssignRecords, searchByCompanyAssign} from '@/apis/merchant'
 import { handleError } from '@/libs/axios'
+import moment from 'moment'
 
 const { Search } = Input
 
@@ -15,20 +16,21 @@ export const FlexPayroll = () => {
       dataIndex: 'orderNumber',
     },
     {
-      title: '创建时间',
-      dataIndex: 'age',
-    },
-    {
       title: '公司名称',
-      dataIndex: 'address',
+      dataIndex: 'companyName',
     },
     {
       title: '发放金额（成功）',
-      dataIndex: 'action',
+      dataIndex: 'amount',
     },
     {
       title: '佣金',
-      dataIndex: 'task',
+      dataIndex: 'rebate',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createDate',
+      render: (text: any, record: any) => <>{moment(text).format('YYYY/MM/DD HH:mm:ss')}</>,
     },
   ]
 
@@ -48,11 +50,10 @@ export const FlexPayroll = () => {
     }
   }
 
-  const searchByName = async (name: string) => {
-    console.log(name)
+  const searchByNumber = async (id: string) => {
     try {
       setLoading(true)
-      const { data } = await searchByCompanyAssign(name)
+      const { data } = await searchByCompanyAssign(id)
       setTableData(data)
      } catch (error) {
       handleError(error)
@@ -67,7 +68,7 @@ export const FlexPayroll = () => {
         style={{ width: 300 }}
         placeholder="请输入公司名称"
         enterButton="搜索"
-        onSearch={value => searchByName(value)}
+        onSearch={value => searchByNumber(value)}
       />
       <Divider />
       <Table bordered loading={loading} rowKey="order_number" columns={columns as any} dataSource={tableData} />
