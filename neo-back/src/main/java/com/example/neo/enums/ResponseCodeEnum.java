@@ -16,9 +16,9 @@ public enum ResponseCodeEnum {
     AMOUNT_NOT_VALID("金额不合法"),
     CREATE_USER_FAILED("创建用户失败"),
     NOT_FOUND_FINANCE("未找到当前公司相关财务信息"),
-
-
-
+    WITHDRAW_LESS_AMOUNT("当前提现金额大于账户总金额，属于非法提现"),
+    CREATE_WITHDRAW_FAIL("提现失败"),
+    WITHDRAW_TODAY("今日已申请提现一次，请等待管理员审核通过"),
 
 
     MOBILE_EQUALS("手机号重复");

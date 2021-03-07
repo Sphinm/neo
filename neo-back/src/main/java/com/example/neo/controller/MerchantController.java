@@ -1,13 +1,12 @@
 package com.example.neo.controller;
 
+import com.example.neo.model.IWithdraw;
 import com.example.neo.service.MerchantService;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -55,5 +54,17 @@ public class MerchantController {
     @GetMapping("/fetch/rebate/records")
     public ResponseBean fetchRebateRecords() {
         return merchantService.fetchRebateRecords();
+    }
+
+    @PreAuthorize("hasAnyAuthority('merchant_rebate')")
+    @PostMapping("/merchant/withdraw")
+    public ResponseBean withdrawByMerchant(@RequestBody IWithdraw withdraw) {
+        return merchantService.withdrawByMerchant(withdraw);
+    }
+
+    @PreAuthorize("hasAnyAuthority('merchant_rebate')")
+    @GetMapping("/fetch/withdraw/records")
+    public ResponseBean fetchMerchantWithDrawRecords() {
+        return merchantService.fetchMerchantWithDrawRecords();
     }
 }

@@ -35,3 +35,13 @@ export const fetchMerchantAssignRecords = () => {
 export const fetchMerchantRebateRecords = () => {
   return ajax.get(`/fetch/rebate/records`)
 }
+
+/** 提现申请 */
+export const withdrawByMerchant = (params: any) => {
+  return ajax.post(`/merchant/withdraw`, params)
+}
+
+/** 获取代理商提现记录 */
+export const fetchMerchantwithdrawRecords = () => {
+  return ajax.get(`/fetch/withdraw/records`)
+}

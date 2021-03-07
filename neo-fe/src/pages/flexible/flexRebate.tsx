@@ -55,7 +55,7 @@ export const FlexRebate = () => {
 
   return (
     <Card title="返佣记录">
-      <Table bordered loading={loading} rowKey="name" columns={columns as any} dataSource={tableData} />
+      <Table bordered loading={loading} rowKey="orderNumber" columns={columns} dataSource={tableData} />
     </Card>
   )
 }

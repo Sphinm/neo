@@ -1,5 +1,6 @@
 package com.example.neo.service;
 
+import com.example.neo.model.IWithdraw;
 import com.example.neo.utils.ResponseBean;
 
 public interface MerchantService {
@@ -16,4 +17,8 @@ public interface MerchantService {
     ResponseBean fetchAssignRecords();
 
     ResponseBean fetchRebateRecords();
+
+    ResponseBean withdrawByMerchant(IWithdraw withdraw);
+
+    ResponseBean fetchMerchantWithDrawRecords();
 }

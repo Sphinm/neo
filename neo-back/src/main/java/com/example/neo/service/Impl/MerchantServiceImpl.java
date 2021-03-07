@@ -1,20 +1,21 @@
 package com.example.neo.service.Impl;
 
+import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.IIssue;
 import com.example.neo.model.IRecharge;
-import com.example.neo.mybatis.mapper.NeoCompanyMapper;
-import com.example.neo.mybatis.mapper.NeoFinanceMapper;
-import com.example.neo.mybatis.mapper.NeoIssueMapper;
-import com.example.neo.mybatis.mapper.NeoRechargeRecordMapper;
+import com.example.neo.model.IWithdraw;
+import com.example.neo.mybatis.mapper.*;
 import com.example.neo.mybatis.model.*;
 import com.example.neo.service.MerchantService;
 import com.example.neo.utils.DoubleUtil;
 import com.example.neo.utils.ResponseBean;
+import com.example.neo.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -32,6 +33,8 @@ public class MerchantServiceImpl implements MerchantService {
     NeoFinanceMapper financeMapper;
     @Autowired
     NeoRechargeRecordMapper recordMapper;
+    @Autowired
+    NeoWithdrawMapper withdrawMapper;
 
     @Override
     public ResponseBean fetchRebate() {
@@ -153,5 +156,54 @@ public class MerchantServiceImpl implements MerchantService {
             }
         }
         return ResponseBean.success(rechargeList);
+    }
+
+    @Override
+    public ResponseBean withdrawByMerchant(IWithdraw withdraw) {
+        ResponseBean res = fetchMerchantBalance();
+        if ((Double) res.getData() < withdraw.getWithdrawMoney()) {
+            return ResponseBean.fail(ResponseCodeEnum.WITHDRAW_LESS_AMOUNT);
+        }
+
+        List<NeoWithdraw> list = hasProcessRecords();
+        if (list.size() > 0) {
+            return ResponseBean.fail(ResponseCodeEnum.WITHDRAW_TODAY);
+        }
+
+        NeoUser user = commonService.fetchUserByMobile();
+        Date date = new Date();
+        NeoWithdraw dto = new NeoWithdraw();
+        dto.setOrderNumber(String.valueOf(Snowflake.INSTANCE.nextId()));
+        dto.setUserId(user.getId());
+        dto.setAmount(withdraw.getWithdrawMoney());
+        dto.setCourierCompany(withdraw.getDeliveryCompany());
+        dto.setTrackingNumber(withdraw.getDeliveryNumber());
+        dto.setStatus(false);
+        dto.setReviewDate(date);
+        dto.setCreatorId(user.getId());
+        dto.setCreateDate(date);
+        dto.setUpdateId(user.getId());
+        dto.setUpdateDate(date);
+        try {
+            withdrawMapper.insert(dto);
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.CREATE_WITHDRAW_FAIL);
+        }
+        return ResponseBean.success();
+    }
+
+    @Override
+    public ResponseBean fetchMerchantWithDrawRecords() {
+        NeoUser user = commonService.fetchUserByMobile();
+        NeoWithdrawExample example = new NeoWithdrawExample();
+        example.createCriteria().andUserIdEqualTo(user.getId());
+        return ResponseBean.success(withdrawMapper.selectByExample(example));
+    }
+
+    private List<NeoWithdraw> hasProcessRecords() {
+        NeoUser user = commonService.fetchUserByMobile();
+        NeoWithdrawExample example = new NeoWithdrawExample();
+        example.createCriteria().andUserIdEqualTo(user.getId()).andStatusEqualTo(false);
+        return withdrawMapper.selectByExample(example);
     }
 }

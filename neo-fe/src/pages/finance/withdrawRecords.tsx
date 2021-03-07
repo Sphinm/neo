@@ -1,58 +1,59 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, Table, Badge } from 'antd'
+import { handleError } from '@/libs/axios'
+import { fetchMerchantwithdrawRecords } from '@/apis/merchant'
+import moment from 'moment'
 
 export const WithdrawRecords = () => {
+  const [loading, setLoading] = useState(false)
+  const [tableData, setTableData] = useState<any>([])
+
+  useEffect(() => {
+    fetchInitData()
+  }, [])
+
+  const fetchInitData = async () => {
+    try {
+      setLoading(true)
+      const { data } = await fetchMerchantwithdrawRecords()
+      setTableData(data)
+    } catch (error) {
+      handleError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const columns = [
     {
       title: '订单号',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: '申请时间',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'orderNumber',
     },
     {
       title: '金额',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'amount',
     },
     {
       title: '审核状态',
-      key: 'action',
-      render: (text: any, record: any) => <Badge status="processing" text="等待审核"></Badge>,
+      dataIndex: 'status',
+      render: (text: any, record: any) => <Badge status={text ? 'success' : 'processing'} text={text ? '审核通过' : '等待审核'}></Badge>,
     },
     {
       title: '审核时间',
-      key: 'action',
+      dataIndex: 'reviewDate',
+      render: (text: any, record: any) => <>{moment(text).format('YYYY/MM/DD HH:mm:ss')}</>,
+    },
+    {
+      title: '申请时间',
+      dataIndex: 'createDate',
+      render: (text: any, record: any) => <>{moment(text).format('YYYY/MM/DD HH:mm:ss')}</>,
     },
   ]
 
-  const data = [
-    {
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ]
 
   return (
     <Card title="提现记录">
-      <Table bordered rowKey="name" columns={columns as any} dataSource={data} />
+      <Table loading={loading} bordered rowKey="orderNumber" columns={columns as any} dataSource={tableData} />
     </Card>
   )
 }

@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
-import { Card, Form, Input, Button, Divider, Descriptions } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { Card, Form, Input, Button, Divider, Descriptions, message } from 'antd'
 import styles from './index.styl'
+import { fetchMerchantBalance, withdrawByMerchant } from '@/apis/merchant'
+import { handleError } from '@/libs/axios'
 
 const layout = {
   labelCol: { span: 8 },
@@ -10,14 +12,43 @@ const layout = {
 export const Withdraw = () => {
   const [form] = Form.useForm()
   const [totalMoney, setTotalMoney] = useState(0)
+  const [merchantBalance, setMerchantBalance] = useState(0)
 
-  const onFinish = (values: any) => {
-    console.log('onFinish:', values)
-    if (!totalMoney) return
+  useEffect(() => {
+      fetchMerchantBalanceMoney()
+  }, [])
+
+  const onFinish = async (values: any) => {
+    if (totalMoney <= 0) {
+      message.error({
+        content: '提现金额已超过当前可用余额，请核实后再提交'
+      })
+      return
+    }
+    try {
+      const params = {
+        withdrawMoney: Number(values.withdrawMoney),
+        deliveryCompany: values.deliveryCompany,
+        deliveryNumber: Number(values.deliveryNumber),
+      }
+      await withdrawByMerchant(params)
+      fetchMerchantBalanceMoney()
+    } catch (error) {}
   }
 
   const handleChangeMoney = (value: any) => {
-    setTotalMoney(200 - value > 0 ? 200 - value : 0)
+    console.log(112, merchantBalance - value)
+    const left = merchantBalance - value
+    setTotalMoney(left)
+  }
+
+  const fetchMerchantBalanceMoney = async () => {
+    try {
+      const { data } = await fetchMerchantBalance()
+      setMerchantBalance(data)
+    } catch (error) {
+      handleError(error)
+    }
   }
 
   return (
@@ -25,10 +56,10 @@ export const Withdraw = () => {
       <div className={styles['recharge']}>
         <Form className={styles['recharge-form']} form={form} {...layout} onFinish={onFinish}>
           <Form.Item label="当前可用余额" name="leftMoeny">
-            <div style={{ textAlign: 'left' }}>￥200</div>
+            <div style={{ textAlign: 'left' }}>￥ {merchantBalance}</div>
           </Form.Item>
           <Form.Item label="提现金额" name="withdrawMoney" rules={[{ required: true, message: '请输入提现金额' }]}>
-            <Input allowClear placeholder="请输入提现金额（元）" onChange={e => handleChangeMoney(e.target.value)} />
+            <Input type="number" allowClear placeholder="请输入提现金额（元）" onChange={e => handleChangeMoney(e.target.value)} />
           </Form.Item>
           <Form.Item label="快递公司" name="deliveryCompany" rules={[{ required: true, message: '请输入快递公司' }]}>
             <Input placeholder="请输入快递公司" />
