@@ -1,11 +1,14 @@
 package com.example.neo.service.Impl;
 
 import com.example.neo.model.IIssue;
+import com.example.neo.model.IRecharge;
 import com.example.neo.mybatis.mapper.NeoCompanyMapper;
 import com.example.neo.mybatis.mapper.NeoFinanceMapper;
 import com.example.neo.mybatis.mapper.NeoIssueMapper;
+import com.example.neo.mybatis.mapper.NeoRechargeRecordMapper;
 import com.example.neo.mybatis.model.*;
 import com.example.neo.service.MerchantService;
+import com.example.neo.utils.DoubleUtil;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,8 @@ public class MerchantServiceImpl implements MerchantService {
     NeoIssueMapper issueMapper;
     @Autowired
     NeoFinanceMapper financeMapper;
+    @Autowired
+    NeoRechargeRecordMapper recordMapper;
 
     @Override
     public ResponseBean fetchRebate() {
@@ -102,7 +107,6 @@ public class MerchantServiceImpl implements MerchantService {
         List<IIssue> issues = new ArrayList<>();
 
         for (NeoCompany company: companyList) {
-
             String companyName = commonService.fetchCompanyNameById(company.getId());
             NeoIssueExample example = new NeoIssueExample();
             // 首先判断是该代理商旗下的公司，其次判断发放状态是成功的，最后判断审核状态为已通过的
@@ -124,6 +128,30 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public ResponseBean fetchRebateRecords() {
-        return ResponseBean.success();
+        NeoUser user = commonService.fetchUserByMobile();
+        NeoCompany currentCompany = commonService.fetchCurrentCompany();
+        NeoCompanyExample companyExample = new NeoCompanyExample();
+        companyExample.createCriteria().andCreatorIdEqualTo(user.getId());
+        List<NeoCompany> companyList = companyMapper.selectByExample(companyExample);
+
+        List<IRecharge> rechargeList = new ArrayList<>();
+        for (NeoCompany company: companyList) {
+            String companyName = commonService.fetchCompanyNameById(company.getId());
+            NeoRechargeRecordExample example = new NeoRechargeRecordExample();
+            // 首先判断是该代理商旗下的公司，其次判断发放状态是成功的，最后判断审核状态为已通过的
+            example.createCriteria().andCompanyIdEqualTo(company.getId()).andApprovalStatusEqualTo(true);
+            List<NeoRechargeRecord> recordList = recordMapper.selectByExample(example);
+            for (NeoRechargeRecord item: recordList) {
+                IRecharge recharge = new IRecharge();
+                recharge.setCompanyName(companyName);
+                recharge.setCreateDate(item.getCreateDate());
+                recharge.setOrderNumber(item.getOrderNumber());
+                recharge.setRate(item.getRate());
+                recharge.setRechargeMoney(item.getAccountAmount());
+                recharge.setRebateMoney(DoubleUtil.formatDouble(item.getAccountAmount() * (item.getRate() - currentCompany.getCompanyRate()) * 0.01));
+                rechargeList.add(recharge);
+            }
+        }
+        return ResponseBean.success(rechargeList);
     }
 }

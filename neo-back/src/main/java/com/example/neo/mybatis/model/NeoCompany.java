@@ -74,7 +74,7 @@ public class NeoCompany implements Serializable {
      *
      * @mbg.generated
      */
-    private String companyRate;
+    private Float companyRate;
 
     /**
      *
@@ -368,7 +368,7 @@ public class NeoCompany implements Serializable {
      *
      * @mbg.generated
      */
-    public String getCompanyRate() {
+    public Float getCompanyRate() {
         return companyRate;
     }
 
@@ -380,8 +380,8 @@ public class NeoCompany implements Serializable {
      *
      * @mbg.generated
      */
-    public void setCompanyRate(String companyRate) {
-        this.companyRate = companyRate == null ? null : companyRate.trim();
+    public void setCompanyRate(Float companyRate) {
+        this.companyRate = companyRate;
     }
 
     /**

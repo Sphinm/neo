@@ -685,62 +685,52 @@ public class NeoCompanyExample {
             return (Criteria) this;
         }
 
-        public Criteria andCompanyRateEqualTo(String value) {
+        public Criteria andCompanyRateEqualTo(Float value) {
             addCriterion("company_rate =", value, "companyRate");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyRateNotEqualTo(String value) {
+        public Criteria andCompanyRateNotEqualTo(Float value) {
             addCriterion("company_rate <>", value, "companyRate");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyRateGreaterThan(String value) {
+        public Criteria andCompanyRateGreaterThan(Float value) {
             addCriterion("company_rate >", value, "companyRate");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyRateGreaterThanOrEqualTo(String value) {
+        public Criteria andCompanyRateGreaterThanOrEqualTo(Float value) {
             addCriterion("company_rate >=", value, "companyRate");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyRateLessThan(String value) {
+        public Criteria andCompanyRateLessThan(Float value) {
             addCriterion("company_rate <", value, "companyRate");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyRateLessThanOrEqualTo(String value) {
+        public Criteria andCompanyRateLessThanOrEqualTo(Float value) {
             addCriterion("company_rate <=", value, "companyRate");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyRateLike(String value) {
-            addCriterion("company_rate like", value, "companyRate");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompanyRateNotLike(String value) {
-            addCriterion("company_rate not like", value, "companyRate");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompanyRateIn(List<String> values) {
+        public Criteria andCompanyRateIn(List<Float> values) {
             addCriterion("company_rate in", values, "companyRate");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyRateNotIn(List<String> values) {
+        public Criteria andCompanyRateNotIn(List<Float> values) {
             addCriterion("company_rate not in", values, "companyRate");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyRateBetween(String value1, String value2) {
+        public Criteria andCompanyRateBetween(Float value1, Float value2) {
             addCriterion("company_rate between", value1, value2, "companyRate");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyRateNotBetween(String value1, String value2) {
+        public Criteria andCompanyRateNotBetween(Float value1, Float value2) {
             addCriterion("company_rate not between", value1, value2, "companyRate");
             return (Criteria) this;
         }

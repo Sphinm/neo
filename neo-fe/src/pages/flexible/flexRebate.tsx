@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Card, Table } from 'antd'
 import { handleError } from '@/libs/axios'
 import { fetchMerchantRebateRecords } from '@/apis/merchant'
+import moment from 'moment'
 
 export const FlexRebate = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -9,27 +10,29 @@ export const FlexRebate = () => {
   const columns = [
     {
       title: '订单号',
-      dataIndex: 'name',
+      dataIndex: 'orderNumber',
     },
     {
       title: '金额',
-      dataIndex: 'age',
+      dataIndex: 'rebateMoney',
     },
     {
       title: '公司名称',
-      dataIndex: 'address',
+      dataIndex: 'companyName',
     },
     {
       title: '充值金额',
-      dataIndex: 'action',
+      dataIndex: 'rechargeMoney',
     },
     {
       title: '费率',
-      dataIndex: 'task',
+      dataIndex: 'rate',
+      render: (text: any, record: any) => <>{`${text}%`}</>,
     },
     {
       title: '创建时间',
-      dataIndex: 'task',
+      dataIndex: 'createDate',
+      render: (text: any, record: any) => <>{moment(text).format('YYYY/MM/DD HH:mm:ss')}</>,
     },
   ]
 

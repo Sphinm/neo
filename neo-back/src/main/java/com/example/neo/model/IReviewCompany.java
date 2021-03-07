@@ -14,7 +14,7 @@ public class IReviewCompany {
     String contactTel;
     String bankName;
     String bankCode;
-    String rate;
+    Float rate;
     Boolean isChecked;
     Date checkTime;
 }

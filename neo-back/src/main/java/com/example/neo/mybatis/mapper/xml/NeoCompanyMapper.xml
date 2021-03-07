@@ -13,7 +13,7 @@
     <result column="company_bank_name" jdbcType="VARCHAR" property="companyBankName" />
     <result column="company_bank_number" jdbcType="VARCHAR" property="companyBankNumber" />
     <result column="company_industry" jdbcType="VARCHAR" property="companyIndustry" />
-    <result column="company_rate" jdbcType="VARCHAR" property="companyRate" />
+    <result column="company_rate" jdbcType="REAL" property="companyRate" />
     <result column="contact_name" jdbcType="VARCHAR" property="contactName" />
     <result column="company_fixed_tel" jdbcType="VARCHAR" property="companyFixedTel" />
     <result column="contact_tel" jdbcType="VARCHAR" property="contactTel" />
@@ -163,7 +163,7 @@
       update_date, company_type)
     values (#{id,jdbcType=INTEGER}, #{companyName,jdbcType=VARCHAR}, #{companyTax,jdbcType=VARCHAR}, 
       #{companyLocation,jdbcType=VARCHAR}, #{companyBankName,jdbcType=VARCHAR}, #{companyBankNumber,jdbcType=VARCHAR}, 
-      #{companyIndustry,jdbcType=VARCHAR}, #{companyRate,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR}, 
+      #{companyIndustry,jdbcType=VARCHAR}, #{companyRate,jdbcType=REAL}, #{contactName,jdbcType=VARCHAR}, 
       #{companyFixedTel,jdbcType=VARCHAR}, #{contactTel,jdbcType=VARCHAR}, #{recipientName,jdbcType=VARCHAR}, 
       #{recipientTel,jdbcType=VARCHAR}, #{recipientAddress,jdbcType=VARCHAR}, #{companyStatus,jdbcType=BIT}, 
       #{creatorId,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateId,jdbcType=INTEGER}, 
@@ -260,7 +260,7 @@
         #{companyIndustry,jdbcType=VARCHAR},
       </if>
       <if test="companyRate != null">
-        #{companyRate,jdbcType=VARCHAR},
+        #{companyRate,jdbcType=REAL},
       </if>
       <if test="contactName != null">
         #{contactName,jdbcType=VARCHAR},
@@ -339,7 +339,7 @@
         company_industry = #{record.companyIndustry,jdbcType=VARCHAR},
       </if>
       <if test="record.companyRate != null">
-        company_rate = #{record.companyRate,jdbcType=VARCHAR},
+        company_rate = #{record.companyRate,jdbcType=REAL},
       </if>
       <if test="record.contactName != null">
         contact_name = #{record.contactName,jdbcType=VARCHAR},
@@ -395,7 +395,7 @@
       company_bank_name = #{record.companyBankName,jdbcType=VARCHAR},
       company_bank_number = #{record.companyBankNumber,jdbcType=VARCHAR},
       company_industry = #{record.companyIndustry,jdbcType=VARCHAR},
-      company_rate = #{record.companyRate,jdbcType=VARCHAR},
+      company_rate = #{record.companyRate,jdbcType=REAL},
       contact_name = #{record.contactName,jdbcType=VARCHAR},
       company_fixed_tel = #{record.companyFixedTel,jdbcType=VARCHAR},
       contact_tel = #{record.contactTel,jdbcType=VARCHAR},
@@ -438,7 +438,7 @@
         company_industry = #{companyIndustry,jdbcType=VARCHAR},
       </if>
       <if test="companyRate != null">
-        company_rate = #{companyRate,jdbcType=VARCHAR},
+        company_rate = #{companyRate,jdbcType=REAL},
       </if>
       <if test="contactName != null">
         contact_name = #{contactName,jdbcType=VARCHAR},
@@ -491,7 +491,7 @@
       company_bank_name = #{companyBankName,jdbcType=VARCHAR},
       company_bank_number = #{companyBankNumber,jdbcType=VARCHAR},
       company_industry = #{companyIndustry,jdbcType=VARCHAR},
-      company_rate = #{companyRate,jdbcType=VARCHAR},
+      company_rate = #{companyRate,jdbcType=REAL},
       contact_name = #{contactName,jdbcType=VARCHAR},
       company_fixed_tel = #{companyFixedTel,jdbcType=VARCHAR},
       contact_tel = #{contactTel,jdbcType=VARCHAR},
