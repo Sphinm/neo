@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Card, Table, Button, Popconfirm, Badge } from 'antd'
 import { handleError } from '@/libs/axios';
 import { fetchReviewProvide, reviewProvide } from '@/apis/review';
+import moment from 'moment';
 
 export const CompanyPayrollRecord = () => {
   const [tableData, setTableData] = useState([])
@@ -44,11 +45,12 @@ export const CompanyPayrollRecord = () => {
     {
       title: '审核时间',
       dataIndex: 'updateDate',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      render: (text: any, record: any) => <>{moment(text).format('YYYY/MM/DD HH:mm:ss')}</>,
     },
     {
       title: '申请时间',
       dataIndex: 'createDate',
+      render: (text: any, record: any) => <>{moment(text).format('YYYY/MM/DD HH:mm:ss')}</>,
     },
     {
       title: '操作',

@@ -1,6 +1,7 @@
 package com.example.neo.service.Impl;
 
 import com.example.neo.enums.ResponseCodeEnum;
+import com.example.neo.exception.NeoException;
 import com.example.neo.model.ICompanyTaxList;
 import com.example.neo.model.IReviewCompany;
 import com.example.neo.model.IUploadTaxInfo;
@@ -39,6 +40,8 @@ public class ReviewServiceImpl implements ReviewService {
     NeoWithdrawMapper withdrawMapper;
     @Autowired
     NeoCompanyTaxMapper taxMapper;
+    @Autowired
+    NeoFinanceMapper financeMapper;
 
     @Autowired
     private CommonService commonService;
@@ -184,8 +187,34 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ResponseBean reviewWithdraw(int id) {
         NeoWithdraw record = withdrawMapper.selectByPrimaryKey(id);
+        Date date = new Date();
+        record.setUpdateDate(date);
+        record.setReviewDate(date);
         record.setStatus(true);
+        // update finance
+        NeoCompany company = commonService.fetchCompanyByUserId(record.getUserId());
+        NeoFinanceExample financeExample = new NeoFinanceExample();
+        financeExample.createCriteria().andCompanyIdEqualTo(company.getId())
+            .andStatusEqualTo(true);
+        List<NeoFinance> finances = financeMapper.selectByExample(financeExample);
+
+        if (finances==null||finances.size()!=1){
+            throw new NeoException("未找到当前公司相关财务信息");
+        }
+        // 更新 finance 表，逻辑变更老的状态，
+        NeoFinance finance = finances.get(0);
+        NeoFinance oldFiance = new NeoFinance();
+        oldFiance.setStatus(false);
+        oldFiance.setUpdateId(commonService.fetchUserByMobile().getId());
+        oldFiance.setUpdateDate(date);
+        financeMapper.updateByExampleSelective(oldFiance,financeExample);
+        finance.setId(null);
+        finance.setTotalRecharge(finance.getTotalRecharge() - record.getAmount());
+        finance.setBalance(finance.getBalance() - record.getAmount());
+        finance.setCreatorId(oldFiance.getUpdateId());
+        finance.setCreateDate(new Date());
         try {
+            financeMapper.insertSelective(finance);
             withdrawMapper.updateByPrimaryKeySelective(record);
             return ResponseBean.success();
         } catch (Exception e) {

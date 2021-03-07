@@ -41,7 +41,7 @@ export const WithdrawRecords = () => {
     {
       title: '审核时间',
       dataIndex: 'reviewDate',
-      render: (text: any, record: any) => <>{moment(text).format('YYYY/MM/DD HH:mm:ss')}</>,
+      render: (text: any, record: any) => <>{record.status ? moment(record.reviewDate).format('YYYY/MM/DD HH:mm:ss') : "-"}</>,
     },
     {
       title: '申请时间',

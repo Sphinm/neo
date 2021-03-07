@@ -37,9 +37,7 @@ export const Withdraw = () => {
   }
 
   const handleChangeMoney = (value: any) => {
-    console.log(112, merchantBalance - value)
-    const left = merchantBalance - value
-    setTotalMoney(left)
+    setTotalMoney(merchantBalance - value)
   }
 
   const fetchMerchantBalanceMoney = async () => {

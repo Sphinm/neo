@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Card, Table, Button, Popconfirm, Badge } from 'antd'
 import { handleError } from '@/libs/axios';
 import { fetchReviewWithdraw, reviewWithdraw } from '@/apis/review';
+import moment from 'moment';
 
 export const MerchantWithdraw = () => {
   const [tableData, setTableData] = useState([])
@@ -21,10 +22,6 @@ export const MerchantWithdraw = () => {
 
   const columns = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-    },
-    {
       title: '订单号',
       dataIndex: 'orderNumber',
     },
@@ -39,19 +36,20 @@ export const MerchantWithdraw = () => {
     },
     {
       title: '审核时间',
-      dataIndex: 'updateDate',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      dataIndex: 'reviewDate',
+      render: (text: any, record: any) => <>{record.status ? moment(record.reviewDate).format('YYYY/MM/DD HH:mm:ss') : "-"}</>,
     },
     {
       title: '申请时间',
       dataIndex: 'createDate',
+      render: (text: any, record: any) => <>{moment(text).format('YYYY/MM/DD HH:mm:ss')}</>,
     },
     {
       title: '操作',
       render: (text: any, record: any) => {
         return (
           <Popconfirm
-            title="通过该笔提现申请"
+            title="通过该笔提现申请前请确保已给该代理商打款"
             onConfirm={() => checkRecharge(record.id)}
             okText="确认"
             cancelText="取消"

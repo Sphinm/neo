@@ -34,8 +34,8 @@ public class AuthController {
 
     @PreAuthorize("hasAnyAuthority('user_logout')")
     @PostMapping("/userLogout")
-    public void logout() {
-        AuthService.logout();
+    public ResponseBean logout() {
+       return AuthService.logout();
     }
 
     @PreAuthorize("hasAnyAuthority('change_password')")

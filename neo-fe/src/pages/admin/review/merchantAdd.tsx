@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Card, Table, Button, Popconfirm, Badge } from 'antd'
 import { fetchReviewCompany, reviewCompany } from '@/apis/review';
 import { handleError } from '@/libs/axios';
+import moment from 'moment';
 
 export const MerchantAdd = () => {
   const [tableData, setTableData] = useState([])
@@ -64,7 +65,7 @@ export const MerchantAdd = () => {
     {
       title: '审核时间',
       dataIndex: 'checkTime',
-      render: (text: any, record: any) => <div>{record.isChecked ? record.checkTime : "-"}</div>,
+      render: (text: any, record: any) => <div>{record.isChecked ? moment(record.checkTime).format('YYYY/MM/DD HH:mm:ss') : "-"}</div>,
     },
     {
       title: '操作',

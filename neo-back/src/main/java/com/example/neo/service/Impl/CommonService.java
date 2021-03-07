@@ -18,6 +18,8 @@ public class CommonService {
     private NeoUserMapper neoUserMapper;
     @Autowired
     private NeoCompanyMapper companyMapper;
+
+
     /**
      * 根据手机号获取用户信息
      *
@@ -32,6 +34,17 @@ public class CommonService {
             return null;
         }
         return users.get(0);
+    }
+
+    /**
+     * 根据 userId 获取用户信息
+     *
+     * @return user
+     */
+    public NeoCompany fetchCompanyByUserId(Integer id) {
+        NeoUser users = neoUserMapper.selectByPrimaryKey(id);
+        NeoCompany company = companyMapper.selectByPrimaryKey(users.getRelatedId());
+        return company;
     }
 
     /**

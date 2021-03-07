@@ -8,7 +8,7 @@ public interface AuthService {
 
     ResponseBean newLogin(ILogin iLogin);
 
-    void logout();
+    ResponseBean logout();
 
     ResponseBean changePwd(IChangePassword pwd);
 }

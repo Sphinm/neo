@@ -39,10 +39,10 @@ public class AuthServiceImpl implements AuthService {
     @Value("${neo.token.secret-key}")
     public String secretKey;
 
-    public void logout() {
+    public ResponseBean logout() {
         NeoUser user = commonService.fetchUserByMobile();
         String token = JwtTokenUtil.generatorJwtToken(user.getId(), user.getUsername(), expiredTime, secretKey);
-        redisTemplate.delete(token);
+        return ResponseBean.success(redisTemplate.delete(token));
     }
 
     public ResponseBean changePwd(IChangePassword pwd) {
