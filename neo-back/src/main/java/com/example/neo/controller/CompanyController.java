@@ -23,12 +23,6 @@ public class CompanyController {
     }
 
     @PreAuthorize("hasAnyAuthority('company_issues')")
-    @GetMapping("/company/issues")
-    public ResponseBean fetchCompanyIssues() {
-        return companyService.fetchCompanyIssues();
-    }
-
-    @PreAuthorize("hasAnyAuthority('company_issues')")
     @GetMapping("/company/balance")
     public ResponseBean fetchCompanyBalance() {
         return companyService.fetchCompanyBalance();

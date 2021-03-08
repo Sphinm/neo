@@ -11,7 +11,6 @@ import { AuthType } from '@/enums/role'
 import { insertUserInfo, updateUserInfo } from '@/apis/user'
 import { handleError } from '@/libs/axios'
 import { fetchMerchantBalance, fetchMerchantRebate } from '@/apis/merchant'
-import { fetchCompanyIssues, fetchCompanyBalance } from '@/apis/compnay'
 
 const textMessage = [
   '1. 我司只接受 6% 服务费专票',
@@ -34,11 +33,10 @@ const Dashboard = () => {
   // 代理商返佣
   const [rebateList, setRebateList] = useState<any[]>([])
   const [rebateMoney, setRebateMoney] = useState(0)
-  const [merchantBalance, setMerchantBalance] = useState(0)
+  const [balance, setBalance] = useState(0)
   // 公司发放
   const [issuesList, setIssuesList] = useState<any[]>([])
   const [issuesMoney, setIssuesMoney] = useState(0)
-  const [companyBalance, setCompanyBalance] = useState(0)
   // 图表
   let chartInstance: echarts.ECharts | null = null
 
@@ -60,15 +58,16 @@ const Dashboard = () => {
   // 代理商初始化请求
   useEffect(() => {
     if (RoleStore.currentRole?.roleType === AuthType.MERCHANT) {
-      fetchMerchantRebateByMonth()
-      fetchMerchantBalanceMoney()
+      fetchRebateByMonth(AuthType.MERCHANT)
+      fetchBalanceMoney()
     }
   }, [])
 
+  // 公司初始化请求
   useEffect(() => {
     if (RoleStore.currentRole?.roleType === AuthType.COMPANY) {
-      fetchIssuesByMonth()
-      fetchCompanyBalanceMoney()
+      fetchRebateByMonth(AuthType.COMPANY)
+      fetchBalanceMoney()
     }
   }, [])
 
@@ -88,43 +87,28 @@ const Dashboard = () => {
     }
   }
 
-  const fetchIssuesByMonth = async () => {
-    try {
-      const { data } = await fetchCompanyIssues()
-      setIssuesList(data)
-      if (data.length) {
-        setIssuesMoney(data.reduce((a: any, b: any) => a + b.rebate))
-      }
-    } catch (error) {
-      handleError(error)
-    }
-  } 
 
-  const fetchCompanyBalanceMoney = async () => {
-    try {
-      const { data } = await fetchCompanyBalance()
-      setCompanyBalance(data)
-    } catch (error) {
-      handleError(error)
-    }
-  }
-
-  const fetchMerchantRebateByMonth = async () => {
+  const fetchRebateByMonth = async (type: AuthType) => {
     try {
       const { data } = await fetchMerchantRebate()
-      setRebateList(data)
       if (data.length) {
-        setRebateMoney(data.reduce((a: any, b: any) => a + b.rebate))
+        if (type === AuthType.MERCHANT) {
+          setRebateList(data)
+          setRebateMoney(data.reduce((a: any, b: any) => a + b.rebate))
+        } else {
+          setIssuesList(data)
+          setIssuesMoney(data.reduce((a: any, b: any) => a + b.amount))
+        }
       }
     } catch (error) {
       handleError(error)
     }
   } 
 
-  const fetchMerchantBalanceMoney = async () => {
+  const fetchBalanceMoney = async () => {
     try {
       const { data } = await fetchMerchantBalance()
-      setMerchantBalance(data)
+      setBalance(data)
     } catch (error) {
       handleError(error)
     }
@@ -168,7 +152,7 @@ const Dashboard = () => {
       {RoleStore.currentRole?.roleType !== 'ADMIN' && (
         <Card className={style['dash-header']}>
           <div className={style['money-title']}>账户可用余额</div>
-          <div className={style['money']}>￥{RoleStore.currentRole?.roleType === AuthType.MERCHANT ? merchantBalance : companyBalance}</div>
+          <div className={style['money']}>￥{balance}</div>
           <div className={style['button-group']}>
             <Button type="primary" onClick={goFinance}>
               {RoleStore.currentRole?.roleType === AuthType.MERCHANT ? '申请提现' : '立即充值'}

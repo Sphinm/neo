@@ -31,7 +31,5 @@ public interface NeoCompanyService {
      */
     ResponseBean getChargeList(int pageNum,int pageSize);
 
-    ResponseBean fetchCompanyIssues();
-
     ResponseBean fetchCompanyBalance();
 }

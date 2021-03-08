@@ -163,13 +163,8 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
     }
 
     @Override
-    public ResponseBean fetchCompanyIssues() {
-        return null;
-    }
-
-    @Override
     public ResponseBean fetchCompanyBalance() {
-        return null;
+        return ResponseBean.success();
     }
 
     /**
