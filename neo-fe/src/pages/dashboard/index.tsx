@@ -11,12 +11,16 @@ import { AuthType } from '@/enums/role'
 import { insertUserInfo, updateUserInfo } from '@/apis/user'
 import { handleError } from '@/libs/axios'
 import { fetchMerchantBalance, fetchMerchantRebate } from '@/apis/merchant'
+import { fetchCompanyIssues, fetchCompanyBalance } from '@/apis/compnay'
 
 const textMessage = [
   '1. 我司只接受 6% 服务费专票',
-  '2. 代理商同一手机号可同时开通代理商账户和用人单位账户',
+  '2. 代理商同一手机号不可同时开通代理商账户和用人单位账户',
   '3. 我司收到发票后 1-3 个工作日发放佣金',
 ]
+
+const TIPS = `由于银行对公转账的相关限制，费用发放在工作日内：周一 至 周五 09:00 ~
+16:00之间进行，超过该时间顺延到第二个工作日办理，如需按时发放请提前做好相关工作准备。`
 
 type CanvasType = HTMLDivElement | HTMLCanvasElement
 
@@ -27,11 +31,15 @@ const Dashboard = () => {
   const [visible, setVisible] = useState(false)
   const [userInfo, setUserInfo] = useState<any>({})
   const [isLoaded, setLoaded] = useState<boolean>(false)
-  // 返佣列表
-  const [rebateList, setRebateList] = useState<any>([])
+  // 代理商返佣
+  const [rebateList, setRebateList] = useState<any[]>([])
   const [rebateMoney, setRebateMoney] = useState(0)
   const [merchantBalance, setMerchantBalance] = useState(0)
+  // 公司发放
+  const [issuesList, setIssuesList] = useState<any[]>([])
+  const [issuesMoney, setIssuesMoney] = useState(0)
   const [companyBalance, setCompanyBalance] = useState(0)
+  // 图表
   let chartInstance: echarts.ECharts | null = null
 
   const renderChart = () => {
@@ -45,15 +53,22 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    console.log(11, rebateList, setCompanyBalance(0))
     RoleStore.currentRole?.roleType !== AuthType.ADMIN && renderChart()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // 代理商初始化请求
   useEffect(() => {
     if (RoleStore.currentRole?.roleType === AuthType.MERCHANT) {
       fetchMerchantRebateByMonth()
       fetchMerchantBalanceMoney()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (RoleStore.currentRole?.roleType === AuthType.COMPANY) {
+      fetchIssuesByMonth()
+      fetchCompanyBalanceMoney()
     }
   }, [])
 
@@ -70,6 +85,27 @@ const Dashboard = () => {
       history.push('/main/finance/withdraw')
     } else {
       history.push('/main/finance/recharge')
+    }
+  }
+
+  const fetchIssuesByMonth = async () => {
+    try {
+      const { data } = await fetchCompanyIssues()
+      setIssuesList(data)
+      if (data.length) {
+        setIssuesMoney(data.reduce((a: any, b: any) => a + b.rebate))
+      }
+    } catch (error) {
+      handleError(error)
+    }
+  } 
+
+  const fetchCompanyBalanceMoney = async () => {
+    try {
+      const { data } = await fetchCompanyBalance()
+      setCompanyBalance(data)
+    } catch (error) {
+      handleError(error)
     }
   }
 
@@ -224,23 +260,20 @@ const Dashboard = () => {
           {RoleStore.currentRole?.roleType !== 'ADMIN' && (
             <Col span={6}>
               {RoleStore.currentRole?.roleType === AuthType.COMPANY && (
-                <Card title="公告">
-                  由于银行对公转账的相关限制，费用发放在工作日内：周一 至 周五 09:00 ~
-                  16:00之间进行，超过该时间顺延到第二个工作日办理，如需按时发放请提前做好相关工作准备。
-                </Card>
+                <Card title="公告">{TIPS}</Card>
               )}
               <Card style={{ margin: '20px 0' }}>
                 <div className={style['money-title']}>
                   {RoleStore.currentRole?.roleType === AuthType.COMPANY ? '最近一个月发放金额' : '最近一个月返佣金额'}
                 </div>
-                <div className={style['money']}>￥{rebateMoney} 元</div>
+                <div className={style['money']}>￥{RoleStore.currentRole?.roleType === AuthType.COMPANY ? issuesMoney : rebateMoney} 元</div>
               </Card>
-              {/* <Card>
+              <Card>
                 <div className={style['money-title']}>
                   {RoleStore.currentRole?.roleType === AuthType.COMPANY ? '最近一个月发放次数' : '最近一个月返佣次数'}
                 </div>
-                <div className={style['money']}>￥100 人</div>
-              </Card> */}
+                <div className={style['money']}>{RoleStore.currentRole?.roleType === AuthType.COMPANY ? issuesList.length : rebateList.length} 人</div>
+              </Card>
             </Col>
           )}
         </Row>

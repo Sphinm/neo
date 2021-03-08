@@ -162,6 +162,16 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
         return ResponseBean.success(newPageInfo);
     }
 
+    @Override
+    public ResponseBean fetchCompanyIssues() {
+        return null;
+    }
+
+    @Override
+    public ResponseBean fetchCompanyBalance() {
+        return null;
+    }
+
     /**
      * 查询公司费率
      * @param companyId

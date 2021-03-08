@@ -22,27 +22,39 @@ public class CompanyController {
         return companyService.fetchCompanyList();
     }
 
-    @PreAuthorize("hasAnyAuthority('charge_page')")
-    @GetMapping("/chargepage")
+    @PreAuthorize("hasAnyAuthority('company_issues')")
+    @GetMapping("/company/issues")
+    public ResponseBean fetchCompanyIssues() {
+        return companyService.fetchCompanyIssues();
+    }
+
+    @PreAuthorize("hasAnyAuthority('company_issues')")
+    @GetMapping("/company/balance")
+    public ResponseBean fetchCompanyBalance() {
+        return companyService.fetchCompanyBalance();
+    }
+
+    @PreAuthorize("hasAnyAuthority('company_issues')")
+    @GetMapping("/company/charge-info")
     public ResponseBean getChargeInfo(){
         return companyService.getChargeInfo();
     }
 
-    @PreAuthorize("hasAnyAuthority('charge_post')")
-    @PostMapping("/chargepost")
+    @PreAuthorize("hasAnyAuthority('company_issues')")
+    @PostMapping("/company/charge/post")
     public ResponseBean charge(@RequestPart("file") MultipartFile file,@RequestPart("charge")ICharge icharge){
         log.info("{}",icharge.getAmount());
         if (file==null){
             return ResponseBean.fail(ResponseCodeEnum.FILE_NOT_NULL);
         }
-        if (icharge == null||icharge.getAmount()<=0){
+        if (icharge.getAmount()<=0){
             return ResponseBean.fail(ResponseCodeEnum.AMOUNT_NOT_VALID);
         }
         return companyService.charge(file,icharge);
     }
 
-    @PreAuthorize("hasAnyAuthority('charge_list')")
-    @GetMapping("/chargelist")
+    @PreAuthorize("hasAnyAuthority('company_issues')")
+    @GetMapping("/company/charge-list")
     public ResponseBean getChargeList(@RequestParam(value="pageNum" ,required =false, defaultValue = "1") int pageNum,@RequestParam(value="pageSize" ,required =false, defaultValue = "10") int pageSize){
         return companyService.getChargeList(pageNum,pageSize);
     }
