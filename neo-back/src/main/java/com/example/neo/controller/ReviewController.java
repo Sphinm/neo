@@ -89,8 +89,8 @@ public class ReviewController {
 
     @PreAuthorize("hasAnyAuthority('review_tax')")
     @PostMapping("/upload/tax")
-    public ResponseBean uploadTax(@RequestParam("file") MultipartFile file) {
-        return reviewService.uploadTax(file);
+    public ResponseBean uploadTax(@RequestParam("file") MultipartFile file, String path) {
+        return reviewService.uploadTax(file, path);
     }
 
     @PreAuthorize("hasAnyAuthority('review_tax')")

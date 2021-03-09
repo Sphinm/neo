@@ -21,6 +21,6 @@ export const fetchCompanyChargeList = () => {
 }
 
 /** 公司充值接口 */
-export const companyCharge = () => {
-  return ajax.post(`/company/charge/post`)
+export const companyCharge = (body: any) => {
+  return ajax.post(`/company/charge/post`, body)
 }

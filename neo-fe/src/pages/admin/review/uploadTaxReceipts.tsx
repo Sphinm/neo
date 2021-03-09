@@ -3,10 +3,10 @@ import { CloudUploadOutlined } from '@ant-design/icons'
 import { Card, Table, Button, Popconfirm, Divider, Modal, Form, Input, Upload, message, Select, DatePicker, Image } from 'antd'
 import { handleError } from '@/libs/axios'
 import { fetchReviewTax, reviewTax, uploadTaxInfo } from '@/apis/review'
-import { RcFile } from 'antd/lib/upload/interface'
 import { fetchCompany } from '@/apis/user'
 import locale from 'antd/lib/date-picker/locale/zh_CN'
 import moment from 'moment'
+import { beforeUpload } from '@/libs/utils'
 
 const { Option } = Select
 
@@ -45,22 +45,13 @@ export const UploadTaxReceipts = () => {
     }
   }
 
-  const beforeUpload = (file: RcFile, FileList: RcFile[]) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-    if (!isJpgOrPng) {
-      message.error('只能上传 JPG/PNG 图片!')
-    }
-    const isLt5M = file.size / 1024 / 1024 < 5
-    if (!isLt5M) {
-      message.error('文件大小不能超过 5M')
-    }
-    return isJpgOrPng && isLt5M
-  }
-
   const options = {
     name: 'file',
     action: '/api/upload/tax',
     accept: "image/png, image/jpeg",
+    data: {
+      path: "tax"
+    },
     headers: {
       'Authorization': `Bearer ` + localStorage.getItem('token'),
     },

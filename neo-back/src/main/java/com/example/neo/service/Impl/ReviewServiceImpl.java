@@ -49,6 +49,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Value("${neo.upload.tax}")
     private String filePath;
 
+    @Value("${neo.charge.filepath}")
+    private String chargeFilePath;
+
     @Override
     public ResponseBean fetchReviewCompanyList() {
 
@@ -166,6 +169,7 @@ public class ReviewServiceImpl implements ReviewService {
         try {
             NeoIssue record = issueMapper.selectByPrimaryKey(id);
             record.setProvideStatus(true);
+            record.setStatus(true);
             issueMapper.updateByPrimaryKeySelective(record);
             return ResponseBean.success();
         } catch (Exception e) {
@@ -267,19 +271,20 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ResponseBean uploadTax(MultipartFile file) {
+    /**
+     * 通用上传图片方法
+     */
+    public ResponseBean uploadTax(MultipartFile file, String path) {
         if (file.isEmpty() || file.getSize() <= 0){
             return ResponseBean.fail(ResponseCodeEnum.FILE_NOT_NULL);
         }
         String fileName = file.getOriginalFilename();
-        String dest = this.filePath + fileName;
-        String virtualPath = "http://www.axinlinggong.com/images/tax/" + fileName;
-        File newFile = new File(dest);
+        File dest = new File(path.equals("tax") ? filePath : chargeFilePath + fileName);
+        String virtualPath = "http://www.axinlinggong.com/images/" + path + "/" + fileName;
         try {
-            file.transferTo(newFile);
+            file.transferTo(dest);
             return ResponseBean.success(virtualPath);
         } catch (Exception e) {
-            log.error(e.toString());
             return ResponseBean.fail(ResponseCodeEnum.FILE_ERROR);
         }
     }

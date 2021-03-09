@@ -1,8 +1,12 @@
-import React, { useState } from 'react'
-import { Card, Form, Input, Button, Upload, message, Divider, Descriptions } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { Card, Form, Input, Button, Upload, Divider, Descriptions, message } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import styles from './index.styl'
 import { Link } from 'react-router-dom'
+import { companyCharge, fetchCompanyChargeInfo } from '@/apis/compnay'
+import { handleError } from '@/libs/axios'
+import { fetchMerchantBalance } from '@/apis/merchant'
+import { beforeUpload } from '@/libs/utils'
 
 const layout = {
   labelCol: { span: 8 },
@@ -14,27 +18,47 @@ export const Recharge = () => {
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
   const [totalMoney, setTotalMoney] = useState(0)
+  const [companyInfo, setCompanyInfo] = useState<any>({})
+  const [balance, setBalance] = useState(0)
 
-  const onFinish = (values: any) => {
-    console.log('onFinish:', values)
+  useEffect(() => {
+    fetchCompanyInfo()
+    fetchBalanceMoney()
+  }, [])
+
+  const fetchCompanyInfo = async () => {
+    try {
+      const { data } = await fetchCompanyChargeInfo()
+      setCompanyInfo(data)
+    } catch (error) {
+      handleError(error)
+    }
   }
 
-  function beforeUpload(file: any) {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-    if (!isJpgOrPng) {
-      message.error('只能上传 JPG/PNG 类型图片!')
+  const fetchBalanceMoney = async () => {
+    try {
+      const { data } = await fetchMerchantBalance()
+      setBalance(data)
+    } catch (error) {
+      handleError(error)
     }
-    const isLt2M = file.size / 1024 / 1024 < 2
-    if (!isLt2M) {
-      message.error('Image must smaller than 2MB!')
-    }
-    return isJpgOrPng && isLt2M
   }
-
-  const getBase64 = (img: Blob, callback: any) => {
-    const reader = new FileReader()
-    reader.addEventListener('load', () => callback(reader.result))
-    reader.readAsDataURL(img)
+  const onFinish = async (values: any) => {
+    if (!values.amount) return
+    setLoading(true)
+    try {
+      const body = {
+        amount: Number(values.amount),
+        virtualPath: imageUrl,
+      }
+      const {data} = await companyCharge(body)
+      message.success(data)
+      window.location.reload()
+    } catch (error) {
+      handleError(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleChange = (info: any) => {
@@ -43,10 +67,16 @@ export const Recharge = () => {
       return
     }
     if (info.file.status === 'done') {
-      getBase64(info.file.originFileObj, (imageUrl: any) => {
-        setImageUrl(imageUrl)
-        setLoading(false)
-      })
+      if (info.file.response.code === 'SUCCESS') {
+        setImageUrl(info.file.response.data)
+        message.success(`${info.file.name} 上传成功`)
+      } else {
+        message.error(`${info.file.name} 上传失败`)
+      }
+      setLoading(false)
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} 上传失败`)
+      setLoading(false)
     }
   }
 
@@ -58,23 +88,39 @@ export const Recharge = () => {
   )
 
   const handleChangeMoney = (value: any) => {
-    // const rate = form.getFieldsValue(['rate'])
-    form.setFieldsValue({ leftmoney: value - value * 0.1 })
-    setTotalMoney(value - value * 0.1 + 0.2)
+    form.setFieldsValue({ leftmoney: value - value * companyInfo.companyRate * 0.01 })
+    setTotalMoney(value - value * companyInfo.companyRate * 0.01  + balance)
+  }
+
+  const options = {
+    name: "file",
+    className: "avatar-uploader",
+    listType: "picture-card" as any,
+    showUploadList: false,
+    action: '/api/upload/tax',
+    accept: "image/png, image/jpeg",
+    data: {
+      path: "charge"
+    },
+    headers: {
+      'Authorization': `Bearer ` + localStorage.getItem('token'),
+    },
+    beforeUpload: beforeUpload,
+    onChange: handleChange
   }
 
   return (
     <Card title="充值">
       <div className={styles['recharge']}>
         <Form className={styles['recharge-form']} form={form} {...layout} onFinish={onFinish}>
-          <Form.Item label="当前可用余额" name="username">
-            <div style={{ textAlign: 'left' }}>￥0.20</div>
+          <Form.Item label="当前可用余额" name="balance">
+            <div style={{ textAlign: 'left' }}>￥{balance}</div>
           </Form.Item>
-          <Form.Item label="打款金额" name="username" rules={[{ required: true, message: '请输入实际打款金额' }]}>
+          <Form.Item label="打款金额" name="amount" rules={[{ required: true, message: '请输入实际打款金额' }]}>
             <Input allowClear placeholder="打款金额（元）" onChange={e => handleChangeMoney(e.target.value)} />
           </Form.Item>
           <Form.Item label="费率" name="rate">
-            <span style={{ fontSize: 20, fontWeight: 500 }}>10%</span>
+            <span style={{ fontSize: 20, fontWeight: 500 }}>{companyInfo.companyRate}%</span>
           </Form.Item>
           <Form.Item
             label="打款凭证"
@@ -82,15 +128,7 @@ export const Recharge = () => {
             valuePropName="credit"
             rules={[{ required: true, message: '请上传打款凭证' }]}
           >
-            <Upload
-              name="credit"
-              listType="picture-card"
-              className="avatar-uploader"
-              showUploadList={false}
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-              beforeUpload={beforeUpload}
-              onChange={handleChange}
-            >
+            <Upload {...options}>
               {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
             </Upload>
           </Form.Item>

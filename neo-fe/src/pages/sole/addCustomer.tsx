@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Card, Form, Input, Button, Upload, message, Divider, Descriptions, Checkbox } from 'antd'
+import { Card, Form, Input, Button, Upload, Divider, Descriptions, Checkbox, message } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import styles from './index.styl'
 import { Link } from 'react-router-dom'
+import { beforeUpload } from '@/libs/utils'
 
 const layout = {
   labelCol: { span: 8 },
@@ -19,18 +20,6 @@ export const AddCustomer = () => {
     console.log('onFinish:', values)
   }
 
-  function beforeUpload(file: any) {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-    if (!isJpgOrPng) {
-      message.error('只能上传 JPG/PNG 类型图片!')
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2
-    if (!isLt2M) {
-      message.error('Image must smaller than 2MB!')
-    }
-    return isJpgOrPng && isLt2M
-  }
-
   const getBase64 = (img: Blob, callback: Function) => {
     const reader = new FileReader()
     reader.addEventListener('load', () => callback(reader.result))
@@ -43,10 +32,17 @@ export const AddCustomer = () => {
       return
     }
     if (info.file.status === 'done') {
+      if (info.file.response.code === 'SUCCESS') {
+        message.success(`${info.file.name} 上传成功`)
+      } else {
+        message.error(`${info.file.name} 上传失败`)
+      }
       getBase64(info.file.originFileObj, (imageUrl: any) => {
         setImageUrl(imageUrl)
         setLoading(false)
       })
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} 上传失败`)
     }
   }
 

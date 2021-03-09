@@ -29,7 +29,7 @@ public interface ReviewService {
 
     ResponseBean reviewTax(int id);
 
-    ResponseBean uploadTax(MultipartFile file);
+    ResponseBean uploadTax(MultipartFile file, String path);
 
     ResponseBean uploadTaxInfo(IUploadTaxInfo info);
 }

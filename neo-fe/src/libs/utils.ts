@@ -1,3 +1,4 @@
+import { message } from "antd"
 import { RcFile } from "antd/lib/upload/interface"
 
 // 图片类型
@@ -14,4 +15,17 @@ export  const isJpgOrPng = (imageFormat: ImageFormatEnum, file: RcFile) => {
     return ['image/png'].includes(file.type)
   }
   return false
+}
+
+
+export const beforeUpload = (file: RcFile, FileList: RcFile[]) => {
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+  if (!isJpgOrPng) {
+    message.error('只能上传 JPG/PNG 图片!')
+  }
+  const isLt5M = file.size / 1024 / 1024 < 5
+  if (!isLt5M) {
+    message.error('文件大小不能超过 5M')
+  }
+  return isJpgOrPng && isLt5M
 }

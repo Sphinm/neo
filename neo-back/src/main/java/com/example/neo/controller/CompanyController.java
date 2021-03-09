@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -36,15 +35,14 @@ public class CompanyController {
 
     @PreAuthorize("hasAnyAuthority('company_issues')")
     @PostMapping("/company/charge/post")
-    public ResponseBean charge(@RequestPart("file") MultipartFile file,@RequestPart("charge")ICharge icharge){
-        log.info("{}",icharge.getAmount());
-        if (file==null){
+    public ResponseBean charge(@RequestBody() ICharge icharge){
+        if (icharge.getVirtualPath()==null){
             return ResponseBean.fail(ResponseCodeEnum.FILE_NOT_NULL);
         }
         if (icharge.getAmount()<=0){
             return ResponseBean.fail(ResponseCodeEnum.AMOUNT_NOT_VALID);
         }
-        return companyService.charge(file,icharge);
+        return companyService.charge(icharge);
     }
 
     @PreAuthorize("hasAnyAuthority('company_issues')")
@@ -52,4 +50,7 @@ public class CompanyController {
     public ResponseBean getChargeList(@RequestParam(value="pageNum" ,required =false, defaultValue = "1") int pageNum,@RequestParam(value="pageSize" ,required =false, defaultValue = "10") int pageSize){
         return companyService.getChargeList(pageNum,pageSize);
     }
+
+    // 财务中心
+
 }

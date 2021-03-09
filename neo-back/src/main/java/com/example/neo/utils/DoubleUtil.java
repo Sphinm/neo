@@ -1,8 +1,5 @@
 package com.example.neo.utils;
 
-import java.math.RoundingMode;
-import java.text.NumberFormat;
-
 /**
  * double工具类
  * @Author: xuhr
@@ -12,7 +9,7 @@ import java.text.NumberFormat;
 public class DoubleUtil {
 
     public static void main(String[] args) {
-        System.out.println(formatDouble(44.4324));
+        System.out.println(formatDouble(44.4));
         System.out.println(formatDouble(44.436666));
     }
 
@@ -22,11 +19,6 @@ public class DoubleUtil {
      * @return
      */
     public static Double formatDouble(double d) {
-        NumberFormat nf = NumberFormat.getNumberInstance();
-        // 保留两位小数
-        nf.setMaximumFractionDigits(2);
-        // 如果不需要四舍五入，可以使用RoundingMode.DOWN
-        nf.setRoundingMode(RoundingMode.HALF_UP);
-        return Double.parseDouble(nf.format(d));
+        return (double) Math.round(d * 100) / 100;
     }
 }

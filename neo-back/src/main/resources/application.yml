@@ -58,7 +58,8 @@ neo:
     expired-seconds: 604800
     secret-key: 'uiewfb7busagf32yr'
   charge:
-    filepath: /usr/neo/upload/charge
+#    filepath: /usr/neo/images/charge
+     filepath: /Users/sumin/Desktop/node
   # 上传完税图片路径
   upload:
     tax: /usr/neo/images/tax/
