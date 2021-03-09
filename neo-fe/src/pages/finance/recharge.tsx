@@ -114,7 +114,7 @@ export const Recharge = () => {
       <div className={styles['recharge']}>
         <Form className={styles['recharge-form']} form={form} {...layout} onFinish={onFinish}>
           <Form.Item label="当前可用余额" name="balance">
-            <div style={{ textAlign: 'left' }}>￥{balance}</div>
+            <div style={{ textAlign: 'left' }}>￥{balance.toFixed(2)}</div>
           </Form.Item>
           <Form.Item label="打款金额" name="amount" rules={[{ required: true, message: '请输入实际打款金额' }]}>
             <Input allowClear placeholder="打款金额（元）" onChange={e => handleChangeMoney(e.target.value)} />
@@ -139,7 +139,7 @@ export const Recharge = () => {
             <Input placeholder="打款金额（元）" disabled />
           </Form.Item>
           <Form.Item label="充值后可用余额" name="totalmoney">
-            <span style={{ fontSize: 20, fontWeight: 500 }}>{totalMoney}</span>
+            <span style={{ fontSize: 20, fontWeight: 500 }}>{totalMoney.toFixed(2)}</span>
           </Form.Item>
           <Form.Item style={{ marginLeft: 200 }}>
             <Button type="primary" htmlType="submit">

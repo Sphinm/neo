@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Table, Button } from 'antd'
+import { Card, Table, Button, Badge } from 'antd'
 import moment from 'moment'
 import { fetchCompanyChargeList } from '@/apis/compnay'
 import { handleError } from '@/libs/axios'
@@ -7,7 +7,7 @@ import { handleError } from '@/libs/axios'
 export const RechargeRecords = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [tableData, setTableData] = useState([])
-
+  
   const columns = [
     {
       title: '订单号',
@@ -15,14 +15,21 @@ export const RechargeRecords = () => {
     },
     
     {
-      title: '收款人',
-      dataIndex: 'address',
-      key: 'address',
+      title: '打款金额',
+      dataIndex: 'paymentAmount',
     },
     {
       title: '充值金额',
-      key: 'task',
-      render: (text: any, record: any) => <div>绑定任务</div>,
+      dataIndex: 'accountAmount',
+    },
+    {
+      title: '打款凭证',
+      dataIndex: 'paymentVoucher',
+    },
+    {
+      title: '审核状态',
+      dataIndex: 'approvalStatus',
+      render: (text: any, record: any) => <Badge status={text ? 'success' : 'processing'} text={text ? '审核通过' : '等待审核'}></Badge>,
     },
     {
       title: '充值时间',
@@ -36,11 +43,8 @@ export const RechargeRecords = () => {
         return (
           <Button
             type="link"
-            onClick={() => {
-              handleSelectRow(record)
-            }}
           >
-            下载回单
+            <a rel="noopener noreferrer" href={record.paymentVoucher} target="_blank">下载回单</a>
           </Button>
         )
       },
@@ -61,11 +65,6 @@ export const RechargeRecords = () => {
     } finally {
       setLoading(false)
     }
-  }
-
-  const handleSelectRow = (record: any) => {
-    console.log('handleSelectRow', record)
-    window.location.href = record.paymentVoucher
   }
 
   return (

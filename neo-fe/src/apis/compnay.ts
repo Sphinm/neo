@@ -5,10 +5,10 @@ import ajax from '@/libs/axios'
 //   return ajax.get(`/company/issues`)
 // }
 
-// /** 获取公司剩余金额 */
-// export const fetchCompanyBalance = () => {
-//   return ajax.get(`/company/balance`)
-// }
+/** 公司开票接口 */
+export const companyInvoice = (body: any) => {
+  return ajax.get(`/company/invoice/post`, body)
+}
 
 /** 获取公司充值信息 */
 export const fetchCompanyChargeInfo = () => {

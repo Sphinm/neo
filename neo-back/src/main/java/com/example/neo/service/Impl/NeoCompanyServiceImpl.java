@@ -2,7 +2,6 @@ package com.example.neo.service.Impl;
 
 import com.example.neo.exception.NeoException;
 import com.example.neo.model.ICharge;
-import com.example.neo.model.IChargeInfo;
 import com.example.neo.mybatis.mapper.NeoCompanyMapper;
 import com.example.neo.mybatis.mapper.NeoFinanceMapper;
 import com.example.neo.mybatis.mapper.NeoRechargeRecordMapper;
@@ -95,18 +94,17 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
         PageHelper.startPage(pageNum,pageSize);
         List<NeoRechargeRecord> records = rechargeRecordMapper.selectByExample(rechargeRecordExample);
         PageInfo<NeoRechargeRecord> pageInfo = new PageInfo<>(records);
-        PageInfo<IChargeInfo> newPageInfo = new PageInfo<>();
+        PageInfo<NeoRechargeRecord> newPageInfo = new PageInfo<>();
         BeanUtils.copyProperties(pageInfo,newPageInfo);
         List<NeoRechargeRecord> mid = pageInfo.getList();
-        List<IChargeInfo> results = new ArrayList<>();
+        List<NeoRechargeRecord> results = new ArrayList<>();
         if (mid==null||mid.size()==0) {
             return ResponseBean.success(newPageInfo);
         }
-        for (NeoRechargeRecord record:mid){
-            IChargeInfo chargeInfo = new IChargeInfo();
-            BeanUtils.copyProperties(record,chargeInfo);
-            chargeInfo.setCompanyName(commonService.fetchCompanyNameById(record.getCompanyId()));
-            results.add(chargeInfo);
+        for (NeoRechargeRecord record : mid){
+            NeoRechargeRecord record1 = new NeoRechargeRecord();
+            BeanUtils.copyProperties(record, record1);
+            results.add(record1);
         }
         newPageInfo.setList(results);
         return ResponseBean.success(newPageInfo);
