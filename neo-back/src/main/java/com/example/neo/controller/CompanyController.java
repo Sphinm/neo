@@ -2,6 +2,7 @@ package com.example.neo.controller;
 
 import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.ICharge;
+import com.example.neo.model.IInvoice;
 import com.example.neo.service.NeoCompanyService;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +20,6 @@ public class CompanyController {
     @GetMapping("/fetch/company")
     public ResponseBean fetchCompanyList() {
         return companyService.fetchCompanyList();
-    }
-
-    @PreAuthorize("hasAnyAuthority('company_issues')")
-    @GetMapping("/company/balance")
-    public ResponseBean fetchCompanyBalance() {
-        return companyService.fetchCompanyBalance();
     }
 
     @PreAuthorize("hasAnyAuthority('company_issues')")
@@ -52,5 +47,9 @@ public class CompanyController {
     }
 
     // 财务中心
-
+    @PreAuthorize("hasAnyAuthority('company_issues')")
+    @PostMapping("/company/invoice/post")
+    public ResponseBean companyInvoice(@RequestBody() IInvoice invoice){
+        return companyService.companyInvoice(invoice);
+    }
 }

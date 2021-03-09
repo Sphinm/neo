@@ -2,6 +2,7 @@ package com.example.neo.service.Impl;
 
 import com.example.neo.exception.NeoException;
 import com.example.neo.model.ICharge;
+import com.example.neo.model.IInvoice;
 import com.example.neo.mybatis.mapper.NeoCompanyMapper;
 import com.example.neo.mybatis.mapper.NeoFinanceMapper;
 import com.example.neo.mybatis.mapper.NeoRechargeRecordMapper;
@@ -110,8 +111,14 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
         return ResponseBean.success(newPageInfo);
     }
 
+    /**
+     * 申请发票
+     *
+     * @param invoice
+     * 如果只有一个单子则正常开票，如果有多个单子一起开票，订单号如何处理？
+     */
     @Override
-    public ResponseBean fetchCompanyBalance() {
+    public ResponseBean companyInvoice(IInvoice invoice) {
         return ResponseBean.success();
     }
 

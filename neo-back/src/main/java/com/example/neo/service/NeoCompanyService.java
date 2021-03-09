@@ -1,6 +1,7 @@
 package com.example.neo.service;
 
 import com.example.neo.model.ICharge;
+import com.example.neo.model.IInvoice;
 import com.example.neo.utils.ResponseBean;
 
 public interface NeoCompanyService {
@@ -29,5 +30,8 @@ public interface NeoCompanyService {
      */
     ResponseBean getChargeList(int pageNum,int pageSize);
 
-    ResponseBean fetchCompanyBalance();
+    /**
+     * 申请发票
+     */
+    ResponseBean companyInvoice(IInvoice invoice);
 }
