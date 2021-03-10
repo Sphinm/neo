@@ -19,6 +19,7 @@ public enum ResponseCodeEnum {
     WITHDRAW_LESS_AMOUNT("当前提现金额大于账户总金额，属于非法提现"),
     CREATE_WITHDRAW_FAIL("提现失败"),
     WITHDRAW_TODAY("今日已申请提现一次，请等待管理员审核通过"),
+    ORDER_NUMBER_MISS("开票信息缺失"),
 
 
     MOBILE_EQUALS("手机号重复");

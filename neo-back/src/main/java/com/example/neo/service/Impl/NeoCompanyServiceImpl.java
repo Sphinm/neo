@@ -5,6 +5,7 @@ import com.example.neo.model.ICharge;
 import com.example.neo.model.IInvoice;
 import com.example.neo.mybatis.mapper.NeoCompanyMapper;
 import com.example.neo.mybatis.mapper.NeoFinanceMapper;
+import com.example.neo.mybatis.mapper.NeoInvoiceMapper;
 import com.example.neo.mybatis.mapper.NeoRechargeRecordMapper;
 import com.example.neo.mybatis.model.*;
 import com.example.neo.service.NeoCompanyService;
@@ -34,6 +35,8 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
     private NeoFinanceMapper financeMapper;
     @Autowired
     private NeoCompanyMapper companyMapper;
+    @Autowired
+    private NeoInvoiceMapper invoiceMapper;
     @Autowired
     private CommonService commonService;
 
@@ -91,7 +94,7 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
     public ResponseBean getChargeList(int pageNum,int pageSize) {
         NeoCompany company = commonService.fetchCurrentCompany();
         NeoRechargeRecordExample rechargeRecordExample = new NeoRechargeRecordExample();
-        rechargeRecordExample.createCriteria().andCompanyIdEqualTo(company.getId());
+        rechargeRecordExample.createCriteria().andCompanyIdEqualTo(company.getId()).andInvoicingStatusEqualTo(false);
         PageHelper.startPage(pageNum,pageSize);
         List<NeoRechargeRecord> records = rechargeRecordMapper.selectByExample(rechargeRecordExample);
         PageInfo<NeoRechargeRecord> pageInfo = new PageInfo<>(records);
@@ -115,11 +118,46 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
      * 申请发票
      *
      * @param invoice
-     * 如果只有一个单子则正常开票，如果有多个单子一起开票，订单号如何处理？
      */
     @Override
     public ResponseBean companyInvoice(IInvoice invoice) {
-        return ResponseBean.success();
+        NeoUser user = commonService.fetchUserByMobile();
+        NeoCompany company = commonService.fetchCurrentCompany();
+        NeoInvoice dto = new NeoInvoice();
+        dto.setOrderNumber(invoice.getOrderNumberList().get(0));
+        dto.setInvoiceType(invoice.getInvoiceType());
+        dto.setInvoiceAmount(invoice.getTotalMoney());
+        dto.setInvoiceContent(invoice.getInvoiceContent());
+        dto.setInvoiceCompany(company.getCompanyName());
+        dto.setReceiveName(invoice.getRecipientName());
+        dto.setReceiveTel(invoice.getRecipientTel());
+        dto.setReceiveAddress(invoice.getRecipientAddress());
+        dto.setStatus(false);
+        dto.setCreatorId(user.getId());
+        dto.setCreateDate(new Date());
+        updateRechargeInvoiceStatus(invoice.getOrderNumberList().get(0));
+        invoiceMapper.insert(dto);
+        return ResponseBean.success("申请开票成功");
+    }
+
+    private void updateRechargeInvoiceStatus(String id) {
+        NeoRechargeRecordExample example = new NeoRechargeRecordExample();
+        example.createCriteria().andOrderNumberEqualTo(id);
+        NeoRechargeRecord record = new NeoRechargeRecord();
+        record.setInvoicingStatus(true);
+        record.setUpdateId(commonService.fetchUserByMobile().getId());
+        record.setUpdateDate(new Date());
+        rechargeRecordMapper.updateByExampleSelective(record, example);
+    }
+
+    /**
+     * 获取开票记录
+     */
+    public ResponseBean getInvoiceList() {
+        NeoUser user = commonService.fetchUserByMobile();
+        NeoInvoiceExample example = new NeoInvoiceExample();
+        example.createCriteria().andCreatorIdEqualTo(user.getId());
+        return ResponseBean.success(invoiceMapper.selectByExample(example));
     }
 
     /**

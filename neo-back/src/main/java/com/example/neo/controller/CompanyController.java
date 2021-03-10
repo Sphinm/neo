@@ -48,8 +48,22 @@ public class CompanyController {
 
     // 财务中心
     @PreAuthorize("hasAnyAuthority('company_issues')")
-    @PostMapping("/company/invoice/post")
+    @PostMapping("/company/create-invoice")
     public ResponseBean companyInvoice(@RequestBody() IInvoice invoice){
+        if (invoice.getOrderNumberList().size() == 0 || invoice.getTotalMoney() <= 0
+            || invoice.getInvoiceContent().equals("")
+            || invoice.getRecipientName().equals("")
+            || invoice.getRecipientTel().equals("")
+            || invoice.getRecipientAddress().equals("")) {
+            return ResponseBean.fail(ResponseCodeEnum.ORDER_NUMBER_MISS);
+        }
         return companyService.companyInvoice(invoice);
     }
+
+    @PreAuthorize("hasAnyAuthority('company_issues')")
+    @GetMapping("/company/invoice-list")
+    public ResponseBean getInvoiceList(){
+        return companyService.getInvoiceList();
+    }
+
 }

@@ -34,4 +34,9 @@ public interface NeoCompanyService {
      * 申请发票
      */
     ResponseBean companyInvoice(IInvoice invoice);
+
+    /**
+     * 开票记录
+     */
+    ResponseBean getInvoiceList();
 }

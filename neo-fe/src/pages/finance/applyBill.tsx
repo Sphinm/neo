@@ -45,7 +45,12 @@ export const ApplyBill = () => {
 
 
   const onFinish = async (values: any) => {
-    if (!selectedRowKeys.length || totalMoney <= 0) return
+    if (!selectedRowKeys.length || totalMoney <= 0 || !values.recipientName || !values.recipientTel || !values.recipientAddress) {
+      message.error({
+        content: '申请信息缺失，请完善后再提交'
+      })
+      return
+    }
     try {
       setLoading(true)
       const body = {
@@ -119,7 +124,10 @@ export const ApplyBill = () => {
     <Card title="申请开票">
       <Table
         loading={loading}
-        rowSelection={rowSelection}
+        rowSelection={{
+          type: 'radio',
+          ...rowSelection,
+        }}
         pagination={false}
         className={styles['bill-table']}
         size="small"

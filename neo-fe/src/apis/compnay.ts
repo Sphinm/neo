@@ -7,7 +7,7 @@ import ajax from '@/libs/axios'
 
 /** 公司开票接口 */
 export const companyInvoice = (body: any) => {
-  return ajax.get(`/company/invoice/post`, body)
+  return ajax.post(`/company/create-invoice`, body)
 }
 
 /** 获取公司充值信息 */
@@ -23,4 +23,9 @@ export const fetchCompanyChargeList = () => {
 /** 公司充值接口 */
 export const companyCharge = (body: any) => {
   return ajax.post(`/company/charge/post`, body)
+}
+
+/** 获取公司申请开票记录 */
+export const fetchCompanyInvoiceList = () => {
+  return ajax.get(`/company/invoice-list`)
 }
