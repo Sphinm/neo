@@ -3,10 +3,8 @@ package com.example.neo.service.Impl;
 import com.example.neo.exception.NeoException;
 import com.example.neo.model.ICharge;
 import com.example.neo.model.IInvoice;
-import com.example.neo.mybatis.mapper.NeoCompanyMapper;
-import com.example.neo.mybatis.mapper.NeoFinanceMapper;
-import com.example.neo.mybatis.mapper.NeoInvoiceMapper;
-import com.example.neo.mybatis.mapper.NeoRechargeRecordMapper;
+import com.example.neo.model.ITaxReceipt;
+import com.example.neo.mybatis.mapper.*;
 import com.example.neo.mybatis.model.*;
 import com.example.neo.service.NeoCompanyService;
 import com.example.neo.utils.DoubleUtil;
@@ -37,6 +35,8 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
     private NeoCompanyMapper companyMapper;
     @Autowired
     private NeoInvoiceMapper invoiceMapper;
+    @Autowired
+    private NeoCompanyTaxMapper taxMapper;
     @Autowired
     private CommonService commonService;
 
@@ -159,6 +159,25 @@ public class NeoCompanyServiceImpl implements NeoCompanyService {
         example.createCriteria().andCreatorIdEqualTo(user.getId());
         return ResponseBean.success(invoiceMapper.selectByExample(example));
     }
+
+    /**
+     * 获取完税凭证
+     */
+    public ResponseBean getReceipts() {
+        NeoCompany company = commonService.fetchCurrentCompany();
+        NeoCompanyTaxExample example = new NeoCompanyTaxExample();
+        example.createCriteria().andCompanyIdEqualTo(company.getId());
+        List<NeoCompanyTax> taxList = taxMapper.selectByExample(example);
+        List<ITaxReceipt> newTaxList = new ArrayList<>();
+        for (NeoCompanyTax tax: taxList) {
+            ITaxReceipt receipt = new ITaxReceipt();
+            BeanUtils.copyProperties(tax, receipt);
+            receipt.setCompanyName(company.getCompanyName());
+            newTaxList.add(receipt);
+        }
+        return ResponseBean.success(newTaxList);
+    }
+
 
     /**
      * 公司财务操作

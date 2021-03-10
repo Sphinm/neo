@@ -66,4 +66,10 @@ public class CompanyController {
         return companyService.getInvoiceList();
     }
 
+    @PreAuthorize("hasAnyAuthority('company_issues')")
+    @GetMapping("/company/receipts")
+    public ResponseBean getReceipts(){
+        return companyService.getReceipts();
+    }
+
 }

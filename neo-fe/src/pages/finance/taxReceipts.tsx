@@ -1,69 +1,62 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, Table } from 'antd'
-import { Link } from 'react-router-dom'
+import { handleError } from '@/libs/axios'
+import { fetchCompanyRecepits } from '@/apis/compnay'
+import moment from 'moment'
 
 export const TaxReceipts = () => {
+  const [tableData, setTableData] = useState<any>([])
+  const [loading, setLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    fetchRecords()
+  }, [])
+
+  const fetchRecords =  async () => {
+    try {
+      setLoading(true)
+      const { data } = await fetchCompanyRecepits()
+      setTableData(data)
+    } catch (error) {
+      handleError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const columns = [
     {
       title: '编号',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'number',
     },
     {
       title: '创建时间',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'createDate',
+      render: (text: any, record: any) => <>{moment(text).format('YYYY/MM/DD HH:mm:ss')}</>,
     },
     {
       title: '公司名称',
-      dataIndex: 'address',
-      key: 'address',
-    },
-    {
-      title: '区域',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      dataIndex: 'companyName',
     },
     {
       title: '完税凭证',
-      key: 'task',
-      render: (text: any, record: any) => {
-        return (
-          <Link target="_blank" to={'/main'}>
-            完税凭证
-          </Link>
-        )
-      },
+      dataIndex: 'taxReceive',
+      // render: (text: any, record: any) => <></>,
     },
     {
       title: '月份',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      dataIndex: 'month',
+      render: (text: any, record: any) => <>{moment(text).format('YYYY/MM')}</>,
     },
     {
       title: '备注信息',
-      key: 'task',
-    },
-  ]
-
-  const data = [
-    {
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
+      dataIndex: 'remark',
     },
   ]
 
   return (
     <Card title="完税凭证">
-      <Table bordered rowKey="name" columns={columns as any} dataSource={data} />
+      <Table loading={loading} bordered rowKey="orderNumber" columns={columns} dataSource={tableData} />
     </Card>
   )
 }

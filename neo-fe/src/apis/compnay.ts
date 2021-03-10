@@ -29,3 +29,8 @@ export const companyCharge = (body: any) => {
 export const fetchCompanyInvoiceList = () => {
   return ajax.get(`/company/invoice-list`)
 }
+
+/** 获取公司完税凭证记录 */
+export const fetchCompanyRecepits = () => {
+  return ajax.get(`/company/receipts`)
+}
