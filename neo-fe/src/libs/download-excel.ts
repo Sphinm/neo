@@ -17,7 +17,7 @@ export const downloadExcel = (data: any[], colunm?: any, name: string = '文件'
       return pre
     }, {})
   })
-  const sheet = XLSX.utils.json_to_sheet(json)
+  const sheet = XLSX.utils.json_to_sheet(json, colunm)
 
   openDownloadDialog(sheet2blob(sheet), `${name}_${moment().format('YYYY-MM-DD')}.csv`)
 }
@@ -45,6 +45,7 @@ const sheet2blob = (sheet: any, sheetName?: any) => {
   const workbook = {
     SheetNames: [sheetName],
     Sheets: {} as any,
+    sheetHeader: ['组织ID','组织代码','组织名称'],
   }
   workbook.Sheets[sheetName] = sheet // 生成excel的配置项
 

@@ -26,7 +26,7 @@ const SideMenu = () => {
   return useObserver(() => (
     <Sider collapsible collapsed={collapsed} onCollapse={handleCollapse}>
       <div className={styles['menu-header']}>
-        <img src="https://oss.fengong8.com/flex-empl-app/fengong8/logo.svg" alt="" className={styles['menu-img']} />
+        <img src="https://www.nicepng.com/png/detail/266-2660352_neo-logo-neo.png" alt="" className={styles['menu-img']} />
         <h1>NEO</h1>
       </div>
       <Menu
@@ -144,8 +144,8 @@ const SideMenu = () => {
               </span>
             }
           >
-            <Menu.Item key="payroll/list">上传发放列表</Menu.Item>
-            <Menu.Item key="payroll/approve">申请发放</Menu.Item>
+            <Menu.Item key="payroll/list">申请发放</Menu.Item>
+            {/* <Menu.Item key="payroll/approve">申请发放</Menu.Item> */}
             <Menu.Item key="payroll/records">发放记录</Menu.Item>
             <Menu.Item key="payroll/details">人员发放明细</Menu.Item>
           </SubMenu>

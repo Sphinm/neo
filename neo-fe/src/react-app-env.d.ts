@@ -67,3 +67,5 @@ declare module '*.styl' {
   const styles: any
   export = styles
 }
+
+declare module 'js-export-excel'

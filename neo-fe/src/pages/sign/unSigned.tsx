@@ -105,8 +105,17 @@ export const UnSigned = () => {
     console.log(1121232)
   }
 
+  const getColumnTitle = () => {
+    return columns.map(item => {
+      if (item?.dataIndex) {
+        return item.title
+      }
+    }).filter(t => t)
+  }
+
   const downLoadReport = async () => {
-    downloadExcel(tableData)
+    console.log(11, getColumnTitle())
+    downloadExcel(tableData, getColumnTitle())
   }
 
   const onSelectChange = (selectedRowKeys: any, selectedRows: any) => {

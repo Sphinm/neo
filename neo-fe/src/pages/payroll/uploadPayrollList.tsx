@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, Select, Button, Space, message, Upload, Table } from 'antd'
 import { taskOptions } from '@/setting/constantVar'
 import { CloudUploadOutlined } from '@ant-design/icons'
@@ -7,6 +7,8 @@ import { downloadExcel } from '@/libs/download-excel'
 
 export const UploadPayrollList = () => {
   const [task, setTask] = useState('')
+  const [tableData, setTableData] = useState<any>([])
+  const [loading, setLoading] = useState<boolean>(false)
 
   const props = {
     name: 'file',
@@ -59,85 +61,66 @@ export const UploadPayrollList = () => {
       key: 'task',
       render: (text: any, record: any) => <div>绑定任务</div>,
     },
+    {
+      title: '操作',
+      key: 'task',
+      align: 'center',
+      render: (text: any, record: any) => {
+        return (
+          <>
+            <Button
+              type="link"
+              onClick={() => {
+                handleSelectRow(record)
+              }}
+            >
+              提醒签约
+            </Button>
+            <Button
+              type="link"
+              onClick={() => {
+                handleSelectRow(record)
+              }}
+            >
+              申请发放
+            </Button>
+            <Button
+              type="link"
+              onClick={() => {
+                handleSelectRow(record)
+              }}
+            >
+              删除
+            </Button>
+          </>
+        )
+      },
+    },
   ]
 
-  const data = [
-    {
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown1',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green1',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black1',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown2',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green2',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black2',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown3',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green3',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black3',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ]
+  useEffect(() => {
+    fetchRecords()
+  }, [])
+
+  const fetchRecords =  async () => {
+    try {
+      setLoading(true)
+      // const { data } = await fetchUnSignUpList()
+      // setTableData(data)
+    } catch (error) {
+      // handleError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSelectRow = (record: any) => {
+    console.log('handleSelectRow', record)
+  }
+
 
   const downLoadReport = async () => {
-    downloadExcel(data)
+    downloadExcel(tableData, )
   }
 
   const changeTask = (value: string) => {
@@ -179,7 +162,7 @@ export const UploadPayrollList = () => {
         </div>
       </Card>
       <Card style={{ marginTop: 20 }}>
-        <Table rowKey="name" columns={columns} dataSource={data} />
+        <Table rowKey="name" loading={loading} columns={columns as any} dataSource={tableData} />
       </Card>
     </>
   )
