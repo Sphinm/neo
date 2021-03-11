@@ -1,14 +1,36 @@
-import React, { useState } from 'react'
-import { Card, Table, Button, Input, Space, Upload, message, Popconfirm, Modal } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { Card, Table, Button, Input, Space, Upload, message, Popconfirm, Modal, Form } from 'antd'
 import { downloadExcel } from '@/libs/download-excel'
 import { CloudUploadOutlined } from '@ant-design/icons'
+import { handleError } from '@/libs/axios'
 import styles from './index.styl'
+import { fetchUnSignUpList,searchByIdCard, changeMobileEmp } from '@/apis/compnay'
+import { deleteEmployee } from '@/apis/user'
 
 const { Search } = Input
 
 export const UnSigned = () => {
+  const [form] = Form.useForm()
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([])
   const [visible, setVisible] = useState(false)
+  const [tableData, setTableData] = useState<any>([])
+  const [loading, setLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    fetchRecords()
+  }, [])
+
+  const fetchRecords =  async () => {
+    try {
+      setLoading(true)
+      const { data } = await fetchUnSignUpList()
+      setTableData(data)
+    } catch (error) {
+      handleError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const options = {
     name: 'file',
@@ -32,32 +54,27 @@ export const UnSigned = () => {
   const columns = [
     {
       title: '编号',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'serialNumber',
     },
     {
       title: '姓名',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'name',
     },
     {
       title: '身份证号',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'idVerify',
     },
     {
       title: '手机号',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      dataIndex: 'tel',
     },
     {
       title: '实名认证',
-      key: 'task',
-      render: (text: any, record: any) => <div>绑定任务</div>,
+      dataIndex: 'idCheck',
+      render: (text: any, record: any) => <>{text ? '已认证' : '未认证'}</>,
     },
     {
       title: '操作',
-      key: 'task',
       align: 'center',
       render: (text: any, record: any) => {
         return (
@@ -65,7 +82,7 @@ export const UnSigned = () => {
             <Button type="link" onClick={() => setVisible(true)}>
               修改
             </Button>
-            <Popconfirm title="删除后，该员工将从列表中彻底移除" onConfirm={deleteItem} okText="确认" cancelText="取消">
+            <Popconfirm title="删除后，该员工将从列表中彻底移除" onConfirm={() => deleteItem(record)} okText="确认" cancelText="取消">
               <Button type="link">删除</Button>
             </Popconfirm>
           </>
@@ -74,83 +91,14 @@ export const UnSigned = () => {
     },
   ]
 
-  const data = [
-    {
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown1',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green1',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black1',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown2',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green2',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black2',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown3',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green3',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black3',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ]
-
-  const deleteItem = (record: any) => {
-    console.log('deleteItem', record)
+  const deleteItem = async (record: any) => {
+    try {
+      await deleteEmployee(record.id)
+      message.success("删除成功")
+      fetchRecords()
+    } catch (error) {
+      handleError(error)
+    }
   }
 
   const checkSign = () => {
@@ -158,7 +106,7 @@ export const UnSigned = () => {
   }
 
   const downLoadReport = async () => {
-    downloadExcel(data)
+    downloadExcel(tableData)
   }
 
   const onSelectChange = (selectedRowKeys: any, selectedRows: any) => {
@@ -170,8 +118,25 @@ export const UnSigned = () => {
     onChange: onSelectChange,
   }
 
-  const handleOk = () => {
-    setVisible(false)
+  const handleOk = async () => {
+    const values = await form.validateFields()
+    try {
+      await changeMobileEmp(values)
+      message.success("修改成功")
+      fetchRecords()
+      setVisible(false)
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  const searchEmployee = async (value: string) => {
+    try {
+      const { data } = await searchByIdCard(value)
+      setTableData(data)
+    } catch (error) {
+      handleError(error)
+    }
   }
 
   return (
@@ -182,7 +147,7 @@ export const UnSigned = () => {
             提醒签约
           </Button>
 
-          <Search placeholder="身份证" enterButton="搜索" onSearch={value => console.log(value)} />
+          <Search placeholder="身份证" enterButton="搜索" onSearch={value => searchEmployee(value)} />
 
           <Button type="default" onClick={downLoadReport}>
             下载模板
@@ -195,7 +160,7 @@ export const UnSigned = () => {
           </Upload>
         </Space>
 
-        <Table rowSelection={rowSelection} bordered rowKey="name" columns={columns as any} dataSource={data} />
+        <Table rowSelection={rowSelection} loading={loading} bordered rowKey="serialNumber" columns={columns as any} dataSource={tableData} />
       </Card>
       <Modal
         title="修改手机号"
@@ -211,10 +176,14 @@ export const UnSigned = () => {
           </Button>,
         ]}
       >
-        <div className={styles['fix-mobile']}>
-          <span>修改手机号: </span>
-          <Input style={{ flex: 1, marginLeft: 20 }} placeholder="请输入手机号"></Input>
-        </div>
+        <Form className={styles['fix-mobile']} form={form}>
+          <Form.Item label="旧手机号" name="oldPhone">
+            <Input type="number" placeholder="请输入旧手机号"></Input>
+          </Form.Item>
+          <Form.Item label="新手机号" name="newPhone">
+            <Input type="number" placeholder="请输入新的手机号"></Input>
+          </Form.Item>
+        </Form>
       </Modal>
     </>
   )

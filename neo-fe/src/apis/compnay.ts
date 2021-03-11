@@ -34,3 +34,23 @@ export const fetchCompanyInvoiceList = () => {
 export const fetchCompanyRecepits = () => {
   return ajax.get(`/company/receipts`)
 }
+
+/** 获取未签约员工记录 */
+export const fetchUnSignUpList = () => {
+  return ajax.get(`/sign/un-sign-up`)
+}
+
+/** 获取签约员工记录 */
+export const fetchSignUpList = () => {
+  return ajax.get(`/sign/sign-up`)
+}
+
+/** 通过身份证查询员工用户 */
+export const searchByIdCard = (id: string) => {
+  return ajax.get(`/sign/search-by-idCard?id=${id}`)
+}
+
+/** 员工更改手机号 */
+export const changeMobileEmp = (body: any) => {
+  return ajax.post(`/sign/change-mobile`, body)
+}

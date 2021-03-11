@@ -1,42 +1,56 @@
-import React, { useState } from 'react'
-import { Card, Table, Button, Input, Space, Modal } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { Card, Table, Button, Input, Space, Modal, Form, message } from 'antd'
 import { downloadExcel } from '@/libs/download-excel'
-import styles from './index.styl'
+import { fetchSignUpList,searchByIdCard, changeMobileEmp } from '@/apis/compnay'
 
 const { Search } = Input
 
 export const SignedIn = () => {
+  const [form] = Form.useForm()
   const [visible, setVisible] = useState(false)
+  const [tableData, setTableData] = useState<any>([])
+  const [loading, setLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    fetchRecords()
+  }, [])
+
+  const fetchRecords =  async () => {
+    try {
+      setLoading(true)
+      const { data } = await fetchSignUpList()
+      setTableData(data)
+    } catch (error) {
+      
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const columns = [
     {
       title: '编号',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'serialNumber',
     },
     {
       title: '姓名',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'name',
     },
     {
       title: '身份证号',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'idVerify',
     },
     {
       title: '手机号',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      dataIndex: 'tel',
     },
     {
       title: '实名认证',
-      key: 'task',
-      render: (text: any, record: any) => <div>绑定任务</div>,
+      dataIndex: 'idCheck',
+      render: (text: any, record: any) => <>{text ? '已认证' : '未认证'}</>,
     },
     {
       title: '操作',
-      key: 'task',
       align: 'center',
       render: (text: any, record: any) => {
         return (
@@ -53,103 +67,43 @@ export const SignedIn = () => {
     },
   ]
 
-  const data = [
-    {
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown1',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green1',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black1',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown2',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green2',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black2',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown3',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green3',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black3',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ]
-
   const downLoadReportItem = () => {
-    downloadExcel(data)
+    downloadExcel(tableData)
   }
 
   const downLoadReport = () => {
-    downloadExcel(data)
+    downloadExcel(tableData)
   }
 
-  const handleOk = () => {
-    setVisible(false)
+  const handleOk = async () => {
+    const values = await form.validateFields()
+    try {
+      await changeMobileEmp(values)
+      message.success("修改成功")
+      fetchRecords()
+      setVisible(false)
+    } catch (error) {
+    }
+  }
+
+  const searchEmployee = async (value: string) => {
+    try {
+      const { data } = await searchByIdCard(value)
+      setTableData(data)
+    } catch (error) {
+    }
   }
 
   return (
     <>
       <Card title="已签约人员">
         <Space size="middle" style={{ marginBottom: 50 }}>
-          <Search placeholder="身份证" enterButton="搜索" onSearch={value => console.log(value)} />
+          <Search placeholder="身份证" enterButton="搜索" onSearch={value => searchEmployee(value)} />
           <Button type="primary" onClick={downLoadReport}>
             导出表格
           </Button>
         </Space>
-        <Table bordered rowKey="name" columns={columns as any} dataSource={data} />
+        <Table bordered loading={loading} rowKey="serialNumber" columns={columns as any} dataSource={tableData} />
       </Card>
       <Modal
         title="修改手机号"
@@ -165,10 +119,14 @@ export const SignedIn = () => {
           </Button>,
         ]}
       >
-        <div className={styles['fix-mobile']}>
-          <span>修改手机号: </span>
-          <Input style={{ flex: 1, marginLeft: 20 }} placeholder="请输入手机号"></Input>
-        </div>
+        <Form form={form}>
+          <Form.Item label="旧手机号" name="oldPhone">
+            <Input type="number" placeholder="请输入旧手机号"></Input>
+          </Form.Item>
+          <Form.Item label="新手机号" name="newPhone">
+            <Input type="number" placeholder="请输入新的手机号"></Input>
+          </Form.Item>
+        </Form>
       </Modal>
     </>
   )

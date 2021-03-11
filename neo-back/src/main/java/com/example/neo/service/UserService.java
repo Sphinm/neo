@@ -43,7 +43,7 @@ public interface UserService {
     ResponseBean updateUserInfo(NeoCompany companyInfo);
 
     /**
-     * 查询员工
+     * 管理员查询员工
      */
     ResponseBean fetchEmployee(int pageNum,int pageSize);
 

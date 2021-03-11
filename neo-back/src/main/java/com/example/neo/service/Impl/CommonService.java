@@ -43,8 +43,7 @@ public class CommonService {
      */
     public NeoCompany fetchCompanyByUserId(Integer id) {
         NeoUser users = neoUserMapper.selectByPrimaryKey(id);
-        NeoCompany company = companyMapper.selectByPrimaryKey(users.getRelatedId());
-        return company;
+        return companyMapper.selectByPrimaryKey(users.getRelatedId());
     }
 
     /**

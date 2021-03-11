@@ -56,7 +56,7 @@ export const fetchAllEmployee = (params: {pageNum: number, pageSize: number}) =>
   return ajax.get(`/fetch/employee?pageNum=${params.pageNum}&pageSize=${params.pageSize}`,)
 }
 
-/** 删除代理商详细信息 */
+/** 删除员工 */
 export const deleteEmployee = (employeeId: string) => {
   return ajax.post(`/delete/employee?employeeId=${employeeId}`)
 }

@@ -67,6 +67,8 @@ dependencies {
     compile group: 'org.apache.poi', name: 'poi', version: '3.17'
     compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
     compile group: 'com.github.pagehelper', name: 'pagehelper', version: '5.2.0'
+    // 阿里云短信
+    compile group: 'com.aliyun', name: 'aliyun-java-sdk-core', version: '4.4.6'
 }
 
 test {
