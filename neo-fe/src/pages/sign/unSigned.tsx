@@ -110,6 +110,7 @@ export const UnSigned = () => {
       if (item?.dataIndex) {
         return item.title
       }
+      return ''
     }).filter(t => t)
   }
 

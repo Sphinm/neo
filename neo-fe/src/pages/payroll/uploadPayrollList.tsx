@@ -106,7 +106,7 @@ export const UploadPayrollList = () => {
     try {
       setLoading(true)
       // const { data } = await fetchUnSignUpList()
-      // setTableData(data)
+      setTableData([])
     } catch (error) {
       // handleError(error)
     } finally {
