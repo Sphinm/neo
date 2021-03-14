@@ -13,6 +13,8 @@ public enum ResponseCodeEnum {
     LOGIN_FAILED("用户名或密码错误"),
     FILE_NOT_NULL("文件不可为空"),
     FILE_ERROR("文件上传失败"),
+    FILE_ERROR_TYPE("文件格式不正确"),
+    SAVE_DATA_ERROR("数据存储异常，请稍后重试！"),
     AMOUNT_NOT_VALID("金额不合法"),
     CREATE_USER_FAILED("创建用户失败"),
     NOT_FOUND_FINANCE("未找到当前公司相关财务信息"),

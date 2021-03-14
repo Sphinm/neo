@@ -1,5 +1,6 @@
 package com.example.neo.controller;
 
+import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.IChangeMobile;
 import com.example.neo.service.SignUpService;
 import com.example.neo.utils.ResponseBean;
@@ -7,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -36,5 +38,24 @@ public class SignUpController {
     @PostMapping("/sign/change-mobile")
     public ResponseBean changeMobile(@RequestBody IChangeMobile mobile) {
         return signUpService.changeMobile(mobile);
+    }
+
+    // 发放逻辑也这里写吧，懒得创建 controller
+    @PreAuthorize("hasAnyAuthority('provide')")
+    @PostMapping("/provide/upload-provide-list")
+    public ResponseBean uploadProvideList(@RequestParam(value = "provideExcel") MultipartFile file) {
+        try {
+            if (file.isEmpty() || file.getSize() == 0){
+                return ResponseBean.fail(ResponseCodeEnum.FILE_NOT_NULL);
+            }
+            String fileName = file.getOriginalFilename();
+            if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
+                // 文件格式不正确
+                return ResponseBean.fail(ResponseCodeEnum.FILE_ERROR_TYPE);
+            }
+            return signUpService.uploadProvideList(file);
+        } catch (Exception e) {
+            return ResponseBean.fail(ResponseCodeEnum.FILE_ERROR);
+        }
     }
 }

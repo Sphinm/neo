@@ -2,6 +2,7 @@ package com.example.neo.service;
 
 import com.example.neo.model.IChangeMobile;
 import com.example.neo.utils.ResponseBean;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface SignUpService {
 
@@ -26,4 +27,10 @@ public interface SignUpService {
      * 修改手机号
      */
     ResponseBean changeMobile(IChangeMobile mobile);
+
+    /**
+     * 发放相关逻辑
+     * 上传发放列表
+     */
+    ResponseBean uploadProvideList(MultipartFile file);
 }

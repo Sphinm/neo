@@ -146,7 +146,7 @@ const SideMenu = () => {
           >
             <Menu.Item key="payroll/list">申请发放</Menu.Item>
             {/* <Menu.Item key="payroll/approve">申请发放</Menu.Item> */}
-            <Menu.Item key="payroll/records">发放记录</Menu.Item>
+            {/* <Menu.Item key="payroll/records">发放记录</Menu.Item> */}
             <Menu.Item key="payroll/details">人员发放明细</Menu.Item>
           </SubMenu>
         )}
