@@ -1,11 +1,9 @@
 package com.example.neo.service.Impl;
 
 import com.example.neo.mybatis.mapper.NeoCompanyMapper;
+import com.example.neo.mybatis.mapper.NeoCompanyRelationMapper;
 import com.example.neo.mybatis.mapper.NeoUserMapper;
-import com.example.neo.mybatis.model.NeoCompany;
-import com.example.neo.mybatis.model.NeoCompanyExample;
-import com.example.neo.mybatis.model.NeoUser;
-import com.example.neo.mybatis.model.NeoUserExample;
+import com.example.neo.mybatis.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -18,6 +16,8 @@ public class CommonService {
     private NeoUserMapper neoUserMapper;
     @Autowired
     private NeoCompanyMapper companyMapper;
+    @Autowired
+    private NeoCompanyRelationMapper relationMapper;
 
 
     /**
@@ -70,6 +70,19 @@ public class CommonService {
             return "";
         }
         return company.getCompanyName();
+    }
+
+    /**
+     * 根据 companyId 查询上级代理商公司信息
+     */
+    public NeoCompany fetchCompanyInfoById(int id) {
+        NeoCompanyRelationExample example = new NeoCompanyRelationExample();
+        example.createCriteria().andCompanyIdEqualTo(id);
+        List<NeoCompanyRelation> list = relationMapper.selectByExample(example);
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        return companyMapper.selectByPrimaryKey(list.get(0).getId());
     }
 
 }

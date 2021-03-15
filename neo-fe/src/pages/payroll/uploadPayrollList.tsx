@@ -12,6 +12,9 @@ export const UploadPayrollList = () => {
   const props = {
     name: 'provideExcel',
     action: '/api/provide/upload-provide-list',
+    data: {
+      taskName: task,
+    },
     accept: ".xls, .xlsx",
     showUploadList: false,
     headers: {
@@ -26,7 +29,7 @@ export const UploadPayrollList = () => {
           message.success(`${info.file.name} 上传成功`)
           // setUploadPath(info.file.response.data)
         } else {
-          message.error(`${info.file.name} 上传失败`)
+          message.error(`${info.file.response.message}`)
         }
       } else if (info.file.status === 'error') {
         message.error(`${info.file.name} 上传失败`)

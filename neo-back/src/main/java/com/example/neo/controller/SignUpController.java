@@ -43,7 +43,7 @@ public class SignUpController {
     // 发放逻辑也这里写吧，懒得创建 controller
     @PreAuthorize("hasAnyAuthority('provide')")
     @PostMapping("/provide/upload-provide-list")
-    public ResponseBean uploadProvideList(@RequestParam(value = "provideExcel") MultipartFile file) {
+    public ResponseBean uploadProvideList(@RequestParam(value = "provideExcel") MultipartFile file, String taskName) {
         try {
             if (file.isEmpty() || file.getSize() == 0){
                 return ResponseBean.fail(ResponseCodeEnum.FILE_NOT_NULL);
@@ -53,7 +53,7 @@ public class SignUpController {
                 // 文件格式不正确
                 return ResponseBean.fail(ResponseCodeEnum.FILE_ERROR_TYPE);
             }
-            return signUpService.uploadProvideList(file);
+            return signUpService.uploadProvideList(file, taskName);
         } catch (Exception e) {
             return ResponseBean.fail(ResponseCodeEnum.FILE_ERROR);
         }

@@ -32,5 +32,5 @@ public interface SignUpService {
      * 发放相关逻辑
      * 上传发放列表
      */
-    ResponseBean uploadProvideList(MultipartFile file);
+    ResponseBean uploadProvideList(MultipartFile file, String taskName);
 }

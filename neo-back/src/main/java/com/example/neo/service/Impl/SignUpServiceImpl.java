@@ -3,12 +3,14 @@ package com.example.neo.service.Impl;
 import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.IChangeMobile;
 import com.example.neo.mybatis.mapper.NeoEmployeeMapper;
-import com.example.neo.mybatis.model.NeoCompany;
-import com.example.neo.mybatis.model.NeoEmployee;
-import com.example.neo.mybatis.model.NeoEmployeeExample;
-import com.example.neo.mybatis.model.NeoIssueDetail;
+import com.example.neo.mybatis.mapper.NeoIssueDetailMapper;
+import com.example.neo.mybatis.mapper.NeoIssueMapper;
+import com.example.neo.mybatis.model.*;
 import com.example.neo.service.SignUpService;
+import com.example.neo.utils.DoubleUtil;
+import com.example.neo.utils.IDCardCheck;
 import com.example.neo.utils.ResponseBean;
+import com.example.neo.utils.Snowflake;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -21,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -30,6 +33,10 @@ public class SignUpServiceImpl implements SignUpService {
     private CommonService commonService;
     @Autowired
     private NeoEmployeeMapper employeeMapper;
+    @Autowired
+    private NeoIssueMapper issueMapper;
+    @Autowired
+    private NeoIssueDetailMapper detailMapper;
 
     /**
      * 获取未签约的员工
@@ -91,7 +98,7 @@ public class SignUpServiceImpl implements SignUpService {
      * @param file
      */
     @Override
-    public ResponseBean uploadProvideList(MultipartFile file) {
+    public ResponseBean uploadProvideList(MultipartFile file, String taskName) {
         try {
             InputStream stream = file.getInputStream();
             Workbook wb;
@@ -111,20 +118,95 @@ public class SignUpServiceImpl implements SignUpService {
             // 行数
             int rows = sheet.getLastRowNum();
 
-            List<NeoIssueDetail>  issueDetails = new ArrayList<>();
+            // 创建发放记录
+            NeoCompany company = commonService.fetchCurrentCompany();
+            NeoUser user = commonService.fetchUserByMobile();
+            NeoIssue issue = new NeoIssue();
+            String orderNumber = String.valueOf(Snowflake.INSTANCE.nextId());
+            issue.setCompanyId(user.getRelatedId());
+            issue.setOrderNumber(orderNumber);
+            issue.setTaskName(taskName);
+            issue.setStatus(false);
+            issue.setCreatorId(user.getId());
+            issue.setCreateDate(new Date());
+            issue.setProvideStatus(false);
 
-            for (int i = 3; i<=rows; i++) {
+            // 创建发放详情
+            List<NeoIssueDetail> list = new ArrayList<>();
+            for (int i = 2; i <= rows; i++) {
                 Row row = sheet.getRow(i);
                 if (row == null) continue;
 
                 NeoIssueDetail item = new NeoIssueDetail();
+                item.setOrderNumber(orderNumber);
+                // 打款流水号
+                item.setBankSerialNumber(String.valueOf(Snowflake.INSTANCE.nextId()));
+                item.setStatus(false);
+                item.setCreatorId(user.getId());
+                item.setCreateDate(new Date());
 
+                // 用户名
                 if (row.getCell(0) != null) {
-//                    item
+                    String userName = row.getCell(0).getStringCellValue();
+                    if (userName.isEmpty()) {
+                        return ResponseBean.fail(ResponseCodeEnum.EXCEL_NAME_NOT_NULL);
+                    }
+                    item.setName(userName);
                 }
 
-            }
+                // 身份证
+                if (row.getCell(1) != null) {
+                    String idCard = row.getCell(1).getStringCellValue();
+//                    if (IDCardCheck.IDCardValidate(idCard)) {
+                    item.setIdNumber(idCard);
+//                    } else {
+//                        return ResponseBean.fail(ResponseCodeEnum.ID_CARD_ERROR);
+//                    }
+                }
 
+                // 银行卡号
+                if (row.getCell(2) != null) {
+                    String bankCode = row.getCell(2).getStringCellValue();
+                    if (IDCardCheck.BankCardValidate(bankCode)) {
+                        item.setBankNumber(bankCode);
+                    } else {
+                        return ResponseBean.fail(ResponseCodeEnum.BACK_CODE_ERROR);
+                    }
+                }
+
+                // 手机号
+                if (row.getCell(3) != null) {
+                    log.debug("{} {}", row.getCell(3));
+                    String mobile = row.getCell(3).getStringCellValue();
+                    if (IDCardCheck.isMobile(mobile)) {
+                        item.setTel(mobile);
+                    } else {
+                        return ResponseBean.fail(ResponseCodeEnum.MOBILE_ERROR);
+                    }
+                }
+
+                // 发放金额
+                if (row.getCell(4) != null) {
+                    String money = row.getCell(4).getStringCellValue();
+                    item.setAmount(Double.parseDouble(money));
+                }
+                list.add(item);
+                // 没有批量插入数据库的语法糖
+                detailMapper.insert(item);
+            }
+            // 每笔的发放金额总额
+            double sumAmount = 0.00;
+            for (NeoIssueDetail it: list) {
+                sumAmount += it.getAmount();
+            }
+            issue.setAmount(sumAmount);
+            // 返佣金额：发放金额 * （公司费率 - 代理商费率）
+            Double a = company.getCompanyRate() * 0.01;
+            Double b = commonService.fetchCompanyInfoById(company.getId()).getCompanyRate() * 0.01;
+            issue.setRebate(DoubleUtil.formatDouble(sumAmount * (a - b)));
+
+            // 插入数据库
+            issueMapper.insert(issue);
         } catch (Exception e) {
             return ResponseBean.fail(ResponseCodeEnum.SAVE_DATA_ERROR);
         }

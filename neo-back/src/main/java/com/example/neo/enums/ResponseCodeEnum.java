@@ -22,7 +22,10 @@ public enum ResponseCodeEnum {
     CREATE_WITHDRAW_FAIL("提现失败"),
     WITHDRAW_TODAY("今日已申请提现一次，请等待管理员审核通过"),
     ORDER_NUMBER_MISS("开票信息缺失"),
-
+    ID_CARD_ERROR("身份证号错误"),
+    BACK_CODE_ERROR("银行卡号错误"),
+    EXCEL_NAME_NOT_NULL("表格中姓名不能为空"),
+    MOBILE_ERROR("手机号格式错误"),
 
     MOBILE_EQUALS("手机号重复");
     public String message;
