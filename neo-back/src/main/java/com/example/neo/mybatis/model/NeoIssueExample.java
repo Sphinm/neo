@@ -934,6 +934,66 @@ public class NeoIssueExample {
             addCriterion("provide_status not between", value1, value2, "provideStatus");
             return (Criteria) this;
         }
+
+        public Criteria andIsDeteleIsNull() {
+            addCriterion("is_detele is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeteleIsNotNull() {
+            addCriterion("is_detele is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeteleEqualTo(Boolean value) {
+            addCriterion("is_detele =", value, "isDetele");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeteleNotEqualTo(Boolean value) {
+            addCriterion("is_detele <>", value, "isDetele");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeteleGreaterThan(Boolean value) {
+            addCriterion("is_detele >", value, "isDetele");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeteleGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_detele >=", value, "isDetele");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeteleLessThan(Boolean value) {
+            addCriterion("is_detele <", value, "isDetele");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeteleLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_detele <=", value, "isDetele");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeteleIn(List<Boolean> values) {
+            addCriterion("is_detele in", values, "isDetele");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeteleNotIn(List<Boolean> values) {
+            addCriterion("is_detele not in", values, "isDetele");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeteleBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_detele between", value1, value2, "isDetele");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDeteleNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_detele not between", value1, value2, "isDetele");
+            return (Criteria) this;
+        }
     }
 
     /**

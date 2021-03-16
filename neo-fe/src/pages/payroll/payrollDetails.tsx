@@ -1,147 +1,70 @@
-import React from 'react'
-import { Card, Table, Button, Form, Input, Row, Col, DatePicker } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { Card, Table, Button, Form, Input, Row, Col, DatePicker, Badge } from 'antd'
 import { downloadExcel } from '@/libs/download-excel'
+import { fetchProvideDetail } from '@/apis/compnay'
+import moment from 'moment'
 const { Search } = Input
 
 export const PayrollDetails = () => {
   const [form] = Form.useForm()
+  const [tableData, setTableData] = useState<any>([])
+  const [loading, setLoading] = useState<boolean>(false)
 
   const columns = [
     {
+      title: '流水号',
+      dataIndex: 'bankSerialNumber',
+    },
+    {
       title: '订单号',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'orderNumber',
     },
     {
       title: '申请时间',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'createDate',
+      render: (text: any, record: any) => <>{moment(text).format('YYYY/MM/DD HH:mm:ss')}</>,
     },
     {
       title: '收款人',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'name',
     },
     {
       title: '收款账号',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      dataIndex: 'bankNumber',
     },
     {
       title: '收款金额',
-      key: 'task',
-      render: (text: any, record: any) => <div>绑定任务</div>,
+      dataIndex: 'amount',
     },
     {
       title: '发放时间',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      dataIndex: 'updateDate',
+      render: (text: any, record: any) => <>{text ? moment(text).format('YYYY/MM/DD HH:mm:ss') : '-'}</>,
     },
     {
       title: '发放状态',
-      key: 'task',
-      render: (text: any, record: any) => <div>绑定任务</div>,
-    },
-    {
-      title: '操作',
-      key: 'task',
-      align: 'center',
-      render: (text: any, record: any) => {
-        return (
-          <Button
-            type="link"
-            onClick={() => {
-              handleSelectRow(record)
-            }}
-          >
-            下载回单
-          </Button>
-        )
-      },
+      dataIndex: 'status',
+      render: (text: any, record: any) => <Badge status={text ? 'success' : 'processing'} text={text ? '发放完成' : '等待发放'}></Badge>,
     },
   ]
 
-  const data = [
-    {
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown1',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green1',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black1',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown2',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green2',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black2',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-    {
-      name: 'John Brown3',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      name: 'Jim Green3',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      name: 'Joe Black3',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ]
+  useEffect(() => {
+    fetchRecords()
+  }, [])
 
-  const handleSelectRow = (record: any) => {
-    console.log('handleSelectRow', record)
+  const fetchRecords =  async () => {
+    try {
+      setLoading(true)
+      const { data } = await fetchProvideDetail()
+      setTableData(data)
+    } catch (error) {
+    } finally {
+      setLoading(false)
+    }
   }
 
   const downLoadReport = async () => {
-    downloadExcel(data)
+    downloadExcel(tableData)
   }
 
   return (
@@ -164,7 +87,7 @@ export const PayrollDetails = () => {
         </Row>
       </Form>
 
-      <Table bordered rowKey="name" columns={columns as any} dataSource={data} />
+      <Table bordered loading={loading} rowKey="id" columns={columns as any} dataSource={tableData} />
     </Card>
   )
 }

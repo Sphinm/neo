@@ -95,7 +95,7 @@ public class SignUpServiceImpl implements SignUpService {
      * 发放相关逻辑
      * 上传发放列表
      *
-     * @param file
+     * @param file 发放文件
      */
     @Override
     public ResponseBean uploadProvideList(MultipartFile file, String taskName) {
@@ -103,7 +103,7 @@ public class SignUpServiceImpl implements SignUpService {
             InputStream stream = file.getInputStream();
             Workbook wb;
             String fileName = file.getOriginalFilename();
-            if (fileName.matches("^.+\\.(?i)(xlsx)$")) {
+            if (fileName != null && fileName.matches("^.+\\.(?i)(xlsx)$")) {
                 wb = new XSSFWorkbook(stream);
             } else {
                 wb = new HSSFWorkbook(stream);
@@ -130,6 +130,7 @@ public class SignUpServiceImpl implements SignUpService {
             issue.setCreatorId(user.getId());
             issue.setCreateDate(new Date());
             issue.setProvideStatus(false);
+            issue.setIsDetele(false);
 
             // 创建发放详情
             List<NeoIssueDetail> list = new ArrayList<>();
@@ -177,7 +178,6 @@ public class SignUpServiceImpl implements SignUpService {
 
                 // 手机号
                 if (row.getCell(3) != null) {
-                    log.debug("{} {}", row.getCell(3));
                     String mobile = row.getCell(3).getStringCellValue();
                     if (IDCardCheck.isMobile(mobile)) {
                         item.setTel(mobile);
@@ -214,6 +214,43 @@ public class SignUpServiceImpl implements SignUpService {
         } catch (Exception e) {
             return ResponseBean.fail(ResponseCodeEnum.SAVE_DATA_ERROR);
         }
+        return ResponseBean.success();
+    }
+
+    /**
+     * 获取发放列表
+     */
+    @Override
+    public ResponseBean fetchProvideList() {
+        NeoCompany company = commonService.fetchCurrentCompany();
+        NeoIssueExample example = new NeoIssueExample();
+        example.createCriteria().andCompanyIdEqualTo(company.getId()).andIsDeteleEqualTo(false);
+        return ResponseBean.success(issueMapper.selectByExample(example));
+    }
+
+    /**
+     * 发放人员详情
+     */
+    @Override
+    public ResponseBean fetchProvideDetail() {
+        NeoUser user = commonService.fetchUserByMobile();
+        NeoIssueDetailExample example = new NeoIssueDetailExample();
+        example.createCriteria().andCreatorIdEqualTo(user.getId());
+        return ResponseBean.success(detailMapper.selectByExample(example));
+    }
+
+    /**
+     * 删除发放记录
+     *
+     * @param id
+     */
+    @Override
+    public ResponseBean deleteProvideById(int id) {
+        NeoIssueExample example = new NeoIssueExample();
+        example.createCriteria().andIdEqualTo(id);
+        NeoIssue issue = new NeoIssue();
+        issue.setIsDetele(true);
+        issueMapper.updateByExampleSelective(issue, example);
         return ResponseBean.success();
     }
 }

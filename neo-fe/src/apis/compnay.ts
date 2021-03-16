@@ -1,10 +1,5 @@
 import ajax from '@/libs/axios'
 
-// /** 获取公司发放记录 */
-// export const fetchCompanyIssues = () => {
-//   return ajax.get(`/company/issues`)
-// }
-
 /** 公司开票接口 */
 export const companyInvoice = (body: any) => {
   return ajax.post(`/company/create-invoice`, body)
@@ -53,4 +48,19 @@ export const searchByIdCard = (id: string) => {
 /** 员工更改手机号 */
 export const changeMobileEmp = (body: any) => {
   return ajax.post(`/sign/change-mobile`, body)
+}
+
+/** 获取发放记录 */
+export const fetchProvideList = () => {
+  return ajax.get(`/provide/list`)
+}
+
+/** 获取发放详情 */
+export const fetchProvideDetail = () => {
+  return ajax.get(`/provide/detail`)
+}
+
+/** 发放记录删除 */
+export const deleteProvideItem = (id: string) => {
+  return ajax.delete(`/provide/delete/${id}`)
 }

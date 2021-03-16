@@ -49,7 +49,7 @@ public class SignUpController {
                 return ResponseBean.fail(ResponseCodeEnum.FILE_NOT_NULL);
             }
             String fileName = file.getOriginalFilename();
-            if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
+            if (fileName != null && !fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
                 // 文件格式不正确
                 return ResponseBean.fail(ResponseCodeEnum.FILE_ERROR_TYPE);
             }
@@ -57,5 +57,23 @@ public class SignUpController {
         } catch (Exception e) {
             return ResponseBean.fail(ResponseCodeEnum.FILE_ERROR);
         }
+    }
+
+    @PreAuthorize("hasAnyAuthority('provide')")
+    @GetMapping("/provide/list")
+    public ResponseBean fetchProvideList() {
+        return signUpService.fetchProvideList();
+    }
+
+    @PreAuthorize("hasAnyAuthority('provide')")
+    @GetMapping("/provide/detail")
+    public ResponseBean fetchProvideDetail() {
+        return signUpService.fetchProvideDetail();
+    }
+
+    @PreAuthorize("hasAnyAuthority('provide')")
+    @DeleteMapping("/provide/delete/{id}")
+    public ResponseBean fetchProvideDetail(@PathVariable int id) {
+        return signUpService.deleteProvideById(id);
     }
 }

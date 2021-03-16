@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Select, Button, Space, message, Upload, Table } from 'antd'
+import { Card, Select, Button, Space, message, Upload, Table, Badge, Modal } from 'antd'
 import { taskOptions } from '@/setting/constantVar'
 import { CloudUploadOutlined } from '@ant-design/icons'
 import style from './index.styl'
+import { deleteProvideItem, fetchProvideList } from '@/apis/compnay'
+import moment from 'moment'
+import history from '@/libs/history'
 
 export const UploadPayrollList = () => {
   const [task, setTask] = useState('')
   const [tableData, setTableData] = useState<any>([])
   const [loading, setLoading] = useState<boolean>(false)
+  const [visible, setVisible] = useState(false)
+  const [provideItem, setProvideItem] = useState<any>()
 
   const props = {
     name: 'provideExcel',
@@ -46,51 +51,37 @@ export const UploadPayrollList = () => {
   const columns = [
     {
       title: '订单号',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'orderNumber',
     },
     {
       title: '申请时间',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'createDate',
+      render: (text: any, record: any) => <>{moment(text).format('YYYY/MM/DD HH:mm:ss')}</>,
     },
     {
       title: '发放金额',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'amount',
     },
     {
-      title: '订单状态',
-      key: 'action',
-      render: (text: any, record: any) => <div>等待发放</div>,
+      title: '发放状态',
+      dataIndex: 'status',
+      render: (text: any, record: any) => <Badge status={text ? 'success' : 'processing'} text={text ? '发放完成' : '等待发放'}></Badge>,
     },
     {
       title: '任务',
-      key: 'task',
-      render: (text: any, record: any) => <div>绑定任务</div>,
+      dataIndex: 'taskName',
     },
     {
       title: '操作',
-      key: 'task',
       align: 'center',
       render: (text: any, record: any) => {
         return (
           <>
             <Button
               type="link"
-              onClick={() => {
-                handleSelectRow(record)
-              }}
+              onClick={() => history.push('/main/finance/recharge')}
             >
-              提醒签约
-            </Button>
-            <Button
-              type="link"
-              onClick={() => {
-                handleSelectRow(record)
-              }}
-            >
-              申请发放
+              充值
             </Button>
             <Button
               type="link"
@@ -113,22 +104,33 @@ export const UploadPayrollList = () => {
   const fetchRecords =  async () => {
     try {
       setLoading(true)
-      // const { data } = await fetchUnSignUpList()
-      setTableData([])
+      const { data } = await fetchProvideList()
+      setTableData(data)
     } catch (error) {
-      // handleError(error)
     } finally {
       setLoading(false)
     }
   }
 
   const handleSelectRow = (record: any) => {
-    console.log('handleSelectRow', record)
+    setVisible(true)
+    setProvideItem(record)
   }
 
   const changeTask = (value: string) => {
     setTask(value)
   }
+
+  const handleOk = async () => {
+    try {
+      await deleteProvideItem(provideItem.id)
+      message.success("删除成功")
+      fetchRecords()
+      setVisible(false)
+    } catch (error) {
+    }
+  }
+
 
   return (
     <>
@@ -165,8 +167,24 @@ export const UploadPayrollList = () => {
         </div>
       </Card>
       <Card style={{ marginTop: 20 }}>
-        <Table rowKey="name" loading={loading} columns={columns as any} dataSource={tableData} />
+        <Table rowKey="orderNumber" loading={loading} columns={columns as any} dataSource={tableData} />
       </Card>
+      <Modal
+        title="删除订单"
+        visible={visible}
+        onOk={handleOk}
+        onCancel={() => setVisible(false)}
+        footer={[
+          <Button key="back" onClick={() => setVisible(false)}>
+            取消
+          </Button>,
+          <Button key="submit" type="primary" onClick={handleOk}>
+            确定
+          </Button>,
+        ]}
+      >
+        是否删除该订单？
+      </Modal>
     </>
   )
 }

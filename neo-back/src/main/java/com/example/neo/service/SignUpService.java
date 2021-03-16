@@ -33,4 +33,19 @@ public interface SignUpService {
      * 上传发放列表
      */
     ResponseBean uploadProvideList(MultipartFile file, String taskName);
+
+    /**
+     * 获取发放列表
+     */
+    ResponseBean fetchProvideList();
+
+    /**
+     * 发放人员详情
+     */
+    ResponseBean fetchProvideDetail();
+
+    /**
+     * 删除发放记录
+     */
+    ResponseBean deleteProvideById(int id);
 }

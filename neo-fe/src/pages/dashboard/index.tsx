@@ -94,10 +94,10 @@ const Dashboard = () => {
       if (data.length) {
         if (type === AuthType.MERCHANT) {
           setRebateList(data)
-          setRebateMoney(data.reduce((a: any, b: any) => a + b.rebate))
+          setRebateMoney(data.reduce((a: any, b: any) => a.amount + b.rebate))
         } else {
           setIssuesList(data)
-          setIssuesMoney(data.reduce((a: any, b: any) => a + b.amount))
+          setIssuesMoney(data.reduce((a: any, b: any) => a.amount + b.amount))
         }
       }
     } catch (error) {
