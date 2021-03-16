@@ -26,6 +26,8 @@ public enum ResponseCodeEnum {
     BACK_CODE_ERROR("银行卡号错误"),
     EXCEL_NAME_NOT_NULL("表格中姓名不能为空"),
     MOBILE_ERROR("手机号格式错误"),
+    COMPANY_RATE_ERROR("客户公司费率不能低于代理商费率"),
+
 
     MOBILE_EQUALS("手机号重复");
     public String message;

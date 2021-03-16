@@ -1,11 +1,9 @@
 package com.example.neo.utils;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,96 +37,71 @@ public class IDCardCheck {
     /**
      * 功能：身份证的有效验证
      *
-     * @param IDStr 身份证号 [url=home.php?mod=space&uid=7300]@return[/url] 有效：返回 ""
-     *              无效：返回String信息
+     * @param idStr 身份证号
      */
-    public static boolean IDCardValidate(String IDStr) {
-        @SuppressWarnings("unused")
-        String errorInfo = ""; // 记录错误信息
-        String[] ValCodeArr = {"1", "0", "X", "9", "8", "7", "6", "5", "4",
-            "3", "2"};
-        String[] Wi = {"7", "9", "10", "5", "8", "4", "2", "1", "6", "3", "7",
-            "9", "10", "5", "8", "4", "2"};
-        String Ai = "";
-        // ================ 号码的长度 15位或18位 ================
-        if (IDStr.length() != 15 && IDStr.length() != 18) {
-            errorInfo = "身份证号码长度应该为15位或18位。";
-            return false;
-        }
-        // =======================(end)========================
-        // ================ 数字 除最后以为都为数字 ================
-        if (IDStr.length() == 18) {
-            Ai = IDStr.substring(0, 17);
-        } else {
-            Ai = IDStr.substring(0, 6) + "19" + IDStr.substring(6, 15);
-        }
-        if (!isNumeric(Ai)) {
-            errorInfo = "身份证15位号码都应为数字 ; 18位号码除最后一位外，都应为数字。";
-            return false;
-        }
-        // =======================(end)========================
-        // ================ 出生年月是否有效 ================
-        String strYear = Ai.substring(6, 10);// 年份
-        String strMonth = Ai.substring(10, 12);// 月份
-        String strDay = Ai.substring(12, 14);// 月份
-        if (!isDate(strYear + "-" + strMonth + "-" + strDay)) {
-            errorInfo = "身份证生日无效。";
-            return false;
-        }
-        GregorianCalendar gc = new GregorianCalendar();
-        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+    public static boolean IDCardValidate(String idStr) {
+        String[] wf = { "1", "0", "x", "9", "8", "7", "6", "5", "4", "3", "2" };
+        String[] checkCode = { "7", "9", "10", "5", "8", "4", "2", "1", "6", "3", "7", "9", "10", "5", "8", "4", "2" };
+        String iDCardNo = "";
         try {
-            if ((gc.get(Calendar.YEAR) - Integer.parseInt(strYear)) > 150
-                || (gc.getTime().getTime() - s.parse(
-                strYear + "-" + strMonth + "-" + strDay).getTime()) < 0) {
-                errorInfo = "身份证生日不在有效范围。";
+            //判断号码的长度 15位或18位
+            if (idStr.length() != 15 && idStr.length() != 18) {
                 return false;
             }
-        } catch (NumberFormatException | ParseException e) {
+            if (idStr.length() == 18) {
+                iDCardNo = idStr.substring(0, 17);
+            } else  {
+                iDCardNo = idStr.substring(0, 6) + "19" + idStr.substring(6, 15);
+            }
+            if (!isStrNum(iDCardNo)) {
+                return false;
+            }
+            //判断出生年月
+            String strYear = iDCardNo.substring(6, 10);// 年份
+            String strMonth = iDCardNo.substring(10, 12);// 月份
+            String strDay = iDCardNo.substring(12, 14);// 月份
+            if (!isDate(strYear + "-" + strMonth + "-" + strDay)) {
+                return false;
+            }
+            GregorianCalendar gc = new GregorianCalendar();
+            SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+            if ((gc.get(Calendar.YEAR) - Integer.parseInt(strYear)) > 150 || (gc.getTime().getTime() - s.parse(strYear + "-" + strMonth + "-" + strDay).getTime()) < 0) {
+                return false;
+            }
+            if (Integer.parseInt(strMonth) > 12 || Integer.parseInt(strMonth) == 0) {
+                return false;
+            }
+            if (Integer.parseInt(strDay) > 31 || Integer.parseInt(strDay) == 0) {
+                return false;
+            }
+            //判断地区码
+            Hashtable<String, String> h = GetAreaCode();
+            if (h.get(iDCardNo.substring(0, 2)) == null) {
+                return false;
+            }
+            //判断最后一位
+            int theLastOne = 0;
+            for (int i = 0; i < 17; i++) {
+                theLastOne = theLastOne + Integer.parseInt(String.valueOf(iDCardNo.charAt(i))) * Integer.parseInt(checkCode[i]);
+            }
+            int modValue = theLastOne % 11;
+            String strVerifyCode = wf[modValue];
+            iDCardNo = iDCardNo + strVerifyCode;
+            if (idStr.length() == 18 &&!iDCardNo.equals(idStr)) {
+                return false;
+            }
+        }catch (Exception e){
             e.printStackTrace();
-        }
-        if (Integer.parseInt(strMonth) > 12 || Integer.parseInt(strMonth) == 0) {
-            errorInfo = "身份证月份无效";
-            return false;
-        }
-        if (Integer.parseInt(strDay) > 31 || Integer.parseInt(strDay) == 0) {
-            errorInfo = "身份证日期无效";
-            return false;
-        }
-        // =====================(end)=====================
-        // ================ 地区码时候有效 ================
-        Map<String, String> h = GetAreaCode();
-        if (h.get(Ai.substring(0, 2)) == null) {
-            errorInfo = "身份证地区编码错误。";
-            return false;
-        }
-        // ==============================================
-        // ================ 判断最后一位的值 ================
-        int TotalmulAiWi = 0;
-        for (int i = 0; i < 17; i++) {
-            TotalmulAiWi = TotalmulAiWi
-                + Integer.parseInt(String.valueOf(Ai.charAt(i)))
-                * Integer.parseInt(Wi[i]);
-        }
-        int modValue = TotalmulAiWi % 11;
-        String strVerifyCode = ValCodeArr[modValue];
-        Ai = Ai + strVerifyCode;
-        if (IDStr.length() == 18) {
-            if (!Ai.equals(IDStr)) {
-                errorInfo = "身份证无效，不是合法的身份证号码";
-                return false;
-            }
         }
         return true;
     }
 
     /**
-     * 功能：设置地区编码
-     *
-     * @return Hashtable 对象
+     * 地区代码
+     * @return Hashtable
      */
-    private static Map<String, String> GetAreaCode() {
-        Map<String, String> hashtable = new HashMap<>();
+    private static Hashtable<String, String> GetAreaCode() {
+        Hashtable<String, String> hashtable = new Hashtable<>();
         hashtable.put("11", "北京");
         hashtable.put("12", "天津");
         hashtable.put("13", "河北");
@@ -168,15 +141,15 @@ public class IDCardCheck {
     }
 
     /**
-     * 功能：判断字符串是否为数字
-     *
+     * 判断字符串是否为数字
      * @param str
      * @return
      */
-    private static boolean isNumeric(String str) {
+    private static boolean isStrNum(String str) {
         Pattern pattern = Pattern.compile("[0-9]*");
         Matcher isNum = pattern.matcher(str);
         return isNum.matches();
+
     }
 
     /**

@@ -155,6 +155,7 @@ public class SignUpServiceImpl implements SignUpService {
                 }
 
                 // 身份证
+                // TODO 身份证校验有问题
                 if (row.getCell(1) != null) {
                     String idCard = row.getCell(1).getStringCellValue();
 //                    if (IDCardCheck.IDCardValidate(idCard)) {
@@ -203,6 +204,9 @@ public class SignUpServiceImpl implements SignUpService {
             // 返佣金额：发放金额 * （公司费率 - 代理商费率）
             Double a = company.getCompanyRate() * 0.01;
             Double b = commonService.fetchCompanyInfoById(company.getId()).getCompanyRate() * 0.01;
+            if (a - b <= 0) {
+                return ResponseBean.fail(ResponseCodeEnum.COMPANY_RATE_ERROR);
+            }
             issue.setRebate(DoubleUtil.formatDouble(sumAmount * (a - b)));
 
             // 插入数据库

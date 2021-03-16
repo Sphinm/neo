@@ -106,7 +106,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 创建员工信息
-     * TODO 员工编号怎么生成？
      * 貌似不能走公共接口创建员工信息
      */
     private void createEmployee(NeoUser neoUser) {
@@ -427,7 +426,6 @@ public class UserServiceImpl implements UserService {
             // companyType 为 false 是代理商
             companyExample.createCriteria().andCompanyTypeEqualTo(false);
             List<NeoCompany> agentList = companyMapper.selectByExample(companyExample);
-            log.info("1111=> {}", agentList.size());
             List<IDataQuery> list = new ArrayList<>();
             for (NeoCompany agent : agentList) {
                 IDataQuery data = new IDataQuery();
@@ -448,7 +446,6 @@ public class UserServiceImpl implements UserService {
                 data.setMerchantName(agent.getCompanyName());
                 data.setTotalAmount(totalWithdraw);
                 // 根据余额记录取最新的一条记录
-                // TODO: 是这么判断吗？
                 data.setBalance(financeListOne.size() >= 1 ? financeListOne.get(0).getBalance(): 0);
                 list.add(data);
             }

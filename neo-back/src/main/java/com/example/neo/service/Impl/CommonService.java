@@ -82,7 +82,7 @@ public class CommonService {
         if (list == null || list.size() == 0) {
             return null;
         }
-        return companyMapper.selectByPrimaryKey(list.get(0).getId());
+        return companyMapper.selectByPrimaryKey(list.get(0).getAgentId());
     }
 
 }
