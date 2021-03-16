@@ -2,6 +2,7 @@ package com.example.neo.service.Impl;
 
 import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.IChangeMobile;
+import com.example.neo.model.IProvideDate;
 import com.example.neo.mybatis.mapper.NeoEmployeeMapper;
 import com.example.neo.mybatis.mapper.NeoIssueDetailMapper;
 import com.example.neo.mybatis.mapper.NeoIssueMapper;
@@ -252,5 +253,25 @@ public class SignUpServiceImpl implements SignUpService {
         issue.setIsDetele(true);
         issueMapper.updateByExampleSelective(issue, example);
         return ResponseBean.success();
+    }
+
+    /**
+     * 根据 idCard 搜索发放记录
+     *
+     * @param id
+     */
+    @Override
+    public ResponseBean searchProvideByIdCard(String id) {
+        return null;
+    }
+
+    /**
+     * 根据时间区间搜索发放记录
+     *
+     * @param provideDate
+     */
+    @Override
+    public ResponseBean searchProvideByDate(IProvideDate provideDate) {
+        return null;
     }
 }

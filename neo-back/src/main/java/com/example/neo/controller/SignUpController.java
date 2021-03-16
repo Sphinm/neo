@@ -2,6 +2,7 @@ package com.example.neo.controller;
 
 import com.example.neo.enums.ResponseCodeEnum;
 import com.example.neo.model.IChangeMobile;
+import com.example.neo.model.IProvideDate;
 import com.example.neo.service.SignUpService;
 import com.example.neo.utils.ResponseBean;
 import lombok.extern.slf4j.Slf4j;
@@ -75,5 +76,17 @@ public class SignUpController {
     @DeleteMapping("/provide/delete/{id}")
     public ResponseBean fetchProvideDetail(@PathVariable int id) {
         return signUpService.deleteProvideById(id);
+    }
+
+    @PreAuthorize("hasAnyAuthority('provide')")
+    @GetMapping("/provide/search-by-idCard")
+    public ResponseBean searchProvideByIdCard(@RequestParam("id") String id) {
+        return signUpService.searchProvideByIdCard(id);
+    }
+
+    @PreAuthorize("hasAnyAuthority('provide')")
+    @PostMapping("/provide/search-by-date")
+    public ResponseBean searchProvideByDate(@RequestBody IProvideDate provideDate) {
+        return signUpService.searchProvideByDate(provideDate);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.neo.service;
 
 import com.example.neo.model.IChangeMobile;
+import com.example.neo.model.IProvideDate;
 import com.example.neo.utils.ResponseBean;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,4 +49,14 @@ public interface SignUpService {
      * 删除发放记录
      */
     ResponseBean deleteProvideById(int id);
+
+    /**
+     * 根据 idCard 搜索发放记录
+     */
+    ResponseBean searchProvideByIdCard(String id);
+
+    /**
+     * 根据时间区间搜索发放记录
+     */
+    ResponseBean searchProvideByDate(IProvideDate provideDate);
 }

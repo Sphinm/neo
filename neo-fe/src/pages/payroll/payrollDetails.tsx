@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Card, Table, Button, Form, Input, Row, Col, DatePicker, Badge } from 'antd'
 import { downloadExcel } from '@/libs/download-excel'
-import { fetchProvideDetail } from '@/apis/compnay'
+import { fetchProvideDetail, searchProvideByIdCard } from '@/apis/compnay'
 import moment from 'moment'
 const { Search } = Input
 
@@ -18,6 +18,10 @@ export const PayrollDetails = () => {
     {
       title: '订单号',
       dataIndex: 'orderNumber',
+    },
+    {
+      title: '身份证',
+      dataIndex: 'idNumber',
     },
     {
       title: '申请时间',
@@ -67,18 +71,30 @@ export const PayrollDetails = () => {
     downloadExcel(tableData)
   }
 
+  const searchListByIdCard = async (value: string) => {
+    try {
+      const { data } = await searchProvideByIdCard(value)
+      setTableData(data)
+    } catch (error) {
+    }
+  }
+
+  const changeDate = (dates: any, dateStrings: string) => {
+    console.log(dates[0].valueOf(), dateStrings)
+  } 
+
   return (
     <Card title="人员发放明细">
       <Form form={form}>
         <Row gutter={24}>
           <Col span={7}>
             <Form.Item name="idcard">
-              <Search placeholder="身份证" enterButton="搜索" onSearch={value => console.log(value)} />
+              <Search placeholder="身份证" enterButton="搜索" onSearch={value => searchListByIdCard(value)} />
             </Form.Item>
           </Col>
           <Col span={8}>
             <Form.Item name="time">
-              <DatePicker.RangePicker allowClear format="YYYY-MM-DD" placeholder={['开始时间', '结束时间']} />
+              <DatePicker.RangePicker allowClear onChange={changeDate as any} format="YYYY-MM-DD" placeholder={['开始时间', '结束时间']} />
             </Form.Item>
           </Col>
           <Button type="primary" onClick={downLoadReport}>

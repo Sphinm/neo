@@ -64,3 +64,8 @@ export const fetchProvideDetail = () => {
 export const deleteProvideItem = (id: string) => {
   return ajax.delete(`/provide/delete/${id}`)
 }
+
+/** 通过身份证查询发放记录 */
+export const searchProvideByIdCard = (id: string) => {
+  return ajax.get(`/provide/search-by-idCard?id=${id}`)
+}
